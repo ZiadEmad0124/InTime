@@ -1,0 +1,74 @@
+<resources>
+    <string name="app_name">InTime</string>
+    <string name="in">In</string>
+    <string name="time">Time</string>
+    <string name="describe">Create a unique emotional story that \n describes better than words</string>
+    <string name="get_started">Get Started</string>
+    <string name="task_manage">Task management &amp; project \n management</string>
+    <string name="signin_with">Signin with</string>
+    <string name="or">Or</string>
+    <string name="google">Google</string>
+    <string name="facebook">Facebook</string>
+    <string name="email">Email</string>
+    <string name="password">Password</string>
+    <string name="forget_password">Forget password ?</string>
+    <string name="_continue">Continue</string>
+    <string name="home">Home</string>
+    <string name="tasks">Tasks</string>
+    <string name="projects">Projects</string>
+    <string name="calender">Calender</string>
+    <string name="completed_tasks">Completed Tasks</string>
+    <string name="total_score">Total Score</string>
+    <string name="points">Points</string>
+    <string name="in_progress">In Progress</string>
+    <string name="your_recent_tasks">Your recent tasks</string>
+    <string name="your_recent_projects">Your recent projects</string>
+    <string name="search_anything">Search anything…</string>
+    <string name="name">Name</string>
+    <string name="start_time">Start Time</string>
+    <string name="end_time">End Time</string>
+    <string name="login">Login</string>
+    <string name="don_t_have_an_account">Don’t have an account?</string>
+    <string name="sign_up">Sign Up</string>
+    <string name="confirm_password">Confirm Password</string>
+    <string name="full_name">Full Name</string>
+    <string name="already_have_an_account">Already have an account?</string>
+    <string name="signup_with">Signup with</string>
+    <string name="phone">Phone</string>
+    <string name="next">Next</string>
+    <string name="enter_your_email_then_we_will_send_you_otp_to_reset_new_password">Enter your Email then we will send you OTP to reset new password</string>
+    <string name="send_otp">Send OTP</string>
+    <string name="enter_otp">Enter OTP</string>
+    <string name="enter_the_otp_we_just_sent_to_you_then_start_rest_new_password">Enter the OTP we just sent to you then start rest new password</string>
+    <string name="reset_new_password">Reset new password</string>
+    <string name="save_new_password">Save New Password</string>
+    <string name="new_password">New Password</string>
+    <string name="resend_otp_in">Resend OTP in </string>
+    <string name="did_not_receive_otp">Didn\'t receive OTP ?</string>
+    <string name="notifications">Notifications</string>
+    <string name="create_a_task">Create a Task</string>
+    <string name="details">Details</string>
+    <string name="create">Create</string>
+    <string name="create_task">Create Task</string>
+    <string name="create_project">Create Project</string>
+    <string name="tag">Tag</string>
+    <string name="add_step">Add Step</string>
+    <string name="nickname">Nickname</string>
+    <string-array name="tasks_category">
+        <item>Task Category</item>
+        <item>First</item>
+        <item>Second</item>
+        <item>Third</item>
+    </string-array>
+    <!-- TODO: Remove or change this placeholder text -->
+    <string name="hello_blank_fragment">Hello blank fragment</string>
+    <string name="dot">.</string>
+    <string name="log_out">Log Out</string>
+    <string name="edit">Edit</string>
+    <string name="username">Username</string>
+    <string name="my_profile">My Profile</string>
+    <string name="to_do">To Do</string>
+    <string name="completed">Completed</string>
+    <string name="backlog">Backlog</string>
+    <string name="new_task">New Task</string>
+</resources>

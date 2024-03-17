@@ -1,0 +1,303 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    tools:context=".ui.app.add.AddTaskActivity">
+
+    <include
+        android:id="@+id/myToolbar"
+        layout="@layout/toolbar_all"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
+
+    <ScrollView
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:fillViewport="true"
+        android:scrollbars="none"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/myToolbar">
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="0dp"
+            android:orientation="vertical">
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:background="@color/tenth"
+                android:orientation="vertical">
+
+                <LinearLayout
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="center"
+                    android:layout_marginHorizontal="20dp"
+                    android:layout_marginTop="20dp"
+                    android:gravity="center">
+
+                    <Button
+                        android:id="@+id/redButton"
+                        android:layout_width="40dp"
+                        android:layout_height="40dp"
+                        android:layout_marginHorizontal="10dp"
+                        android:background="@drawable/circle_red_selected"
+                        app:backgroundTint="@null"
+                        tools:ignore="ButtonStyle" />
+
+                    <Button
+                        android:id="@+id/orangeButton"
+                        android:layout_width="40dp"
+                        android:layout_height="40dp"
+                        android:layout_marginHorizontal="10dp"
+                        android:background="@drawable/circle_orange"
+                        app:backgroundTint="@null"
+                        tools:ignore="ButtonStyle" />
+
+                    <Button
+                        android:id="@+id/yellowButton"
+                        android:layout_width="40dp"
+                        android:layout_height="40dp"
+                        android:layout_marginHorizontal="10dp"
+                        android:background="@drawable/circle_yellow"
+                        app:backgroundTint="@null"
+                        tools:ignore="ButtonStyle" />
+
+                    <Button
+                        android:id="@+id/grayButton"
+                        android:layout_width="40dp"
+                        android:layout_height="40dp"
+                        android:layout_marginHorizontal="10dp"
+                        android:background="@drawable/circle_gray"
+                        app:backgroundTint="@null"
+                        tools:ignore="ButtonStyle" />
+
+                </LinearLayout>
+
+                <EditText
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_margin="20dp"
+                    android:background="@drawable/create_task_edit_text_background"
+                    android:elevation="5dp"
+                    android:fontFamily="@font/lato"
+                    android:hint="@string/name"
+                    android:importantForAutofill="no"
+                    android:inputType="text"
+                    android:lines="1"
+                    android:paddingHorizontal="20dp"
+                    android:paddingVertical="20dp"
+                    android:textColor="@color/second"
+                    android:textColorHint="@color/second" />
+
+            </LinearLayout>
+
+            <androidx.constraintlayout.widget.ConstraintLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content">
+
+                <View
+                    android:id="@+id/view1"
+                    android:layout_width="match_parent"
+                    android:layout_height="0dp"
+                    android:background="@color/tenth"
+                    app:layout_constraintBottom_toTopOf="@id/view2"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toTopOf="parent" />
+
+                <View
+                    android:layout_width="match_parent"
+                    android:layout_height="1dp"
+                    android:background="@color/third"
+                    app:layout_constraintBottom_toTopOf="@id/view2"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toBottomOf="@id/view1" />
+
+                <View
+                    android:id="@+id/view2"
+                    android:layout_width="match_parent"
+                    android:layout_height="0dp"
+                    app:layout_constraintBottom_toBottomOf="parent"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toBottomOf="@id/view1" />
+
+                <EditText
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginHorizontal="20dp"
+                    android:layout_marginBottom="20dp"
+                    android:background="@drawable/create_task_edit_text_background"
+                    android:elevation="5dp"
+                    android:fontFamily="@font/lato"
+                    android:gravity="top"
+                    android:hint="@string/details"
+                    android:importantForAutofill="no"
+                    android:inputType="textMultiLine"
+                    android:maxLines="8"
+                    android:minLines="8"
+                    android:padding="20dp"
+                    android:scrollbars="vertical"
+                    app:layout_constraintBottom_toBottomOf="@+id/view2"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toTopOf="parent" />
+
+            </androidx.constraintlayout.widget.ConstraintLayout>
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginHorizontal="10dp"
+                android:orientation="vertical">
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content">
+
+                    <EditText
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginHorizontal="10dp"
+                        android:layout_marginBottom="10dp"
+                        android:layout_weight="1"
+                        android:background="@drawable/create_task_edit_text_background"
+                        android:drawableStart="@drawable/ic_end_flag"
+                        android:drawablePadding="10dp"
+                        android:drawableTint="@color/first"
+                        android:elevation="2dp"
+                        android:fontFamily="@font/lato"
+                        android:hint="@string/start_time"
+                        android:importantForAutofill="no"
+                        android:inputType="time"
+                        android:lines="1"
+                        android:paddingHorizontal="20dp"
+                        android:paddingVertical="20dp"
+                        android:textColor="@color/second"
+                        android:textColorHint="@color/second" />
+
+                    <EditText
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginHorizontal="10dp"
+                        android:layout_marginBottom="10dp"
+                        android:layout_weight="1"
+                        android:background="@drawable/create_task_edit_text_background"
+                        android:drawableStart="@drawable/ic_start_triangle"
+                        android:drawablePadding="10dp"
+                        android:drawableTint="@color/first"
+                        android:elevation="2dp"
+                        android:fontFamily="@font/lato"
+                        android:hint="@string/end_time"
+                        android:importantForAutofill="no"
+                        android:inputType="time"
+                        android:lines="1"
+                        android:paddingHorizontal="20dp"
+                        android:paddingVertical="20dp"
+                        android:textColor="@color/second"
+                        android:textColorHint="@color/second" />
+
+                </LinearLayout>
+
+                <EditText
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginHorizontal="10dp"
+                    android:layout_marginTop="20dp"
+                    android:layout_marginBottom="10dp"
+                    android:background="@drawable/create_task_edit_text_background"
+                    android:elevation="2dp"
+                    android:fontFamily="@font/lato"
+                    android:hint="@string/tag"
+                    android:importantForAutofill="no"
+                    android:inputType="text"
+                    android:lines="1"
+                    android:paddingHorizontal="20dp"
+                    android:paddingVertical="20dp"
+                    android:textColor="@color/second"
+                    android:textColorHint="@color/second" />
+
+                <LinearLayout
+                    android:id="@+id/stepLayout"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="20dp">
+
+                    <EditText
+                        android:layout_width="0dp"
+                        android:layout_height="wrap_content"
+                        android:layout_marginStart="10dp"
+                        android:layout_marginBottom="10dp"
+                        android:layout_weight="1"
+                        android:background="@drawable/create_task_edit_text_background"
+                        android:elevation="2dp"
+                        android:fontFamily="@font/lato"
+                        android:hint="My first step is ......"
+                        android:importantForAutofill="no"
+                        android:inputType="text"
+                        android:lines="1"
+                        android:padding="20dp"
+                        android:textColor="@color/second"
+                        android:textColorHint="@color/second" />
+
+                    <Spinner
+                        android:id="@+id/coloredCirclesSpinner"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_gravity="center_vertical"
+                        android:layout_marginHorizontal="10dp"
+                        android:background="@drawable/spinner_background"
+                        android:paddingHorizontal="20dp" />
+
+                </LinearLayout>
+
+                <com.google.android.material.button.MaterialButton
+                    android:id="@+id/addStepButton"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginStart="10dp"
+                    android:layout_marginTop="20dp"
+                    android:background="@drawable/create_task_edit_text_background"
+                    android:fontFamily="@font/lato"
+                    android:paddingHorizontal="40dp"
+                    android:paddingVertical="15dp"
+                    android:text="@string/add_step"
+                    android:textColor="@color/second"
+                    android:textSize="18sp"
+                    app:backgroundTint="@null"
+                    app:icon="@drawable/ic_add"
+                    app:iconGravity="end"
+                    app:iconPadding="15dp"
+                    app:iconSize="24dp"
+                    app:iconTint="@color/first" />
+
+                <Button
+                    android:id="@+id/createButton"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="bottom"
+                    android:layout_marginHorizontal="70dp"
+                    android:layout_marginTop="20dp"
+                    android:background="@drawable/button_background"
+                    android:padding="15dp"
+                    android:text="@string/create"
+                    android:textSize="21sp"
+                    app:backgroundTint="@null" />
+
+            </LinearLayout>
+
+        </LinearLayout>
+
+    </ScrollView>
+
+</androidx.constraintlayout.widget.ConstraintLayout>

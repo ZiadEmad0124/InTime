@@ -1,0 +1,28 @@
+<?xml version="1.0" encoding="utf-8"?>
+<menu xmlns:android="http://schemas.android.com/apk/res/android">
+
+    <item
+        android:id="@+id/homeFragment"
+        android:icon="@drawable/ic_home"
+        android:title="@string/home" />
+
+    <item
+        android:id="@+id/tasksFragment"
+        android:icon="@drawable/ic_task"
+        android:title="@string/tasks" />
+
+    <item
+        android:id="@+id/addFragment"
+        android:title="" />
+
+    <item
+        android:id="@+id/projectsFragment"
+        android:icon="@drawable/ic_project"
+        android:title="@string/projects" />
+
+    <item
+        android:id="@+id/calenderFragment"
+        android:icon="@drawable/ic_calender"
+        android:title="@string/calender" />
+
+</menu>
