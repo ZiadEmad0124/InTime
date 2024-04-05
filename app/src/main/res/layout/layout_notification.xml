@@ -1,44 +1,50 @@
 <?xml version="1.0" encoding="utf-8"?>
 <androidx.cardview.widget.CardView xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
-    android:layout_marginHorizontal="10dp"
-    android:layout_marginTop="15dp"
-    app:cardCornerRadius="15dp"
-    app:cardElevation="10dp">
+    android:layout_marginHorizontal="@dimen/standard_20"
+    android:layout_marginTop="@dimen/standard_15"
+    app:cardCornerRadius="@dimen/border_radius_16"
+    app:cardElevation="@dimen/standard_5">
 
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:background="@color/white"
-        android:padding="15dp">
+        android:padding="@dimen/standard_15">
 
         <ImageView
             android:id="@+id/notificationIcon"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:importantForAccessibility="no" />
+            android:layout_width="32dp"
+            android:layout_height="32dp"
+            android:layout_gravity="center"
+            android:importantForAccessibility="no"
+            tools:src="@drawable/ic_done" />
 
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_marginStart="20dp"
+            android:layout_marginStart="@dimen/standard_15"
             android:orientation="vertical">
 
             <TextView
-                android:id="@+id/notificationText"
+                android:id="@+id/notificationContent"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:fontFamily="@font/roboto_medium" />
+                android:fontFamily="@font/roboto"
+                android:lines="1"
+                android:textStyle="bold"
+                tools:text="You finished your first task" />
 
             <TextView
-                android:id="@+id/notificationTime"
+                android:id="@+id/notificationDate"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_gravity="end"
-                android:layout_marginTop="5dp"
-                android:fontFamily="@font/roboto_medium" />
+                android:layout_gravity="end|bottom"
+                android:fontFamily="@font/roboto"
+                android:textStyle="bold"
+                tools:text="1/2/2023" />
 
         </LinearLayout>
 

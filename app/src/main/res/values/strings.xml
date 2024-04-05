@@ -17,7 +17,6 @@
     <string name="tasks">Tasks</string>
     <string name="projects">Projects</string>
     <string name="calender">Calender</string>
-    <string name="completed_tasks">Completed Tasks</string>
     <string name="total_score">Total Score</string>
     <string name="points">Points</string>
     <string name="in_progress">In Progress</string>
@@ -28,6 +27,8 @@
     <string name="start_time">Start Time</string>
     <string name="end_time">End Time</string>
     <string name="login">Login</string>
+    <string name="u_login"> <u>Login</u> </string>
+    <string name="u_signup"> <u>Sign up</u> </string>
     <string name="don_t_have_an_account">Don’t have an account?</string>
     <string name="sign_up">Sign Up</string>
     <string name="confirm_password">Confirm Password</string>
@@ -53,16 +54,6 @@
     <string name="create_project">Create Project</string>
     <string name="tag">Tag</string>
     <string name="add_step">Add Step</string>
-    <string name="nickname">Nickname</string>
-    <string-array name="tasks_category">
-        <item>Task Category</item>
-        <item>First</item>
-        <item>Second</item>
-        <item>Third</item>
-    </string-array>
-    <!-- TODO: Remove or change this placeholder text -->
-    <string name="hello_blank_fragment">Hello blank fragment</string>
-    <string name="dot">.</string>
     <string name="log_out">Log Out</string>
     <string name="edit">Edit</string>
     <string name="username">Username</string>
@@ -71,4 +62,19 @@
     <string name="completed">Completed</string>
     <string name="backlog">Backlog</string>
     <string name="new_task">New Task</string>
+    <string name="start_date">Start date</string>
+    <string name="end_date">End date</string>
+    <string name="upload_cover">upload cover</string>
+    <string name="add_new_step">Add New Step</string>
+    <string name="task_title">Task %s</string>
+    <string name="task_date">%s %s</string>
+    <string name="task_progress">%s completed</string>
+    <string name="task_points">%s / %s</string>
+    <string name="hello_blank_fragment">Hello Blank Fragment</string>
+    <string name="to_do_task_date">%s - %s</string>
+    <string name="ongoing">Ongoing</string>
+    <string name="agenda">Agenda</string>
+    <string name="all_projects">All Projects</string>
+    <string name="as_admin">As Admin</string>
+    <string name="as_member">As Member</string>
 </resources>

@@ -5,7 +5,7 @@
     <solid android:color="@color/white" />
 
     <stroke
-        android:width="10dp"
+        android:width="@dimen/standard_10"
         android:color="@color/second" />
 
 </shape>

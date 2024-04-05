@@ -4,15 +4,15 @@ plugins {
 }
 
 android {
-    namespace = "com.ziad_emad_dev.intime"
+    namespace = "com.ziad_emad_dev.in_time"
     compileSdk = 34
 
     defaultConfig {
-        applicationId = "com.ziad_emad_dev.intime"
+        applicationId = "com.ziad_emad_dev.in_time"
         minSdk = 24
         targetSdk = 34
         versionCode = 1
-        versionName = "1.0"
+        versionName = "1.0.0"
 
         testInstrumentationRunner = "androidx.test.runner.AndroidJUnitRunner"
     }
@@ -50,12 +50,10 @@ dependencies {
     androidTestImplementation("androidx.test.ext:junit:1.1.5")
     androidTestImplementation("androidx.test.espresso:espresso-core:3.5.1")
 //    navigation
-    implementation("androidx.navigation:navigation-fragment-ktx:2.7.6")
-    implementation("androidx.navigation:navigation-ui-ktx:2.7.6")
+    implementation("androidx.navigation:navigation-fragment-ktx:2.7.7")
+    implementation("androidx.navigation:navigation-ui-ktx:2.7.7")
 //    OTP
     implementation("io.github.chaosleung:pinview:1.4.4")
-//    Indicator
-    implementation("com.tbuonomo:dotsindicator:4.3")
 //    Circle Image View
     implementation("de.hdodenhof:circleimageview:3.1.0")
 }

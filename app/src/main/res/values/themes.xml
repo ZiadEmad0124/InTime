@@ -1,14 +1,11 @@
 <resources>
 
     <style name="Base.Theme.InTime" parent="Theme.Material3.DayNight.NoActionBar">
+        <item name="android:windowBackground">@color/white</item>
         <item name="android:statusBarColor">@color/white</item>
         <item name="android:windowLightStatusBar">true</item>
-        <item name="android:windowBackground">@color/white</item>
-    </style>
-
-    <style name="Base.Theme.InTime.Indicator" parent="Widget.Material3.BottomNavigationView.ActiveIndicator">
-        <item name="android:color">@color/third</item>
     </style>
 
     <style name="Theme.InTime" parent="Base.Theme.InTime" />
+
 </resources>

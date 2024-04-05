@@ -1,0 +1,78 @@
+<?xml version="1.0" encoding="utf-8"?>
+<com.google.android.material.card.MaterialCardView xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/taskCard"
+    style="@style/InTime.CardView.Task"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:layout_marginHorizontal="@dimen/standard_20"
+    android:layout_marginTop="@dimen/standard_15"
+    app:strokeColor="@color/orange">
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content">
+
+        <View
+            android:id="@+id/taskIndicator"
+            android:layout_width="@dimen/standard_5"
+            android:layout_height="match_parent"
+            android:background="@color/orange" />
+
+        <LinearLayout
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:orientation="vertical"
+            android:padding="@dimen/standard_20">
+
+            <TextView
+                android:id="@+id/taskDate"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:drawableStart="@drawable/ic_box"
+                android:drawablePadding="@dimen/standard_15"
+                android:fontFamily="@font/lato"
+                android:textColor="@color/fifteenth"
+                android:textSize="16sp"
+                tools:ignore="UseCompatTextViewDrawableXml"
+                tools:text="11.30 Am - 12.30 Pm" />
+
+            <TextView
+                android:id="@+id/taskTitle"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="@dimen/standard_15"
+                android:fontFamily="@font/roboto"
+                android:textColor="@color/sixth"
+                android:textSize="16sp"
+                android:textStyle="bold"
+                tools:text="Geometry" />
+
+            <TextView
+                android:id="@+id/taskDescription"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="@dimen/standard_15"
+                android:fontFamily="@font/roboto"
+                android:lines="2"
+                android:textColor="@color/second"
+                android:textSize="16sp"
+                tools:text="Create a unique emotional story that describes better than words" />
+
+        </LinearLayout>
+
+        <ImageView
+            android:id="@+id/taskOptions"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center_vertical"
+            android:layout_marginEnd="@dimen/standard_10"
+            android:importantForAccessibility="no"
+            android:padding="@dimen/standard_10"
+            android:src="@drawable/ic_options" />
+
+    </LinearLayout>
+
+</com.google.android.material.card.MaterialCardView>

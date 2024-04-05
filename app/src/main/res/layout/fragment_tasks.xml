@@ -4,25 +4,23 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context=".ui.app.TasksFragment">
+    tools:context=".ui.home.TasksFragment">
 
     <include
         android:id="@+id/myToolbar"
-        layout="@layout/toolbar_all"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        app:layout_constraintBottom_toTopOf="@+id/tabsBarLayout"
+        layout="@layout/toolbar_app"
+        app:layout_constraintBottom_toTopOf="@+id/tabsBar"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent" />
 
     <include
-        android:id="@+id/tabsBarLayout"
+        android:id="@+id/tabsBar"
         layout="@layout/tab_layout"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_marginHorizontal="25dp"
-        android:layout_marginTop="15dp"
+        android:layout_marginHorizontal="@dimen/standard_20"
+        android:layout_marginTop="@dimen/standard_15"
         app:layout_constraintBottom_toTopOf="@id/viewPager"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
@@ -32,10 +30,9 @@
         android:id="@+id/viewPager"
         android:layout_width="match_parent"
         android:layout_height="0dp"
-        android:animateLayoutChanges="true"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/tabsBarLayout" />
+        app:layout_constraintTop_toBottomOf="@+id/tabsBar" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>

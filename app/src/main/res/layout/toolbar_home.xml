@@ -1,16 +1,15 @@
 <?xml version="1.0" encoding="utf-8"?>
 <com.google.android.material.appbar.MaterialToolbar xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
-    android:layout_height="wrap_content"
-    android:background="@color/white">
+    android:layout_height="wrap_content">
 
     <ImageButton
         android:id="@+id/menu"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:background="@color/white"
+        android:background="@color/transparent"
         android:importantForAccessibility="no"
-        android:padding="10dp"
+        android:padding="@dimen/standard_10"
         android:src="@drawable/ic_menu" />
 
     <TextView
@@ -19,7 +18,7 @@
         android:layout_height="wrap_content"
         android:layout_gravity="center"
         android:fontFamily="@font/roboto_medium"
-        android:lineSpacingExtra="4sp"
+        android:lines="1"
         android:textColor="@color/sixth"
         android:textSize="21sp"
         android:textStyle="bold" />
@@ -29,10 +28,10 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_gravity="end"
-        android:layout_marginEnd="15dp"
-        android:background="@color/white"
+        android:layout_marginEnd="@dimen/standard_15"
+        android:background="@color/transparent"
         android:importantForAccessibility="no"
-        android:padding="10dp"
+        android:padding="@dimen/standard_10"
         android:src="@drawable/ic_notification" />
 
 </com.google.android.material.appbar.MaterialToolbar>

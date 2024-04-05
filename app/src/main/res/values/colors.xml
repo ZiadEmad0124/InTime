@@ -18,10 +18,14 @@
     <color name="thirteenth">#94A2BC</color>
     <color name="fourteenth">#D8DEF3</color>
     <color name="fifteenth">#9A9A9AE5</color>
+    <color name="sixteenth">#4D000000</color>
+    <color name="seventeenth">#D9D9D9</color>
     <color name="green">#45B062</color>
     <color name="orange">#DE700B</color>
     <color name="red">#D20000</color>
     <color name="blue">#016EE4</color>
     <color name="yellow">#E8FC00</color>
     <color name="transparent">#00000000</color>
+    <color name="lightGrey">#E69A9A9A</color>
+    <color name="eighteen">#CCCCCC</color>
 </resources>
