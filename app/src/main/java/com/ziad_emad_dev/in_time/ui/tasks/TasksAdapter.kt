@@ -25,7 +25,7 @@ class TasksAdapter(
         val taskDate: TextView = itemView.findViewById(R.id.taskDate)
         val taskTitle: TextView = itemView.findViewById(R.id.taskTitle)
         val taskDescription: TextView = itemView.findViewById(R.id.taskDescription)
-        val toDoTaskOptions: ImageView = itemView.findViewById(R.id.taskOptions)
+        val taskOptions: ImageView = itemView.findViewById(R.id.taskOptions)
     }
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): TasksViewHolder {
@@ -41,28 +41,28 @@ class TasksAdapter(
     override fun onBindViewHolder(holder: TasksViewHolder, position: Int) {
 
         when (taskType) {
-            TaskType.BACKLOG -> {
+            TaskStatus.BACKLOG -> {
                 holder.taskCard.strokeColor = ContextCompat.getColor(context, R.color.red)
                 holder.taskIndicator.setBackgroundResource(R.color.red)
             }
 
-            TaskType.IN_PROGRESS -> {
-                holder.taskCard.strokeColor = ContextCompat.getColor(context, R.color.second)
-                holder.taskIndicator.setBackgroundResource(R.color.second)
+            TaskStatus.IN_PROGRESS -> {
+                holder.taskCard.strokeColor = ContextCompat.getColor(context, R.color.secondary)
+                holder.taskIndicator.setBackgroundResource(R.color.secondary)
             }
 
-            TaskType.COMPLETED -> {
+            TaskStatus.COMPLETED -> {
                 holder.taskCard.strokeColor = ContextCompat.getColor(context, R.color.green)
                 holder.taskIndicator.setBackgroundResource(R.color.green)
             }
         }
 
-        val toDoTask = tasks[position]
+        val task = tasks[position]
         holder.taskDate.text = context.getString(R.string.to_do_task_date, "11.30Am", "12.30 Pm")
-        holder.taskTitle.text = toDoTask.title
-        holder.taskDescription.text = toDoTask.description
+        holder.taskTitle.text = task.title
+        holder.taskDescription.text = task.description
 
-        holder.toDoTaskOptions.setOnClickListener {
+        holder.taskOptions.setOnClickListener {
 
         }
     }

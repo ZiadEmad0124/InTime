@@ -22,7 +22,7 @@
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:background="@color/white2"
+            android:background="@color/white_2"
             android:orientation="vertical">
 
             <LinearLayout
@@ -90,7 +90,7 @@
                 android:id="@+id/view1"
                 android:layout_width="match_parent"
                 android:layout_height="0dp"
-                android:background="@color/white2"
+                android:background="@color/white_2"
                 app:layout_constraintBottom_toTopOf="@id/view2"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
@@ -99,7 +99,7 @@
             <View
                 android:layout_width="match_parent"
                 android:layout_height="1dp"
-                android:background="@color/third"
+                android:background="@color/sky_1"
                 app:layout_constraintBottom_toTopOf="@id/view2"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
@@ -127,7 +127,7 @@
                 android:maxLines="8"
                 android:minLines="8"
                 android:scrollbars="vertical"
-                android:textColorHint="@color/eighteen"
+                android:textColorHint="@color/grey_2"
                 app:layout_constraintBottom_toBottomOf="parent"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
@@ -154,7 +154,7 @@
                     android:layout_marginEnd="@dimen/standard_10"
                     android:layout_weight="1"
                     android:drawableStart="@drawable/ic_flag"
-                    android:drawableTint="@color/first"
+                    android:drawableTint="@color/primary"
                     android:hint="@string/start_date"
                     android:importantForAutofill="no"
                     android:inputType="time" />
@@ -168,7 +168,7 @@
                     android:layout_marginEnd="@dimen/standard_20"
                     android:layout_weight="1"
                     android:drawableStart="@drawable/ic_flag"
-                    android:drawableTint="@color/first"
+                    android:drawableTint="@color/primary"
                     android:hint="@string/end_date"
                     android:importantForAutofill="no"
                     android:inputType="time" />

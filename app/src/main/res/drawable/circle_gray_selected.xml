@@ -6,6 +6,6 @@
 
     <stroke
         android:width="@dimen/standard_10"
-        android:color="@color/second" />
+        android:color="@color/secondary" />
 
 </shape>

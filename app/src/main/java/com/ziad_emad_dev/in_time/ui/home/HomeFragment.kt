@@ -51,7 +51,7 @@ class HomeFragment : Fragment() {
     private fun completedTasks() {
         binding.completedTasks.let {
             it.icon.setImageResource(R.drawable.ic_completed)
-            it.icon.setBackgroundColor(resources.getColor(R.color.first))
+            it.icon.setBackgroundColor(resources.getColor(R.color.primary))
             it.name.text = getString(R.string.completed)
             it.points.text = 27.toString()
             it.details.text = getString(R.string.tasks)

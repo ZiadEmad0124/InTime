@@ -52,7 +52,7 @@
                 android:layout_weight="1"
                 android:fontFamily="@font/poppins_medium"
                 android:lines="1"
-                android:textColor="@color/seventh"
+                android:textColor="@color/white_6"
                 tools:text="tasks" />
 
         </LinearLayout>

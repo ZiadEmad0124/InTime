@@ -84,7 +84,7 @@
                 android:drawablePadding="@dimen/standard_10"
                 android:fontFamily="@font/roboto"
                 android:text="@string/your_recent_tasks"
-                android:textColor="@color/sixth"
+                android:textColor="@color/blue_dark"
                 android:textSize="21sp"
                 android:textStyle="bold"
                 app:drawableStartCompat="@drawable/ic_recent_task" />
@@ -111,7 +111,7 @@
                 android:drawablePadding="@dimen/standard_10"
                 android:fontFamily="@font/roboto"
                 android:text="@string/your_recent_projects"
-                android:textColor="@color/sixth"
+                android:textColor="@color/blue_dark"
                 android:textSize="21sp"
                 android:textStyle="bold"
                 app:drawableStartCompat="@drawable/ic_recent_project" />

@@ -8,5 +8,5 @@
       android:pathData="M1.033,10.133V0.533H15.967L13.833,5.333L15.967,10.133H1.033ZM1.033,10.133V16"
       android:strokeLineJoin="round"
       android:fillColor="@color/transparent"
-      android:strokeColor="@color/first"/>
+      android:strokeColor="@color/primary"/>
 </vector>

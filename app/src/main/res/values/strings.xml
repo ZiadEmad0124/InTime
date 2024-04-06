@@ -12,7 +12,6 @@
     <string name="email">Email</string>
     <string name="password">Password</string>
     <string name="forget_password">Forget password ?</string>
-    <string name="_continue">Continue</string>
     <string name="home">Home</string>
     <string name="tasks">Tasks</string>
     <string name="projects">Projects</string>
@@ -24,19 +23,14 @@
     <string name="your_recent_projects">Your recent projects</string>
     <string name="search_anything">Search anything…</string>
     <string name="name">Name</string>
-    <string name="start_time">Start Time</string>
-    <string name="end_time">End Time</string>
     <string name="login">Login</string>
     <string name="u_login"> <u>Login</u> </string>
     <string name="u_signup"> <u>Sign up</u> </string>
     <string name="don_t_have_an_account">Don’t have an account?</string>
     <string name="sign_up">Sign Up</string>
     <string name="confirm_password">Confirm Password</string>
-    <string name="full_name">Full Name</string>
     <string name="already_have_an_account">Already have an account?</string>
     <string name="signup_with">Signup with</string>
-    <string name="phone">Phone</string>
-    <string name="next">Next</string>
     <string name="enter_your_email_then_we_will_send_you_otp_to_reset_new_password">Enter your Email then we will send you OTP to reset new password</string>
     <string name="send_otp">Send OTP</string>
     <string name="enter_otp">Enter OTP</string>
@@ -70,11 +64,18 @@
     <string name="task_date">%s %s</string>
     <string name="task_progress">%s completed</string>
     <string name="task_points">%s / %s</string>
-    <string name="hello_blank_fragment">Hello Blank Fragment</string>
     <string name="to_do_task_date">%s - %s</string>
     <string name="ongoing">Ongoing</string>
     <string name="agenda">Agenda</string>
     <string name="all_projects">All Projects</string>
     <string name="as_admin">As Admin</string>
     <string name="as_member">As Member</string>
+    <string name="view_tasks">View Tasks</string>
+    <string name="new_project">New Project</string>
+    <string name="wait_to_start">Wait To Start</string>
+    <string name="finished">Finished</string>
+    <string name="all">All</string>
+    <string name="your_task">Your Task</string>
+    <string name="next">Next</string>
+    <string name="full_name">Full Name</string>
 </resources>

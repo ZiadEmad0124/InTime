@@ -30,7 +30,7 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:fontFamily="@font/roboto"
-                android:textColor="@color/second"
+                android:textColor="@color/secondary"
                 android:textSize="16sp"
                 android:textStyle="bold"
                 tools:text="@string/name" />
@@ -40,7 +40,7 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:fontFamily="@font/roboto"
-                android:textColor="@color/second"
+                android:textColor="@color/secondary"
                 android:textSize="21sp"
                 android:textStyle="bold"
                 tools:text="Name" />
@@ -52,6 +52,6 @@
     <View
         android:layout_width="match_parent"
         android:layout_height="@dimen/stroke_width"
-        android:background="@color/fourth" />
+        android:background="@color/sky_2" />
 
 </LinearLayout>

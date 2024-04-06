@@ -42,17 +42,15 @@ class CalendarAdapter : RecyclerView.Adapter<CalendarAdapter.CalendarViewHolder>
 
     private val todayDate = Calendar.getInstance().get(Calendar.DAY_OF_MONTH)
     private var adapterPosition = todayDate - 1
-    private val currentMonth = Calendar.getInstance().get(Calendar.MONTH) + 1
+    private val currentMonth = Calendar.getInstance().get(Calendar.MONTH)
     private var isThisPastMonth = false
 
-    fun checkIfMonthChanged(selectedMonth: Int) : Boolean {
+    fun checkIfMonthChanged(selectedMonth: Int) {
         isThisPastMonth = selectedMonth < currentMonth
-        return if (selectedMonth == currentMonth) {
-            adapterPosition = todayDate - 1
-            false
+        adapterPosition = if (selectedMonth == currentMonth) {
+            todayDate - 1
         } else {
-            adapterPosition = -1
-            true
+            -1
         }
     }
 
@@ -65,18 +63,18 @@ class CalendarAdapter : RecyclerView.Adapter<CalendarAdapter.CalendarViewHolder>
         if (position == adapterPosition) {
             holder.calendarDay.setTextColor(ContextCompat.getColor(holder.itemView.context, R.color.white))
             holder.calendarDate.setTextColor(ContextCompat.getColor(holder.itemView.context, R.color.white))
-            holder.calenderItemCard.strokeColor = ContextCompat.getColor(holder.itemView.context, R.color.fourth)
-            holder.calenderItem.setBackgroundColor(ContextCompat.getColor(holder.itemView.context, R.color.first))
+            holder.calenderItemCard.strokeColor = ContextCompat.getColor(holder.itemView.context, R.color.primary)
+            holder.calenderItem.setBackgroundColor(ContextCompat.getColor(holder.itemView.context, R.color.primary))
         } else {
             if (position < adapterPosition || isThisPastMonth) {
-                holder.calendarDay.setTextColor(ContextCompat.getColor(holder.itemView.context, R.color.lightGrey))
-                holder.calendarDate.setTextColor(ContextCompat.getColor(holder.itemView.context, R.color.lightGrey))
-                holder.calenderItemCard.strokeColor = ContextCompat.getColor(holder.itemView.context, R.color.transparent)
+                holder.calendarDay.setTextColor(ContextCompat.getColor(holder.itemView.context, R.color.grey_1))
+                holder.calendarDate.setTextColor(ContextCompat.getColor(holder.itemView.context, R.color.grey_1))
+                holder.calenderItemCard.strokeColor = ContextCompat.getColor(holder.itemView.context, R.color.white)
                 holder.calenderItem.setBackgroundColor(ContextCompat.getColor(holder.itemView.context, R.color.white))
             } else {
-                holder.calendarDay.setTextColor(ContextCompat.getColor(holder.itemView.context, R.color.second))
-                holder.calendarDate.setTextColor(ContextCompat.getColor(holder.itemView.context, R.color.second))
-                holder.calenderItemCard.strokeColor = ContextCompat.getColor(holder.itemView.context, R.color.transparent)
+                holder.calendarDay.setTextColor(ContextCompat.getColor(holder.itemView.context, R.color.secondary))
+                holder.calendarDate.setTextColor(ContextCompat.getColor(holder.itemView.context, R.color.secondary))
+                holder.calenderItemCard.strokeColor = ContextCompat.getColor(holder.itemView.context, R.color.white)
                 holder.calenderItem.setBackgroundColor(ContextCompat.getColor(holder.itemView.context, R.color.white))
             }
         }

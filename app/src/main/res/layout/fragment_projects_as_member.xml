@@ -18,8 +18,8 @@
         android:drawablePadding="@dimen/standard_10"
         android:fontFamily="@font/roboto"
         android:padding="@dimen/standard_10"
-        android:text="@string/new_task"
-        android:textColor="@color/first"
+        android:text="@string/new_project"
+        android:textColor="@color/primary"
         android:textStyle="bold"
         tools:ignore="UseCompatTextViewDrawableXml" />
 

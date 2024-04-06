@@ -2,79 +2,107 @@
 <com.google.android.material.card.MaterialCardView xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
+    style="@style/InTime.CardView.Project"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
-    android:layout_marginHorizontal="20dp"
-    android:layout_marginTop="15dp"
-    app:cardBackgroundColor="@color/white"
-    app:cardCornerRadius="16dp"
-    app:strokeColor="@color/sixteenth"
-    app:strokeWidth="1dp">
+    android:layout_marginHorizontal="@dimen/standard_20"
+    android:layout_marginTop="@dimen/standard_15">
 
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:background="@color/white"
-        android:orientation="vertical"
-        android:paddingHorizontal="10dp">
+        android:orientation="vertical">
 
         <TextView
             android:id="@+id/projectName"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_marginTop="10dp"
+            android:layout_marginHorizontal="@dimen/standard_25"
+            android:layout_marginTop="@dimen/standard_10"
             android:fontFamily="@font/poppins_medium"
-            android:padding="5dp"
             android:textColor="@color/black"
-            android:textSize="25sp"
+            android:textSize="21sp"
             tools:text="Moodboards" />
 
-        <ImageView
-            android:id="@+id/projectPhoto"
+        <com.google.android.material.card.MaterialCardView
             android:layout_width="match_parent"
-            android:layout_height="140dp"
-            android:layout_marginHorizontal="10dp"
-            android:layout_marginTop="15dp"
-            android:importantForAccessibility="no"
-            android:scaleType="centerCrop"
-            tools:src="@drawable/project_image" />
+            android:layout_height="wrap_content"
+            android:layout_marginHorizontal="@dimen/standard_25"
+            android:layout_marginTop="@dimen/standard_10"
+            app:cardCornerRadius="@dimen/border_radius_16">
+
+            <ImageView
+                android:id="@+id/projectPhoto"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:importantForAccessibility="no"
+                android:minHeight="140dp"
+                android:scaleType="centerCrop"
+                tools:src="@drawable/project_image" />
+
+        </com.google.android.material.card.MaterialCardView>
 
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:paddingVertical="10dp">
+            android:layout_marginHorizontal="@dimen/standard_5"
+            android:layout_marginVertical="@dimen/standard_10"
+            android:gravity="center">
 
             <ImageView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_marginHorizontal="5dp"
+                android:layout_marginHorizontal="@dimen/standard_5"
                 android:importantForAccessibility="no"
-                android:padding="5dp"
-                android:src="@drawable/ic_error" />
+                android:padding="@dimen/standard_5"
+                android:src="@drawable/ic_cancel" />
 
             <ImageView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_marginHorizontal="5dp"
+                android:layout_marginHorizontal="@dimen/standard_5"
                 android:importantForAccessibility="no"
-                android:padding="5dp"
+                android:padding="@dimen/standard_5"
                 android:src="@drawable/ic_edit_project" />
 
             <ImageView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_marginHorizontal="5dp"
+                android:layout_marginHorizontal="@dimen/standard_5"
                 android:importantForAccessibility="no"
-                android:padding="5dp"
+                android:padding="@dimen/standard_5"
                 android:src="@drawable/ic_add_new_project" />
+
+            <View
+                android:layout_width="0dp"
+                android:layout_height="0dp"
+                android:layout_weight="1" />
 
             <ImageView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_gravity="end"
+                android:layout_marginHorizontal="@dimen/standard_5"
                 android:importantForAccessibility="no"
-                android:padding="5dp"
+                android:padding="@dimen/standard_5"
                 android:src="@drawable/ic_share_project" />
+
+            <com.google.android.material.card.MaterialCardView
+                android:id="@+id/viewTasks"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginHorizontal="@dimen/standard_5"
+                app:cardBackgroundColor="@color/white"
+                app:cardCornerRadius="@dimen/border_radius_8"
+                app:strokeColor="@color/primary">
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:padding="@dimen/standard_5"
+                    android:text="@string/view_tasks"
+                    android:textColor="@color/primary" />
+
+            </com.google.android.material.card.MaterialCardView>
 
         </LinearLayout>
 

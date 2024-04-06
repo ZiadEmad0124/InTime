@@ -37,7 +37,7 @@
                 android:minWidth="150dp"
                 android:minHeight="150dp"
                 android:src="@drawable/ic_profile"
-                app:civ_border_color="@color/first"
+                app:civ_border_color="@color/primary"
                 app:civ_border_width="@dimen/standard_5" />
 
             <TextView
@@ -46,7 +46,7 @@
                 android:layout_marginTop="@dimen/standard_25"
                 android:fontFamily="@font/roboto_medium"
                 android:text="@string/username"
-                android:textColor="@color/sixth"
+                android:textColor="@color/blue_dark"
                 android:textSize="24sp"
                 android:textStyle="bold" />
 
@@ -57,7 +57,7 @@
                 android:fontFamily="@font/roboto"
                 android:padding="@dimen/standard_10"
                 android:text="@string/log_out"
-                android:textColor="@color/first"
+                android:textColor="@color/primary"
                 android:textSize="18sp"
                 android:textStyle="bold" />
 
@@ -65,7 +65,7 @@
                 android:layout_width="match_parent"
                 android:layout_height="@dimen/stroke_width"
                 android:layout_marginTop="@dimen/standard_15"
-                android:background="@color/third" />
+                android:background="@color/sky_1" />
 
             <LinearLayout
                 android:layout_width="match_parent"

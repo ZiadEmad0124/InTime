@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <selector xmlns:android="http://schemas.android.com/apk/res/android">
-    <item android:color="@color/first" android:state_selected="true" />
-    <item android:color="@color/second" android:state_focused="true" />
-    <item android:color="@color/second" />
+    <item android:color="@color/primary" android:state_selected="true" />
+    <item android:color="@color/secondary" android:state_focused="true" />
+    <item android:color="@color/secondary" />
 </selector>

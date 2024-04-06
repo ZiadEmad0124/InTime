@@ -70,7 +70,7 @@
                 android:layout_height="wrap_content"
                 android:fontFamily="@font/roboto"
                 android:text="@string/already_have_an_account"
-                android:textColor="@color/fifth"
+                android:textColor="@color/grey_3"
                 android:textSize="18sp"
                 android:textStyle="bold" />
 
@@ -80,8 +80,8 @@
                 android:layout_height="wrap_content"
                 android:layout_marginStart="5dp"
                 android:fontFamily="@font/roboto"
-                android:text="@string/login"
-                android:textColor="@color/first"
+                android:text="@string/u_login"
+                android:textColor="@color/primary"
                 android:textSize="18sp"
                 android:textStyle="bold" />
 

@@ -4,7 +4,7 @@
 
     <stroke
         android:width="@dimen/stroke_width"
-        android:color="@color/first" />
+        android:color="@color/primary" />
 
     <corners android:radius="@dimen/border_radius_16" />
 

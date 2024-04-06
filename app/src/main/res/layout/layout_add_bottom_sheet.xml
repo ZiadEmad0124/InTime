@@ -20,7 +20,7 @@
             android:layout_marginEnd="@dimen/standard_5"
             android:layout_weight="1"
             app:cardBackgroundColor="@color/white"
-            app:strokeColor="@color/fourth">
+            app:strokeColor="@color/sky_2">
 
             <LinearLayout
                 android:layout_width="match_parent"
@@ -42,7 +42,7 @@
                     android:layout_marginStart="@dimen/standard_10"
                     android:fontFamily="@font/lato"
                     android:text="@string/create_task"
-                    android:textColor="@color/eleventh"
+                    android:textColor="@color/brown"
                     android:textSize="16sp"
                     android:textStyle="bold" />
 
@@ -58,7 +58,7 @@
             android:layout_marginStart="@dimen/standard_5"
             android:layout_weight="1"
             app:cardBackgroundColor="@color/white"
-            app:strokeColor="@color/fourth">
+            app:strokeColor="@color/sky_2">
 
             <LinearLayout
                 android:layout_width="match_parent"
@@ -80,7 +80,7 @@
                     android:layout_marginStart="@dimen/standard_10"
                     android:fontFamily="@font/lato"
                     android:text="@string/create_project"
-                    android:textColor="@color/eleventh"
+                    android:textColor="@color/brown"
                     android:textSize="16sp"
                     android:textStyle="bold" />
 

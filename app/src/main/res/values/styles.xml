@@ -4,8 +4,8 @@
     <style name="InTime.CardView.OnBoarding" parent="Widget.MaterialComponents.CardView">
         <item name="cardBackgroundColor">@color/white</item>
         <item name="cardCornerRadius">@dimen/border_radius_16</item>
-        <item name="strokeColor">@color/third</item>
-        <item name="strokeWidth">1dp</item>
+        <item name="strokeColor">@color/sky_1</item>
+        <item name="strokeWidth">@dimen/stroke_width</item>
     </style>
 
     <style name="InTime.Button" parent="Widget.Material3.Button">
@@ -20,16 +20,16 @@
 
     <style name="InTime.TextInputEditText" parent="ThemeOverlay.Material3.TextInputEditText">
         <item name="android:background">@drawable/sign_background</item>
-        <item name="android:textColor">@color/second</item>
+        <item name="android:textColor">@color/secondary</item>
         <item name="android:fontFamily">@font/roboto_medium</item>
         <item name="android:lines">1</item>
-        <item name="drawableTint">@color/second</item>
+        <item name="drawableTint">@color/secondary</item>
         <item name="android:padding">@dimen/standard_20</item>
     </style>
 
     <style name="InTime.PinView" parent="PinWidget.PinView">
         <item name="android:cursorVisible">true</item>
-        <item name="cursorColor">@color/first</item>
+        <item name="cursorColor">@color/primary</item>
         <item name="cursorWidth">@dimen/stroke_width</item>
         <item name="hideLineWhenFilled">false</item>
         <item name="lineColor">@drawable/pin_line</item>
@@ -40,34 +40,34 @@
         <item name="itemWidth">80dp</item>
         <item name="itemSpacing">@dimen/standard_5</item>
         <item name="itemRadius">@dimen/border_radius_8</item>
-        <item name="android:textColor">@color/sixth</item>
+        <item name="android:textColor">@color/blue_dark</item>
         <item name="android:textSize">30sp</item>
     </style>
 
     <style name="InTime.BottomNavigationView.ActiveIndicator" parent="Widget.Material3.BottomNavigationView.ActiveIndicator">
-        <item name="android:color">@color/seventeenth</item>
+        <item name="android:color">@color/white_5</item>
     </style>
 
     <style name="InTime.BottomNavigationView" parent="Widget.Material3.BottomNavigationView">
         <item name="android:background">@color/white</item>
         <item name="itemActiveIndicatorStyle">@style/InTime.BottomNavigationView.ActiveIndicator</item>
-        <item name="itemIconTint">@color/second</item>
-        <item name="itemTextColor">@color/second</item>
+        <item name="itemIconTint">@color/secondary</item>
+        <item name="itemTextColor">@color/secondary</item>
         <item name="labelVisibilityMode">labeled</item>
     </style>
 
     <style name="InTime.CardView.Add" parent="Widget.MaterialComponents.CardView">
-        <item name="cardBackgroundColor">@color/tenth</item>
+        <item name="cardBackgroundColor">@color/white_4</item>
         <item name="cardCornerRadius">@dimen/border_radius_16</item>
-        <item name="strokeColor">@color/fourth</item>
-        <item name="strokeWidth">1dp</item>
+        <item name="strokeColor">@color/sky_2</item>
+        <item name="strokeWidth">@dimen/stroke_width</item>
     </style>
 
     <style name="InTime.SearchBar" parent="ThemeOverlay.Material3.TextInputEditText">
         <item name="android:background">@drawable/search_bar_background</item>
-        <item name="drawableTint">@color/second</item>
+        <item name="drawableTint">@color/secondary</item>
         <item name="android:fontFamily">@font/roboto</item>
-        <item name="android:textColor">@color/second</item>
+        <item name="android:textColor">@color/secondary</item>
         <item name="android:textStyle">bold</item>
         <item name="android:lines">1</item>
         <item name="android:paddingVertical" tools:targetApi="o">@dimen/standard_15</item>
@@ -76,8 +76,8 @@
 
     <style name="InTime.TextInputEditText.CreateTask" parent="ThemeOverlay.Material3.TextInputEditText">
         <item name="android:background">@drawable/create_edit_text_background</item>
-        <item name="android:textColor">@color/second</item>
-        <item name="android:textColorHint">@color/second</item>
+        <item name="android:textColor">@color/secondary</item>
+        <item name="android:textColorHint">@color/secondary</item>
         <item name="android:fontFamily">@font/lato</item>
         <item name="android:lines">1</item>
         <item name="android:padding">@dimen/standard_20</item>
@@ -88,12 +88,12 @@
     <style name="InTime.MaterialButton.CreateProject" parent="ThemeOverlay.Material3.TextInputEditText">
         <item name="android:background">@drawable/create_edit_text_background</item>
         <item name="backgroundTint">@null</item>
-        <item name="android:textColor">@color/second</item>
+        <item name="android:textColor">@color/secondary</item>
         <item name="android:textSize">18sp</item>
         <item name="android:fontFamily">@font/lato</item>
         <item name="iconPadding">@dimen/standard_15</item>
         <item name="iconSize">@dimen/standard_25</item>
-        <item name="iconTint">@color/first</item>
+        <item name="iconTint">@color/primary</item>
     </style>
 
     <style name="InTime.MaterialButton.EditProfile" parent="ThemeOverlay.Material3.TextInputEditText">
@@ -102,7 +102,7 @@
         <item name="android:textSize">26sp</item>
         <item name="android:fontFamily">@font/roboto</item>
         <item name="iconGravity">textEnd</item>
-        <item name="iconPadding">@dimen/standard_10</item>1
+        <item name="iconPadding">@dimen/standard_10</item>
     </style>
 
     <style name="InTime.TabLayout" parent="Widget.Material3.TabLayout">
@@ -110,16 +110,38 @@
         <item name="android:fontFamily">@font/roboto</item>
         <item name="android:padding">@dimen/standard_5</item>
         <item name="tabGravity">center</item>
-        <item name="tabMode">fixed</item>
-        <item name="tabIndicatorColor">@color/first</item>
-        <item name="tabSelectedTextColor">@color/first</item>
-        <item name="tabTextColor">@color/sixth</item>
+        <item name="tabMode">scrollable</item>
+        <item name="tabIndicatorColor">@color/primary</item>
+        <item name="tabSelectedTextColor">@color/primary</item>
+        <item name="tabTextColor">@color/blue_dark</item>
     </style>
 
     <style name="InTime.CardView.Task" parent="Widget.MaterialComponents.CardView">
         <item name="cardBackgroundColor">@color/white</item>
         <item name="cardCornerRadius">@dimen/border_radius_16</item>
-        <item name="strokeWidth">1dp</item>
+        <item name="strokeWidth">@dimen/stroke_width</item>
+    </style>
+
+    <style name="InTime.CardView.Project" parent="Widget.MaterialComponents.CardView">
+        <item name="cardBackgroundColor">@color/white</item>
+        <item name="cardCornerRadius">@dimen/border_radius_16</item>
+        <item name="strokeColor">@color/black_2</item>
+        <item name="strokeWidth">@dimen/stroke_width</item>
+    </style>
+
+    <style name="InTime.CardView.Date" parent="Widget.MaterialComponents.CardView">
+        <item name="cardBackgroundColor">@color/white</item>
+        <item name="cardCornerRadius">@dimen/border_radius_16</item>
+        <item name="strokeColor">@color/white</item>
+        <item name="strokeWidth">@dimen/stroke_width</item>
+        <item name="cardElevation">3dp</item>
+    </style>
+
+    <style name="InTime.CardView.ProjectTasks" parent="Widget.MaterialComponents.CardView">
+        <item name="cardBackgroundColor">@color/white</item>
+        <item name="cardCornerRadius">@dimen/border_radius_16</item>
+        <item name="strokeColor">@color/secondary</item>
+        <item name="strokeWidth">@dimen/stroke_width</item>
     </style>
 
 </resources>

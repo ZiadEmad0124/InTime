@@ -1,0 +1,34 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical"
+    tools:context=".ui.home.projects.my_project.ProjectFinishedTasks">
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="end"
+        android:layout_marginHorizontal="@dimen/standard_5"
+        android:layout_marginTop="@dimen/standard_15"
+        android:drawableStart="@drawable/ic_add_new"
+        android:drawablePadding="@dimen/standard_10"
+        android:fontFamily="@font/roboto"
+        android:padding="@dimen/standard_10"
+        android:text="@string/new_task"
+        android:textColor="@color/primary"
+        android:textStyle="bold"
+        tools:ignore="UseCompatTextViewDrawableXml" />
+
+    <androidx.recyclerview.widget.RecyclerView
+        android:id="@+id/recyclerView"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_marginHorizontal="@dimen/standard_5"
+        app:layoutManager="androidx.recyclerview.widget.GridLayoutManager"
+        app:spanCount="2"
+        tools:listitem="@layout/layout_project_task" />
+
+</LinearLayout>

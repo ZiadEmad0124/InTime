@@ -16,7 +16,7 @@ class OnBoarding : AppCompatActivity() {
         binding = ActivityOnBoardingBinding.inflate(layoutInflater)
         setContentView(binding.root)
 
-        window.statusBarColor = getColor(R.color.white2)
+        window.statusBarColor = getColor(R.color.white_2)
 
         clickOnGetStartedButton()
     }

@@ -43,7 +43,7 @@
                 android:layout_weight="1"
                 android:drawablePadding="@dimen/standard_5"
                 android:fontFamily="@font/poppins_medium"
-                android:textColor="@color/eighth"
+                android:textColor="@color/sky_4"
                 app:drawableStartCompat="@drawable/ic_clock"
                 tools:text="3.00 pm" />
 
@@ -61,7 +61,7 @@
                 android:layout_height="wrap_content"
                 android:layout_weight="1"
                 android:fontFamily="@font/poppins_medium"
-                android:textColor="@color/sixth"
+                android:textColor="@color/blue_dark"
                 android:textStyle="bold"
                 tools:text="60% completed" />
 
@@ -92,7 +92,7 @@
             android:layout_gravity="bottom"
             android:fontFamily="@font/poppins_medium"
             android:gravity="end"
-            android:textColor="@color/eighth"
+            android:textColor="@color/sky_4"
             tools:text="60 / 100" />
 
     </LinearLayout>

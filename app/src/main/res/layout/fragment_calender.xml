@@ -4,7 +4,6 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="@color/white"
     android:fillViewport="true"
     tools:context=".ui.home.CalenderFragment">
 
@@ -20,17 +19,17 @@
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:paddingHorizontal="15dp"
-            android:paddingVertical="10dp">
+            android:gravity="center"
+            android:paddingHorizontal="@dimen/standard_20"
+            android:paddingVertical="@dimen/standard_10">
 
             <TextView
                 android:id="@+id/lastMonth"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_gravity="center_vertical|start"
-                android:drawablePadding="5dp"
-                android:padding="5dp"
-                android:textColor="@color/second"
+                android:drawablePadding="@dimen/standard_5"
+                android:padding="@dimen/standard_5"
+                android:textColor="@color/secondary"
                 app:drawableStartCompat="@drawable/ic_arrow_last"
                 tools:text="Mar" />
 
@@ -44,25 +43,26 @@
                     android:id="@+id/monthTextView"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:fontFamily="@font/roboto_medium"
-                    android:textColor="@color/sixth"
+                    android:fontFamily="@font/roboto"
+                    android:textColor="@color/blue_dark"
                     android:textSize="36sp"
+                    android:textStyle="bold"
                     tools:text="April" />
 
                 <com.google.android.material.card.MaterialCardView
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:layout_marginStart="10dp"
+                    android:layout_marginStart="@dimen/standard_10"
                     app:cardBackgroundColor="@color/transparent"
-                    app:cardCornerRadius="16dp"
-                    app:strokeColor="@color/fifth"
-                    app:strokeWidth="1dp">
+                    app:cardCornerRadius="@dimen/border_radius_16"
+                    app:strokeColor="@color/grey_3"
+                    app:strokeWidth="@dimen/stroke_width">
 
                     <ImageView
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:importantForAccessibility="no"
-                        android:padding="5dp"
+                        android:padding="@dimen/standard_5"
                         android:src="@drawable/ic_month_calender" />
 
                 </com.google.android.material.card.MaterialCardView>
@@ -73,10 +73,9 @@
                 android:id="@+id/nextMonth"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_gravity="center_vertical|end"
-                android:drawablePadding="5dp"
-                android:padding="5dp"
-                android:textColor="@color/second"
+                android:drawablePadding="@dimen/standard_5"
+                android:padding="@dimen/standard_5"
+                android:textColor="@color/secondary"
                 app:drawableEndCompat="@drawable/ic_arrow_next"
                 tools:text="May" />
 
@@ -87,14 +86,14 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:orientation="horizontal"
-            android:paddingVertical="10dp"
+            android:paddingVertical="@dimen/standard_10"
             app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"
             tools:listitem="@layout/layout_date" />
 
         <TextView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_margin="10dp"
+            android:layout_margin="@dimen/standard_10"
             android:fontFamily="@font/lato"
             android:text="@string/ongoing"
             android:textColor="@color/black"

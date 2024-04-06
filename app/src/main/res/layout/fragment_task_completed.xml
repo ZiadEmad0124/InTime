@@ -12,14 +12,14 @@
         android:layout_height="wrap_content"
         android:gravity="center_vertical"
         android:paddingHorizontal="@dimen/standard_25"
-        android:paddingTop="@dimen/standard_20">
+        android:paddingTop="@dimen/standard_15">
 
         <com.google.android.material.card.MaterialCardView
             style="@style/InTime.CardView.Task"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             app:contentPadding="@dimen/standard_10"
-            app:strokeColor="@color/fourth">
+            app:strokeColor="@color/sky_2">
 
             <ImageView
                 android:layout_width="wrap_content"
@@ -43,7 +43,7 @@
             android:fontFamily="@font/roboto"
             android:padding="@dimen/standard_10"
             android:text="@string/new_task"
-            android:textColor="@color/first"
+            android:textColor="@color/primary"
             android:textStyle="bold"
             tools:ignore="UseCompatTextViewDrawableXml" />
 

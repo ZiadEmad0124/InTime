@@ -6,6 +6,6 @@
 
     <stroke
         android:width="@dimen/stroke_width"
-        android:color="@color/third" />
+        android:color="@color/sky_1" />
 
 </shape>

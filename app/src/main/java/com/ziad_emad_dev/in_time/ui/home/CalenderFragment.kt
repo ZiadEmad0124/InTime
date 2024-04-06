@@ -21,7 +21,7 @@ class CalenderFragment : Fragment() {
     private var _binding: FragmentCalenderBinding? = null
     private val binding get() = _binding!!
 
-    private var calendarDate: Calendar = Calendar.getInstance(Locale.ENGLISH)
+    private var calendarCurrentMonth: Calendar = Calendar.getInstance(Locale.ENGLISH)
     private var calendarNextMonth: Calendar = Calendar.getInstance(Locale.ENGLISH)
     private var calendarLastMonth: Calendar = Calendar.getInstance(Locale.ENGLISH)
     private val todayDate = Calendar.getInstance().get(Calendar.DAY_OF_MONTH)
@@ -49,6 +49,8 @@ class CalenderFragment : Fragment() {
         setUpAdapter()
         setUpClickListener()
         setUpCalendar()
+
+        binding.recyclerView.layoutManager?.scrollToPosition(todayDate - 2)
     }
 
     private fun myToolbar() {
@@ -61,30 +63,21 @@ class CalenderFragment : Fragment() {
         snapHelper.attachToRecyclerView(binding.recyclerView)
 
         adapter = CalendarAdapter()
-
-        val isMonthChanged = adapter.checkIfMonthChanged(calendarDate.get(Calendar.MONTH) + 1)
-
-        if (isMonthChanged) {
-            binding.recyclerView.layoutManager?.scrollToPosition(0)
-        } else {
-            binding.recyclerView.layoutManager?.scrollToPosition(todayDate - 2)
-        }
-
+        binding.recyclerView.layoutManager?.scrollToPosition(todayDate - 2)
         adapter.setData(calendarList)
-
         binding.recyclerView.adapter = adapter
     }
 
     private fun setUpClickListener() {
         binding.nextMonth.setOnClickListener {
-            calendarDate.add(Calendar.MONTH, 1)
+            calendarCurrentMonth.add(Calendar.MONTH, 1)
             calendarNextMonth.add(Calendar.MONTH, 1)
             calendarLastMonth.add(Calendar.MONTH, 1)
             setUpCalendar()
         }
 
         binding.lastMonth.setOnClickListener {
-            calendarDate.add(Calendar.MONTH, -1)
+            calendarCurrentMonth.add(Calendar.MONTH, -1)
             calendarNextMonth.add(Calendar.MONTH, -1)
             calendarLastMonth.add(Calendar.MONTH, -1)
             setUpCalendar()
@@ -93,38 +86,25 @@ class CalenderFragment : Fragment() {
 
     private fun setUpCalendar() {
 
-        binding.monthTextView.text =
-            SimpleDateFormat("MMMM", Locale.getDefault()).format(calendarDate.time)
-        binding.nextMonth.text =
-            SimpleDateFormat("MMM", Locale.getDefault()).format(calendarNextMonth.time)
-        binding.lastMonth.text =
-            SimpleDateFormat("MMM", Locale.getDefault()).format(calendarLastMonth.time)
+        binding.monthTextView.text = SimpleDateFormat("MMMM", Locale.getDefault()).format(calendarCurrentMonth.time)
+        binding.nextMonth.text = SimpleDateFormat("MMM", Locale.getDefault()).format(calendarNextMonth.time)
+        binding.lastMonth.text = SimpleDateFormat("MMM", Locale.getDefault()).format(calendarLastMonth.time)
+
+        adapter.checkIfMonthChanged(calendarCurrentMonth.get(Calendar.MONTH))
+        binding.recyclerView.layoutManager?.scrollToPosition(0)
 
         val calendarList = ArrayList<CalendarDateModel>()
-        val monthCalendar = calendarDate.clone() as Calendar
-        val maxDaysInMonth = calendarDate.getActualMaximum(Calendar.DAY_OF_MONTH)
-
+        val monthCalendar = calendarCurrentMonth.clone() as Calendar
+        val maxDaysInMonth = calendarCurrentMonth.getActualMaximum(Calendar.DAY_OF_MONTH)
         dates.clear()
-
         monthCalendar.set(Calendar.DAY_OF_MONTH, 1)
-
         while (dates.size < maxDaysInMonth) {
             dates.add(monthCalendar.time)
             calendarList.add(CalendarDateModel(monthCalendar.time))
             monthCalendar.add(Calendar.DAY_OF_MONTH, 1)
         }
-
         this.calendarList.clear()
         this.calendarList.addAll(calendarList)
-
-        val isMonthChanged = adapter.checkIfMonthChanged(calendarDate.get(Calendar.MONTH) + 1)
-
-        if (isMonthChanged) {
-            binding.recyclerView.layoutManager?.scrollToPosition(0)
-        } else {
-            binding.recyclerView.layoutManager?.scrollToPosition(todayDate - 2)
-        }
-
         adapter.setData(calendarList)
     }
 

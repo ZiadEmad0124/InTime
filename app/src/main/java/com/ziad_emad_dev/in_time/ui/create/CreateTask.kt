@@ -17,7 +17,7 @@ class CreateTask : AppCompatActivity() {
         binding = ActivityCreateTaskBinding.inflate(layoutInflater)
         setContentView(binding.root)
 
-        window.statusBarColor = ContextCompat.getColor(this, R.color.white2)
+        window.statusBarColor = ContextCompat.getColor(this, R.color.white_2)
 
         myToolbar()
 
@@ -27,7 +27,7 @@ class CreateTask : AppCompatActivity() {
     }
 
     private fun myToolbar() {
-        binding.myToolbar.root.background = ContextCompat.getDrawable(this, R.color.white2)
+        binding.myToolbar.root.background = ContextCompat.getDrawable(this, R.color.white_2)
         binding.myToolbar.title.text = getString(R.string.create_a_task)
         binding.myToolbar.back.setOnClickListener {
             finish()

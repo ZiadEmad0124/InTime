@@ -6,7 +6,7 @@ import android.view.View
 import android.view.ViewGroup
 import androidx.fragment.app.Fragment
 import com.ziad_emad_dev.in_time.databinding.FragmentTaskInProgressBinding
-import com.ziad_emad_dev.in_time.ui.tasks.TaskType
+import com.ziad_emad_dev.in_time.ui.tasks.TaskStatus
 import com.ziad_emad_dev.in_time.ui.tasks.Tasks
 import com.ziad_emad_dev.in_time.ui.tasks.TasksAdapter
 
@@ -26,7 +26,7 @@ class InProgressFragment : Fragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
-        binding.recyclerView.adapter = TasksAdapter(requireContext(), TaskType.IN_PROGRESS, Tasks.getTasks())
+        binding.recyclerView.adapter = TasksAdapter(requireContext(), TaskStatus.IN_PROGRESS, Tasks.getTasks())
         binding.recyclerView.setHasFixedSize(true)
     }
 
