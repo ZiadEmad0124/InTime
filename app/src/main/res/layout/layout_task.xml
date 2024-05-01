@@ -7,7 +7,7 @@
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
     android:layout_marginHorizontal="@dimen/standard_20"
-    android:layout_marginTop="@dimen/standard_15"
+    android:layout_marginVertical="@dimen/standard_10"
     app:strokeColor="@color/orange">
 
     <LinearLayout

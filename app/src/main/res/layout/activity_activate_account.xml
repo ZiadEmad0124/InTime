@@ -5,7 +5,7 @@
     android:layout_height="match_parent"
     android:fillViewport="true"
     android:scrollbars="none"
-    tools:context=".ui.forgetPassword.EnterOTP">
+    tools:context=".ui.activate_account.ActivateAccount">
 
     <LinearLayout
         android:layout_width="match_parent"
@@ -45,7 +45,7 @@
             android:textStyle="bold" />
 
         <com.chaos.view.PinView
-            android:id="@+id/pinView"
+            android:id="@+id/otpView"
             style="@style/InTime.PinView"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
@@ -58,6 +58,7 @@
             android:layout_marginTop="@dimen/standard_25">
 
             <TextView
+                android:id="@+id/resendOTP"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:fontFamily="@font/roboto"
@@ -67,6 +68,7 @@
                 android:textStyle="bold" />
 
             <TextView
+                android:id="@+id/otpTimer"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginStart="@dimen/standard_5"

@@ -1,4 +1,4 @@
-package com.ziad_emad_dev.in_time.ui
+package com.ziad_emad_dev.in_time.ui.on_boarding
 
 import android.content.Intent
 import android.os.Bundle

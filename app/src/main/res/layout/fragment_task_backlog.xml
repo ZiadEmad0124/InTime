@@ -12,7 +12,8 @@
         android:layout_height="wrap_content"
         android:gravity="center_vertical"
         android:paddingHorizontal="@dimen/standard_25"
-        android:paddingTop="@dimen/standard_15">
+        android:paddingTop="@dimen/standard_15"
+        android:paddingBottom="5dp">
 
         <com.google.android.material.card.MaterialCardView
             style="@style/InTime.CardView.Task"
@@ -53,7 +54,6 @@
         android:id="@+id/recyclerView"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:paddingVertical="@dimen/standard_10"
         app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"
         tools:listitem="@layout/layout_task" />
 

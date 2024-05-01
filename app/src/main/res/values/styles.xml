@@ -18,12 +18,23 @@
         <item name="android:padding">@dimen/standard_15</item>
     </style>
 
+    <style name="InTime.TextInputLayout" parent="Widget.MaterialComponents.TextInputLayout.OutlinedBox">
+        <item name="boxCornerRadiusTopEnd">@dimen/border_radius_16</item>
+        <item name="boxCornerRadiusTopStart">@dimen/border_radius_16</item>
+        <item name="boxCornerRadiusBottomEnd">@dimen/border_radius_16</item>
+        <item name="boxCornerRadiusBottomStart">@dimen/border_radius_16</item>
+        <item name="boxStrokeColor">@color/primary</item>
+        <item name="boxStrokeWidth">1dp</item>
+        <item name="hintTextColor">@color/secondary</item>
+        <item name="fontFamily">@font/roboto_medium</item>
+        <item name="helperTextEnabled">true</item>
+        <item name="helperTextTextColor">@color/red</item>
+    </style>
+
     <style name="InTime.TextInputEditText" parent="ThemeOverlay.Material3.TextInputEditText">
-        <item name="android:background">@drawable/sign_background</item>
         <item name="android:textColor">@color/secondary</item>
         <item name="android:fontFamily">@font/roboto_medium</item>
         <item name="android:lines">1</item>
-        <item name="drawableTint">@color/secondary</item>
         <item name="android:padding">@dimen/standard_20</item>
     </style>
 
@@ -50,7 +61,8 @@
 
     <style name="InTime.BottomNavigationView" parent="Widget.Material3.BottomNavigationView">
         <item name="android:background">@color/white</item>
-        <item name="itemActiveIndicatorStyle">@style/InTime.BottomNavigationView.ActiveIndicator</item>
+        <item name="itemActiveIndicatorStyle">@style/InTime.BottomNavigationView.ActiveIndicator
+        </item>
         <item name="itemIconTint">@color/secondary</item>
         <item name="itemTextColor">@color/secondary</item>
         <item name="labelVisibilityMode">labeled</item>

@@ -38,7 +38,7 @@
     <string name="reset_new_password">Reset new password</string>
     <string name="save_new_password">Save New Password</string>
     <string name="new_password">New Password</string>
-    <string name="resend_otp_in">Resend OTP in </string>
+    <string name="resend_otp_in">Resend OTP </string>
     <string name="did_not_receive_otp">Didn\'t receive OTP ?</string>
     <string name="notifications">Notifications</string>
     <string name="create_a_task">Create a Task</string>
@@ -78,4 +78,21 @@
     <string name="your_task">Your Task</string>
     <string name="next">Next</string>
     <string name="full_name">Full Name</string>
+    <string name="this_email_already_exists">This email already exists</string>
+    <string name="phone_number">Phone Number</string>
+    <string name="empty_field">Empty Field</string>
+    <string name="wrong_password">Wrong Password</string>
+    <string name="name_error">name must be more than 2 letters</string>
+    <string name="phone_error">phone must be 11 number</string>
+    <string name="password_error"><![CDATA[password must be more than 8 and contain digits, upper letter & lower letter and don\'t contain space]]></string>
+    <string name="now">Now</string>
+    <string name="email_not_found">Email not registered</string>
+    <string name="wrong_code">Wrong Code</string>
+    <string name="password_must_be_at_least_8_characters">Password must be at least 8 characters</string>
+    <string name="password_must_contain_at_least_one_lowercase_letter">Password must contain at least one lowercase letter</string>
+    <string name="password_must_contain_at_least_one_uppercase_letter">Password must contain at least one uppercase letter</string>
+    <string name="password_must_contain_at_least_one_digit">Password must contain at least one digit</string>
+    <string name="password_must_contain_at_least_one_special_character">Password must contain at least one special character</string>
+    <string name="invalid_email">Invalid Email</string>
+    <string name="password_not_match">Password not match</string>
 </resources>

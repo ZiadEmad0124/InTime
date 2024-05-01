@@ -6,7 +6,7 @@
     android:background="@color/white_2"
     android:fillViewport="true"
     android:scrollbars="none"
-    tools:context=".ui.OnBoarding">
+    tools:context=".ui.on_boarding.OnBoarding">
 
     <LinearLayout
         android:layout_width="match_parent"
@@ -23,7 +23,6 @@
             <ImageView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_gravity="center"
                 android:importantForAccessibility="no"
                 android:src="@drawable/onboarding_asset" />
 
@@ -45,60 +44,52 @@
                 <LinearLayout
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:gravity="center_horizontal"
                     android:orientation="vertical"
                     android:padding="@dimen/standard_25">
 
                     <LinearLayout
                         android:layout_width="match_parent"
-                        android:layout_height="0dp"
+                        android:layout_height="wrap_content"
                         android:layout_weight="1"
-                        android:gravity="center"
-                        android:orientation="vertical">
-
-                        <LinearLayout
-                            android:layout_width="match_parent"
-                            android:layout_height="wrap_content"
-                            android:gravity="center">
-
-                            <TextView
-                                android:layout_width="wrap_content"
-                                android:layout_height="wrap_content"
-                                android:fontFamily="@font/roboto_medium"
-                                android:text="@string/in"
-                                android:textColor="@color/primary"
-                                android:textSize="30sp"
-                                android:textStyle="bold" />
-
-                            <TextView
-                                android:layout_width="wrap_content"
-                                android:layout_height="wrap_content"
-                                android:fontFamily="@font/roboto_medium"
-                                android:text="@string/time"
-                                android:textSize="30sp"
-                                android:textStyle="bold" />
-
-                        </LinearLayout>
+                        android:gravity="bottom|center">
 
                         <TextView
-                            android:layout_width="match_parent"
+                            android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
-                            android:layout_marginTop="@dimen/standard_30"
-                            android:fontFamily="@font/lato"
-                            android:lineSpacingExtra="4sp"
-                            android:text="@string/describe"
-                            android:textAlignment="center"
-                            android:textColor="@color/secondary"
-                            android:textSize="18sp" />
+                            android:fontFamily="@font/roboto_medium"
+                            android:text="@string/in"
+                            android:textColor="@color/primary"
+                            android:textSize="30sp"
+                            android:textStyle="bold" />
+
+                        <TextView
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:fontFamily="@font/roboto_medium"
+                            android:text="@string/time"
+                            android:textSize="30sp"
+                            android:textStyle="bold" />
 
                     </LinearLayout>
+
+                    <TextView
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_marginTop="25dp"
+                        android:layout_weight="1"
+                        android:fontFamily="@font/lato"
+                        android:lineSpacingExtra="4sp"
+                        android:text="@string/describe"
+                        android:textAlignment="center"
+                        android:textColor="@color/secondary"
+                        android:textSize="18sp" />
 
                     <Button
                         android:id="@+id/getStartedButton"
                         style="@style/InTime.Button"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-                        android:layout_marginHorizontal="@dimen/standard_25"
+                        android:layout_margin="@dimen/standard_25"
                         android:text="@string/get_started" />
 
                 </LinearLayout>

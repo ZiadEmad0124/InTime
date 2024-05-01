@@ -2,6 +2,8 @@
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools">
 
+    <uses-permission android:name="android.permission.INTERNET" />
+
     <application
         android:allowBackup="true"
         android:icon="@mipmap/ic_launcher"
@@ -10,6 +12,7 @@
         android:supportsRtl="true"
         android:theme="@style/Theme.InTime"
         tools:targetApi="31">
+
         <activity
             android:name=".ui.home.projects.my_project.MyProject"
             android:exported="false" />
@@ -29,13 +32,16 @@
             android:name=".ui.forgetPassword.ForgetPassword"
             android:exported="false" />
         <activity
+            android:name=".ui.activate_account.ActivateAccount"
+            android:exported="false" />
+        <activity
             android:name=".ui.signing.SignPage"
             android:exported="false" />
         <activity
-            android:name=".ui.OnBoarding"
+            android:name=".ui.on_boarding.OnBoarding"
             android:exported="false" />
         <activity
-            android:name=".ui.SplashScreen"
+            android:name=".ui.splash_screen.SplashScreen"
             android:exported="true">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
@@ -47,6 +53,7 @@
         <meta-data
             android:name="preloaded_fonts"
             android:resource="@array/preloaded_fonts" />
+
     </application>
 
 </manifest>

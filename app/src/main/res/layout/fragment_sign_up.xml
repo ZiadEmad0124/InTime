@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
@@ -20,44 +21,79 @@
             android:layout_height="0dp"
             android:layout_weight="1" />
 
-        <EditText
-            style="@style/InTime.TextInputEditText"
+        <com.google.android.material.textfield.TextInputLayout
+            android:id="@+id/nameLayout"
+            style="@style/InTime.TextInputLayout"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:autofillHints="name"
-            android:hint="@string/full_name"
-            android:inputType="text" />
+            android:hint="@string/name"
+            android:inputType="text">
 
-        <EditText
-            style="@style/InTime.TextInputEditText"
+            <com.google.android.material.textfield.TextInputEditText
+                android:id="@+id/name"
+                style="@style/InTime.TextInputEditText"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content" />
+
+        </com.google.android.material.textfield.TextInputLayout>
+
+        <com.google.android.material.textfield.TextInputLayout
+            android:id="@+id/emailLayout"
+            style="@style/InTime.TextInputLayout"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_marginTop="@dimen/standard_40"
             android:autofillHints="emailAddress"
             android:hint="@string/email"
-            android:inputType="textEmailAddress" />
+            android:inputType="textEmailAddress">
 
-        <EditText
-            android:id="@+id/password"
-            style="@style/InTime.TextInputEditText"
+            <com.google.android.material.textfield.TextInputEditText
+                android:id="@+id/email"
+                style="@style/InTime.TextInputEditText"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content" />
+
+        </com.google.android.material.textfield.TextInputLayout>
+
+        <com.google.android.material.textfield.TextInputLayout
+            android:id="@+id/phoneLayout"
+            style="@style/InTime.TextInputLayout"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="@dimen/standard_40"
+            android:autofillHints="phone"
+            android:hint="@string/phone_number"
+            android:inputType="phone"
+            app:prefixTextColor="@color/secondary">
+
+            <com.google.android.material.textfield.TextInputEditText
+                android:id="@+id/phone"
+                style="@style/InTime.TextInputEditText"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content" />
+
+        </com.google.android.material.textfield.TextInputLayout>
+
+        <com.google.android.material.textfield.TextInputLayout
+            android:id="@+id/passwordLayout"
+            style="@style/InTime.TextInputLayout"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_marginTop="@dimen/standard_40"
             android:autofillHints="password"
-            android:drawableEnd="@drawable/ic_eye"
             android:hint="@string/password"
-            android:inputType="textPassword" />
+            android:inputType="textEmailAddress"
+            app:endIconMode="password_toggle">
 
-        <EditText
-            android:id="@+id/confirmPassword"
-            style="@style/InTime.TextInputEditText"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_marginTop="@dimen/standard_40"
-            android:autofillHints="password"
-            android:drawableEnd="@drawable/ic_eye"
-            android:hint="@string/confirm_password"
-            android:inputType="textPassword" />
+            <com.google.android.material.textfield.TextInputEditText
+                android:id="@+id/password"
+                style="@style/InTime.TextInputEditText"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:inputType="textPassword" />
+
+        </com.google.android.material.textfield.TextInputLayout>
 
         <LinearLayout
             android:layout_width="wrap_content"
