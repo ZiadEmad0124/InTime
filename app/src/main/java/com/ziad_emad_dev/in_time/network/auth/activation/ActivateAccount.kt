@@ -1,8 +1,8 @@
-package com.ziad_emad_dev.in_time.network.activation
+package com.ziad_emad_dev.in_time.network.auth.activation
 
 import com.google.gson.Gson
 import com.ziad_emad_dev.in_time.network.InTimeApi
-import com.ziad_emad_dev.in_time.network.sign_in.SignInResponse
+import com.ziad_emad_dev.in_time.network.auth.sign_in.SignInResponse
 import retrofit2.Call
 import retrofit2.Callback
 import retrofit2.Response

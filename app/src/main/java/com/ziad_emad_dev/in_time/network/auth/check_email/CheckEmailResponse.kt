@@ -1,4 +1,4 @@
-package com.ziad_emad_dev.in_time.network.check_email
+package com.ziad_emad_dev.in_time.network.auth.check_email
 
 import com.google.gson.annotations.SerializedName
 

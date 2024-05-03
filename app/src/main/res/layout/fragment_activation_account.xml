@@ -5,7 +5,7 @@
     android:layout_height="match_parent"
     android:fillViewport="true"
     android:scrollbars="none"
-    tools:context=".ui.activate_account.ActivateAccount">
+    tools:context=".ui.signing.ActivationAccount">
 
     <LinearLayout
         android:layout_width="match_parent"

@@ -1,4 +1,4 @@
-package com.ziad_emad_dev.in_time.network.sign_up
+package com.ziad_emad_dev.in_time.network.auth.sign_up
 
 import com.google.gson.annotations.SerializedName
 

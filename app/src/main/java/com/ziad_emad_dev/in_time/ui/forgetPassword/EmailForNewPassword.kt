@@ -9,7 +9,7 @@ import androidx.fragment.app.Fragment
 import androidx.navigation.fragment.findNavController
 import com.ziad_emad_dev.in_time.R
 import com.ziad_emad_dev.in_time.databinding.FragmentEmailForNewPasswordBinding
-import com.ziad_emad_dev.in_time.network.check_email.CheckEmailAccount
+import com.ziad_emad_dev.in_time.network.auth.check_email.CheckEmailAccount
 
 class EmailForNewPassword : Fragment() {
 
@@ -28,53 +28,56 @@ class EmailForNewPassword : Fragment() {
         super.onViewCreated(view, savedInstanceState)
 
         focusOnEditTextLayout()
-        clickOnButtons()
+        clickOnSendOTPButton()
     }
 
     private fun focusOnEditTextLayout() {
         binding.email.setOnFocusChangeListener { _, hasFocus ->
             if (hasFocus) {
                 binding.emailLayout.error = null
-            }
-        }
-    }
-
-    private fun clickOnButtons() {
-        binding.sendOTPButton.setOnClickListener {
-            focusOnEditTextLayout()
-            if (!isEmailEmpty()){
-                if (!emailValidationError()){
-                    checkEmail()
+            } else {
+                if (!emailEmptyError(binding.email.text.toString().trim())) {
+                    emailValidationError(binding.email.text.toString().trim())
                 }
             }
         }
     }
 
-    private fun isEmailEmpty(): Boolean {
-        var isErrorFound = false
-        if (binding.email.text?.trim().isNullOrEmpty()) {
-            binding.emailLayout.error = getString(R.string.empty_field)
-            isErrorFound = true
+    private fun clickOnSendOTPButton() {
+        binding.sendOTPButton.setOnClickListener {
+            val email = binding.email.text.toString().trim()
+            clearFocusEditTextLayout()
+            if (!emailEmptyError(email)) {
+                if (!emailValidationError(email)) {
+                    checkEmail(email)
+                }
+            }
         }
-        return isErrorFound
     }
 
-    private fun emailValidationError(): Boolean {
-        val email = binding.email.text.toString()
-        var isEmailError = false
+    private fun emailEmptyError(email: String): Boolean {
+        if (email.isEmpty()) {
+            binding.emailLayout.error = getString(R.string.empty_field)
+        }
+        return email.isEmpty()
+    }
+
+    private fun emailValidationError(email: String): Boolean {
         if (!android.util.Patterns.EMAIL_ADDRESS.matcher(email).matches()) {
             binding.emailLayout.error = getString(R.string.invalid_email)
-            isEmailError = true
         }
-        return isEmailError
+        return !android.util.Patterns.EMAIL_ADDRESS.matcher(email).matches()
     }
 
     private fun emailNotRegistered() {
-        binding.emailLayout.error = getString(R.string.email_not_found)
+        binding.emailLayout.error = getString(R.string.email_not_registered)
     }
 
-    private fun checkEmail() {
-        val email = binding.email.text?.trim().toString()
+    private fun clearFocusEditTextLayout() {
+        binding.email.clearFocus()
+    }
+
+    private fun checkEmail(email: String) {
         CheckEmailAccount().checkEmail(email, object : CheckEmailAccount.CheckEmailCallback {
             override fun onResult(message: String) {
                 checkEmailAndNetwork(message)
@@ -84,17 +87,17 @@ class EmailForNewPassword : Fragment() {
 
     private fun checkEmailAndNetwork(message: String) {
         when (message) {
-            "Failed Connect, Try Again" -> {
-                Toast.makeText(requireContext(), message, Toast.LENGTH_SHORT).show()
-            }
-
             "true" -> {
-                val action = EmailForNewPasswordDirections.actionEmailForNewPasswordToResetPassword(binding.email.text.toString())
+                val action = EmailForNewPasswordDirections.actionEmailForNewPasswordToResetPassword(binding.email.text.toString().trim())
                 findNavController().navigate(action)
             }
 
             "false" -> {
                 emailNotRegistered()
+            }
+
+            "Failed Connect, Try Again" -> {
+                Toast.makeText(requireContext(), "Failed Connect, Try Again", Toast.LENGTH_SHORT).show()
             }
         }
     }

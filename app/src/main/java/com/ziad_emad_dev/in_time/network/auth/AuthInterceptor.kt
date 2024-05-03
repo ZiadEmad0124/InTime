@@ -1,4 +1,4 @@
-package com.ziad_emad_dev.in_time.network
+package com.ziad_emad_dev.in_time.network.auth
 
 import android.content.Context
 import okhttp3.Interceptor

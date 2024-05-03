@@ -1,8 +1,8 @@
-package com.ziad_emad_dev.in_time.network.new_password
+package com.ziad_emad_dev.in_time.network.auth.new_password
 
 import com.google.gson.Gson
 import com.ziad_emad_dev.in_time.network.InTimeApi
-import com.ziad_emad_dev.in_time.network.sign_in.SignInResponse
+import com.ziad_emad_dev.in_time.network.auth.sign_in.SignInResponse
 import retrofit2.Call
 import retrofit2.Callback
 import retrofit2.Response
@@ -24,11 +24,11 @@ class NewPasswordAccount {
 
                 override fun onResponse(call: Call<NewPasswordResponse>, response: Response<NewPasswordResponse>) {
                     if (response.isSuccessful) {
-                        callback.onResult(response.body()?.success.toString())
+                        callback.onResult(response.body()?.message.toString())
                     } else {
                         val errorResponse = response.errorBody()?.string()
                         val errorActivationResponse = Gson().fromJson(errorResponse, SignInResponse::class.java)
-                        callback.onResult(errorActivationResponse?.success.toString())
+                        callback.onResult(errorActivationResponse?.message.toString())
                     }
                 }
             })

@@ -1,4 +1,4 @@
-package com.ziad_emad_dev.in_time.network.activation
+package com.ziad_emad_dev.in_time.network.auth.activation
 
 import com.google.gson.annotations.SerializedName
 

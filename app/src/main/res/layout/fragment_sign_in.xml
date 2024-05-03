@@ -65,7 +65,7 @@
                 style="@style/InTime.TextInputLayout"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_marginTop="@dimen/standard_40"
+                android:layout_marginTop="@dimen/standard_25"
                 android:autofillHints="password"
                 android:hint="@string/password"
                 android:inputType="textEmailAddress"

@@ -1,4 +1,4 @@
-package com.ziad_emad_dev.in_time.network.sign_in
+package com.ziad_emad_dev.in_time.network.auth.sign_in
 
 import com.google.gson.Gson
 import com.ziad_emad_dev.in_time.network.InTimeApi
@@ -9,7 +9,7 @@ import retrofit2.Response
 class SignInUser {
 
     interface SignInCallback {
-        fun onResult(message: String)
+        fun onResult(message: String, accessToken: String? = null, refreshToken: String? = null)
     }
 
     fun signIn(email: String, password: String, callback: SignInCallback) {
@@ -23,7 +23,11 @@ class SignInUser {
 
             override fun onResponse(call: Call<SignInResponse>, response: Response<SignInResponse>) {
                 if (response.isSuccessful) {
-                    callback.onResult(response.body()?.accessToken.toString())
+                    val rightResponse = response.body()
+                    val success = rightResponse?.success.toString()
+                    val accessToken = rightResponse?.accessToken
+                    val refreshToken = rightResponse?.refreshToken
+                    callback.onResult(success, accessToken, refreshToken)
                 } else {
                     val errorResponse = response.errorBody()?.string()
                     val errorSignInResponse = Gson().fromJson(errorResponse, SignInResponse::class.java)

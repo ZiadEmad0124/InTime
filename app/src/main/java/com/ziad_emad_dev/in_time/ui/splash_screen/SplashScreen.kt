@@ -7,9 +7,10 @@ import android.os.Handler
 import android.os.Looper
 import androidx.appcompat.app.AppCompatActivity
 import com.ziad_emad_dev.in_time.databinding.ActivitySplashScreenBinding
-import com.ziad_emad_dev.in_time.network.SessionManager
+import com.ziad_emad_dev.in_time.network.auth.SessionManager
 import com.ziad_emad_dev.in_time.ui.home.HomePage
 import com.ziad_emad_dev.in_time.ui.on_boarding.OnBoarding
+import com.ziad_emad_dev.in_time.ui.signing.SignPage
 
 @SuppressLint("CustomSplashScreen")
 class SplashScreen : AppCompatActivity() {
@@ -29,16 +30,31 @@ class SplashScreen : AppCompatActivity() {
     private fun startApp() {
         Handler(Looper.myLooper()!!).postDelayed(
             {
-                if (sessionManager.isAuthEmpty()) {
-                    val intent = Intent(this, OnBoarding::class.java)
-                    startActivity(intent)
-                    finish()
+                if (isFirstTimeUse()) {
+                    skipOnBoardingScreenLater()
                 } else {
-                    val intent = Intent(this, HomePage::class.java)
-                    startActivity(intent)
-                    finish()
+                    if (sessionManager.isAuthEmpty()) {
+                        intent = Intent(this, SignPage::class.java)
+                        startActivity(intent)
+                        finish()
+                    } else {
+                        intent = Intent(this, HomePage::class.java)
+                        startActivity(intent)
+                        finish()
+                    }
                 }
             }, 2000
         )
+    }
+
+    private fun isFirstTimeUse(): Boolean {
+        return getSharedPreferences("FirstTimeUse", MODE_PRIVATE).getBoolean("isFirstTimeUse", true)
+    }
+
+    private fun skipOnBoardingScreenLater() {
+        getSharedPreferences("FirstTimeUse", MODE_PRIVATE).edit().putBoolean("isFirstTimeUse", false).apply()
+        val intent = Intent(this, OnBoarding::class.java)
+        startActivity(intent)
+        finish()
     }
 }
