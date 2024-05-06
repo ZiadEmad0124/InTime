@@ -7,7 +7,7 @@
 
     <fragment
         android:id="@+id/signIn"
-        android:name="com.ziad_emad_dev.in_time.ui.signing.SignIn"
+        android:name="com.ziad_emad_dev.in_time.ui.signing.signin_or_signup.SignIn"
         android:label="fragment_sign_in"
         tools:layout="@layout/fragment_sign_in">
         <action
@@ -17,10 +17,17 @@
             app:exitAnim="@anim/nav_default_exit_anim"
             app:popEnterAnim="@anim/nav_default_pop_enter_anim"
             app:popExitAnim="@anim/nav_default_pop_exit_anim" />
+        <action
+            android:id="@+id/action_signIn_to_emailToResetPassword"
+            app:destination="@id/emailToResetPassword"
+            app:enterAnim="@anim/nav_default_enter_anim"
+            app:exitAnim="@anim/nav_default_exit_anim"
+            app:popEnterAnim="@anim/nav_default_pop_enter_anim"
+            app:popExitAnim="@anim/nav_default_pop_exit_anim" />
     </fragment>
     <fragment
         android:id="@+id/SignUp"
-        android:name="com.ziad_emad_dev.in_time.ui.signing.SignUp"
+        android:name="com.ziad_emad_dev.in_time.ui.signing.signin_or_signup.SignUp"
         android:label="fragment_sign_up"
         tools:layout="@layout/fragment_sign_up">
         <action
@@ -40,7 +47,7 @@
     </fragment>
     <fragment
         android:id="@+id/activation_Account"
-        android:name="com.ziad_emad_dev.in_time.ui.signing.ActivationAccount"
+        android:name="com.ziad_emad_dev.in_time.ui.signing.activation.ActivationAccount"
         android:label="fragment_activation_account"
         tools:layout="@layout/fragment_activation_account" >
         <action
@@ -55,6 +62,35 @@
             app:argType="string" />
         <argument
             android:name="password"
+            app:argType="string" />
+    </fragment>
+    <fragment
+        android:id="@+id/emailToResetPassword"
+        android:name="com.ziad_emad_dev.in_time.ui.signing.forgetPassword.EmailToResetPassword"
+        android:label="fragment_email_to_reset_password"
+        tools:layout="@layout/fragment_email_to_reset_password" >
+        <action
+            android:id="@+id/action_emailToResetPassword_to_resetPassword"
+            app:destination="@id/resetPassword"
+            app:enterAnim="@anim/nav_default_enter_anim"
+            app:exitAnim="@anim/nav_default_exit_anim"
+            app:popEnterAnim="@anim/nav_default_pop_enter_anim"
+            app:popExitAnim="@anim/nav_default_pop_exit_anim" />
+    </fragment>
+    <fragment
+        android:id="@+id/resetPassword"
+        android:name="com.ziad_emad_dev.in_time.ui.signing.forgetPassword.ResetPassword"
+        android:label="fragment_reset_password"
+        tools:layout="@layout/fragment_reset_password" >
+        <action
+            android:id="@+id/action_resetPassword_to_signIn"
+            app:destination="@id/signIn"
+            app:enterAnim="@anim/nav_default_enter_anim"
+            app:exitAnim="@anim/nav_default_exit_anim"
+            app:popEnterAnim="@anim/nav_default_pop_enter_anim"
+            app:popExitAnim="@anim/nav_default_pop_exit_anim" />
+        <argument
+            android:name="email"
             app:argType="string" />
     </fragment>
 </navigation>

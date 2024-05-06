@@ -16,6 +16,7 @@
         <item name="android:textStyle">bold</item>
         <item name="android:textSize">18sp</item>
         <item name="android:padding">@dimen/standard_15</item>
+        <item name="iconGravity">end</item>
     </style>
 
     <style name="InTime.TextInputLayout" parent="Widget.MaterialComponents.TextInputLayout.OutlinedBox">

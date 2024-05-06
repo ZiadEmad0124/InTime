@@ -1,13 +1,19 @@
 package com.ziad_emad_dev.in_time.ui.profile
 
 import android.os.Bundle
+import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
 import com.ziad_emad_dev.in_time.R
 import com.ziad_emad_dev.in_time.databinding.ActivityProfileBinding
+import com.ziad_emad_dev.in_time.viewmodels.UserViewModel
 
 class ProfileActivity : AppCompatActivity() {
 
     private lateinit var binding: ActivityProfileBinding
+
+    private val userViewModel by lazy {
+        UserViewModel(this)
+    }
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -16,10 +22,17 @@ class ProfileActivity : AppCompatActivity() {
 
         myToolbar()
 
+        profileUsername()
         profileName()
         profileEmail()
-        profileUsername()
+        profilePhone()
         profilePassword()
+
+        userViewModel.fetchUser()
+
+        userViewModel.message.observe(this) {
+            Toast.makeText(this, it, Toast.LENGTH_SHORT).show()
+        }
     }
 
     private fun myToolbar() {
@@ -29,35 +42,47 @@ class ProfileActivity : AppCompatActivity() {
         }
     }
 
+    private fun profileUsername() {
+        userViewModel.name.observe(this) {
+            binding.profileUsername.text = it
+        }
+    }
+
     private fun profileName() {
-        binding.profileName.let {
-            it.icon.setImageResource(R.drawable.ic_username)
-            it.title.text = getString(R.string.name)
-            it.details.text = getText(R.string.name)
+        binding.profileName.let { name ->
+            name.icon.setImageResource(R.drawable.ic_username)
+            name.title.text = getString(R.string.name)
+            userViewModel.name.observe(this) {
+                name.details.text = it
+            }
         }
     }
 
     private fun profileEmail() {
-        binding.profileEmail.let {
-            it.icon.setImageResource(R.drawable.ic_email)
-            it.title.text = getString(R.string.email)
-            it.details.text = getText(R.string.email)
+        binding.profileEmail.let { email ->
+            email.icon.setImageResource(R.drawable.ic_email)
+            email.title.text = getString(R.string.email)
+            userViewModel.email.observe(this) {
+                email.details.text = it
+            }
         }
     }
 
-    private fun profileUsername() {
-        binding.profileUsername.let {
-            it.icon.setImageResource(R.drawable.ic_edit)
-            it.title.text = getString(R.string.username)
-            it.details.text = getText(R.string.username)
+    private fun profilePhone() {
+        binding.profilePhone.let { phone ->
+            phone.icon.setImageResource(R.drawable.ic_edit)
+            phone.title.text = getString(R.string.username)
+            userViewModel.phone.observe(this) {
+                phone.details.text = it
+            }
         }
     }
 
     private fun profilePassword() {
-        binding.profilePassword.let {
-            it.icon.setImageResource(R.drawable.ic_password_lock)
-            it.title.text = getString(R.string.password)
-            it.details.text = getText(R.string.password)
+        binding.profilePassword.let { password ->
+            password.icon.setImageResource(R.drawable.ic_password_lock)
+            password.title.text = getString(R.string.password)
+            password.details.text = getString(R.string.password_pattern)
         }
     }
 }

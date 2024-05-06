@@ -96,6 +96,7 @@ class HomePage : AppCompatActivity() {
         }
         val createProjectButton = view.findViewById<View>(R.id.create_project_Button)
         createProjectButton.setOnClickListener {
+
             dialog.dismiss()
         }
         dialog.show()

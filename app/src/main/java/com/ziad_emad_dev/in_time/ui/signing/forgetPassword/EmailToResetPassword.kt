@@ -1,4 +1,4 @@
-package com.ziad_emad_dev.in_time.ui.forgetPassword
+package com.ziad_emad_dev.in_time.ui.signing.forgetPassword
 
 import android.os.Bundle
 import android.view.LayoutInflater
@@ -6,21 +6,24 @@ import android.view.View
 import android.view.ViewGroup
 import android.widget.Toast
 import androidx.fragment.app.Fragment
+import androidx.fragment.app.viewModels
 import androidx.navigation.fragment.findNavController
 import com.ziad_emad_dev.in_time.R
-import com.ziad_emad_dev.in_time.databinding.FragmentEmailForNewPasswordBinding
-import com.ziad_emad_dev.in_time.network.auth.check_email.CheckEmailAccount
+import com.ziad_emad_dev.in_time.databinding.FragmentEmailToResetPasswordBinding
+import com.ziad_emad_dev.in_time.viewmodels.AuthViewModel
 
-class EmailForNewPassword : Fragment() {
+class EmailToResetPassword : Fragment() {
 
-    private var _binding: FragmentEmailForNewPasswordBinding? = null
+    private var _binding: FragmentEmailToResetPasswordBinding? = null
     private val binding get() = _binding!!
+
+    private val viewModel: AuthViewModel by viewModels()
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View {
-        _binding = FragmentEmailForNewPasswordBinding.inflate(inflater, container, false)
+        _binding = FragmentEmailToResetPasswordBinding.inflate(inflater, container, false)
         return binding.root
     }
 
@@ -29,6 +32,7 @@ class EmailForNewPassword : Fragment() {
 
         focusOnEditTextLayout()
         clickOnSendOTPButton()
+        responseComing()
     }
 
     private fun focusOnEditTextLayout() {
@@ -49,7 +53,8 @@ class EmailForNewPassword : Fragment() {
             clearFocusEditTextLayout()
             if (!emailEmptyError(email)) {
                 if (!emailValidationError(email)) {
-                    checkEmail(email)
+                    startLoading()
+                    viewModel.checkEmail(email)
                 }
             }
         }
@@ -73,22 +78,37 @@ class EmailForNewPassword : Fragment() {
         binding.emailLayout.error = getString(R.string.email_not_registered)
     }
 
+    private fun startLoading() {
+        binding.email.isEnabled = false
+        binding.sendOTPButton.isEnabled = false
+        binding.sendOTPButton.setBackgroundResource(R.drawable.button_loading_background)
+        binding.sendOTPButton.setTextColor(resources.getColor(R.color.grey_5, null))
+        binding.sendOTPButton.text = getString(R.string.loading)
+    }
+
+    private fun stopLoading() {
+        binding.email.isEnabled = true
+        binding.sendOTPButton.isEnabled = true
+        binding.sendOTPButton.setBackgroundResource(R.drawable.button_background)
+        binding.sendOTPButton.setTextColor(resources.getColor(R.color.white, null))
+        binding.sendOTPButton.text = getString(R.string.send_otp)
+    }
+
     private fun clearFocusEditTextLayout() {
         binding.email.clearFocus()
     }
 
-    private fun checkEmail(email: String) {
-        CheckEmailAccount().checkEmail(email, object : CheckEmailAccount.CheckEmailCallback {
-            override fun onResult(message: String) {
-                checkEmailAndNetwork(message)
-            }
-        })
+    private fun responseComing() {
+        viewModel.message.observe(viewLifecycleOwner) {
+            checkEmailAndNetwork(it)
+        }
     }
 
     private fun checkEmailAndNetwork(message: String) {
+        stopLoading()
         when (message) {
             "true" -> {
-                val action = EmailForNewPasswordDirections.actionEmailForNewPasswordToResetPassword(binding.email.text.toString().trim())
+                val action = EmailToResetPasswordDirections.actionEmailToResetPasswordToResetPassword(binding.email.text.toString().trim())
                 findNavController().navigate(action)
             }
 
@@ -97,7 +117,7 @@ class EmailForNewPassword : Fragment() {
             }
 
             "Failed Connect, Try Again" -> {
-                Toast.makeText(requireContext(), "Failed Connect, Try Again", Toast.LENGTH_SHORT).show()
+                Toast.makeText(requireContext(), message, Toast.LENGTH_SHORT).show()
             }
         }
     }

@@ -1,20 +1,23 @@
-package com.ziad_emad_dev.in_time.ui.forgetPassword
+package com.ziad_emad_dev.in_time.ui.signing.forgetPassword
 
 import android.annotation.SuppressLint
-import android.content.Intent
 import android.graphics.Color
 import android.os.Bundle
 import android.os.CountDownTimer
+import android.text.method.PasswordTransformationMethod
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.EditText
 import android.widget.Toast
 import androidx.fragment.app.Fragment
+import androidx.fragment.app.viewModels
+import androidx.navigation.fragment.findNavController
 import com.google.android.material.textfield.TextInputLayout
 import com.ziad_emad_dev.in_time.R
 import com.ziad_emad_dev.in_time.databinding.FragmentResetPasswordBinding
-import com.ziad_emad_dev.in_time.network.auth.new_password.NewPasswordAccount
-import com.ziad_emad_dev.in_time.ui.signing.SignPage
+import com.ziad_emad_dev.in_time.ui.signing.AsteriskPasswordTransformation
+import com.ziad_emad_dev.in_time.viewmodels.AuthViewModel
 import java.util.concurrent.TimeUnit
 
 class ResetPassword : Fragment() {
@@ -22,8 +25,10 @@ class ResetPassword : Fragment() {
     private var _binding: FragmentResetPasswordBinding? = null
     private val binding get() = _binding!!
 
-    val millisInFuture = 5 * 60 * 1000 // 5 minutes in milliseconds
-    val countDownInterval = 1000 // 1 second
+    private val viewModel: AuthViewModel by viewModels()
+
+    val millisInFuture = 5 * 60 * 1000
+    val countDownInterval = 1000
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
@@ -37,12 +42,23 @@ class ResetPassword : Fragment() {
         super.onViewCreated(view, savedInstanceState)
 
         focusOnEditTextLayout()
+        passwordToggle(binding.passwordLayout, binding.password)
+        passwordToggle(binding.confirmPasswordLayout, binding.confirmPassword)
         countDownTimer.start()
         clickOnNewPasswordButton()
         resendOTP()
+        responseComing()
+
+        binding.password.transformationMethod = AsteriskPasswordTransformation()
+        binding.confirmPassword.transformationMethod = AsteriskPasswordTransformation()
     }
 
     private fun focusOnEditTextLayout() {
+        binding.otpView.setOnFocusChangeListener { _, hasFocus ->
+            if (hasFocus) {
+                binding.otpView.setLineColor(R.drawable.pin_line)
+            }
+        }
         binding.password.setOnFocusChangeListener { _, hasFocus ->
             if (hasFocus) {
                 binding.passwordLayout.error = null
@@ -52,7 +68,6 @@ class ResetPassword : Fragment() {
                 }
             }
         }
-
         binding.confirmPassword.setOnFocusChangeListener { _, hasFocus ->
             if (hasFocus) {
                 binding.confirmPasswordLayout.error = null
@@ -62,6 +77,19 @@ class ResetPassword : Fragment() {
                     passwordsMatchError(binding.password.text.toString().trim(), binding.confirmPassword.text.toString().trim())
                 }
             }
+        }
+    }
+
+    private fun passwordToggle(passwordLayout: TextInputLayout, password: EditText) {
+        passwordLayout.setEndIconOnClickListener {
+            val selection = password.selectionEnd
+            val hasPasswordTransformation = password.transformationMethod is PasswordTransformationMethod
+            if (hasPasswordTransformation) {
+                password.transformationMethod = null
+            } else {
+                password.transformationMethod = AsteriskPasswordTransformation()
+            }
+            password.setSelection(selection)
         }
     }
 
@@ -81,6 +109,7 @@ class ResetPassword : Fragment() {
     private fun clickOnNewPasswordButton() {
         binding.saveNewPasswordButton.setOnClickListener {
             val otpCode = binding.otpView.text.toString()
+            val email = requireArguments().getString("email").toString()
             val password = binding.password.text.toString().trim()
             val confirmPassword = binding.confirmPassword.text.toString().trim()
             clearFocusEditTextLayout()
@@ -88,7 +117,8 @@ class ResetPassword : Fragment() {
                 if (!(passwordEmptyError(password) && confirmPasswordEmptyError(confirmPassword))) {
                     if (!(passwordValidationError(binding.passwordLayout, password) || passwordValidationError(binding.confirmPasswordLayout, confirmPassword))) {
                         if (!passwordsMatchError(password, confirmPassword)) {
-                            resetPassword(password, confirmPassword)
+                            startLoading()
+                            viewModel.resetPassword(otpCode, email, password, confirmPassword)
                         }
                     }
                 }
@@ -119,24 +149,24 @@ class ResetPassword : Fragment() {
     }
 
     private fun passwordValidationError(passwordLayout: TextInputLayout, password: String): Boolean {
-        var isPasswordError = false
         if (password.length < 8) {
             passwordLayout.error = getString(R.string.password_must_be_at_least_8_characters)
-            isPasswordError = true
+            return true
         } else if (!password.matches(Regex(".*[a-z].*"))) {
             passwordLayout.error = getString(R.string.password_must_contain_at_least_one_lowercase_letter)
-            isPasswordError = true
+            return true
         } else if (!password.matches(Regex(".*[A-Z].*"))) {
             passwordLayout.error = getString(R.string.password_must_contain_at_least_one_uppercase_letter)
-            isPasswordError = true
+            return true
         } else if (!password.matches(Regex(".*[0-9].*"))) {
             passwordLayout.error = getString(R.string.password_must_contain_at_least_one_digit)
-            isPasswordError = true
+            return true
         } else if (!password.matches(Regex(".*[!@#\$_%^&*+(,)/\"\':?-].*"))) {
             passwordLayout.error = getString(R.string.password_must_contain_at_least_one_special_character)
-            isPasswordError = true
+            return true
+        } else {
+            return false
         }
-        return isPasswordError
     }
 
     private fun passwordsMatchError(password: String, confirmPassword: String): Boolean {
@@ -146,19 +176,31 @@ class ResetPassword : Fragment() {
         return password != confirmPassword
     }
 
+    private fun startLoading() {
+        binding.otpView.isEnabled = false
+        binding.otpTimer.isEnabled = false
+        binding.password.isEnabled = false
+        binding.confirmPassword.isEnabled = false
+        binding.saveNewPasswordButton.isEnabled = false
+        binding.saveNewPasswordButton.setBackgroundResource(R.drawable.button_loading_background)
+        binding.saveNewPasswordButton.setTextColor(resources.getColor(R.color.grey_5, null))
+        binding.saveNewPasswordButton.text = getString(R.string.loading)
+    }
+
+    private fun stopLoading() {
+        binding.otpView.isEnabled = true
+        binding.otpTimer.isEnabled = true
+        binding.password.isEnabled = true
+        binding.confirmPassword.isEnabled = true
+        binding.saveNewPasswordButton.isEnabled = true
+        binding.saveNewPasswordButton.setBackgroundResource(R.drawable.button_background)
+        binding.saveNewPasswordButton.setTextColor(resources.getColor(R.color.white, null))
+        binding.saveNewPasswordButton.text = getString(R.string.save_new_password)
+    }
+
     private fun clearFocusEditTextLayout() {
         binding.password.clearFocus()
         binding.confirmPassword.clearFocus()
-    }
-
-    private fun resetPassword(password: String, confirmPassword: String) {
-        val email = arguments?.getString("email").toString()
-        val otpCode = binding.otpView.text.toString()
-        NewPasswordAccount().newPassword(email, password, confirmPassword, otpCode, object : NewPasswordAccount.NewPasswordCallback {
-            override fun onResult(message: String) {
-                checkCodePasswordAndNetwork(message)
-            }
-        })
     }
 
     private fun passwordMustBeUnique() {
@@ -166,20 +208,24 @@ class ResetPassword : Fragment() {
         binding.confirmPasswordLayout.error = getString(R.string.password_must_be_unique)
     }
 
+    private fun responseComing() {
+        viewModel.message.observe(viewLifecycleOwner) {
+            checkCodePasswordAndNetwork(it)
+        }
+    }
+
     private fun checkCodePasswordAndNetwork(message: String) {
+        stopLoading()
         when (message) {
-            "Invalid Token" -> {
+            "Invalid OTP" -> {
                 binding.otpView.setLineColor(Color.RED)
                 Toast.makeText(requireContext(), "Code is Wrong, Try Again", Toast.LENGTH_SHORT).show()
             }
 
             "password changed" -> {
-//                Error
                 binding.otpView.setLineColor(Color.GREEN)
-                val intent = Intent(requireContext(), SignPage::class.java)
-                startActivity(intent)
-                requireActivity().finish()
-                Toast.makeText(requireContext(), "Password Changed Successfully, SignIn", Toast.LENGTH_SHORT).show()
+                findNavController().navigate(R.id.action_resetPassword_to_signIn)
+                Toast.makeText(requireContext(), "Password Changed Successfully, SignIn Now", Toast.LENGTH_SHORT).show()
             }
 
             "password must be unique" -> {
@@ -192,13 +238,16 @@ class ResetPassword : Fragment() {
         }
     }
 
-
+//    Error
     private fun resendOTP() {
         binding.otpTimer.setOnClickListener {
             if (binding.otpTimer.text == getString(R.string.now)) {
+                val otpCode = binding.otpView.text.toString()
+                val email = requireArguments().getString("email").toString()
                 val password = binding.password.text.toString().trim()
                 val confirmPassword = binding.confirmPassword.text.toString().trim()
-                resetPassword(password, confirmPassword)
+                stopLoading()
+                viewModel.resetPassword(otpCode, email, password, confirmPassword)
                 countDownTimer.start()
             }
         }

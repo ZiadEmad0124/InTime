@@ -29,9 +29,6 @@
             android:name=".ui.home.HomePage"
             android:exported="false" />
         <activity
-            android:name=".ui.forgetPassword.ForgetPassword"
-            android:exported="false" />
-        <activity
             android:name=".ui.signing.SignPage"
             android:exported="false" />
         <activity

@@ -33,15 +33,13 @@ class SplashScreen : AppCompatActivity() {
                 if (isFirstTimeUse()) {
                     skipOnBoardingScreenLater()
                 } else {
-                    if (sessionManager.isAuthEmpty()) {
-                        intent = Intent(this, SignPage::class.java)
-                        startActivity(intent)
-                        finish()
+                    val intent: Intent = if (sessionManager.isAuthEmpty()) {
+                        Intent(this, SignPage::class.java)
                     } else {
-                        intent = Intent(this, HomePage::class.java)
-                        startActivity(intent)
-                        finish()
+                        Intent(this, HomePage::class.java)
                     }
+                    startActivity(intent)
+                    finish()
                 }
             }, 2000
         )

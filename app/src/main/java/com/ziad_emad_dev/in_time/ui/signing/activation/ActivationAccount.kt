@@ -1,4 +1,4 @@
-package com.ziad_emad_dev.in_time.ui.signing
+package com.ziad_emad_dev.in_time.ui.signing.activation
 
 import android.annotation.SuppressLint
 import android.graphics.Color
@@ -9,17 +9,19 @@ import android.view.View
 import android.view.ViewGroup
 import android.widget.Toast
 import androidx.fragment.app.Fragment
+import androidx.fragment.app.viewModels
 import androidx.navigation.fragment.findNavController
 import com.ziad_emad_dev.in_time.R
 import com.ziad_emad_dev.in_time.databinding.FragmentActivationAccountBinding
-import com.ziad_emad_dev.in_time.network.auth.activation.ActivateAccount
-import com.ziad_emad_dev.in_time.network.auth.resend_activation_code.ResendActivationCode
+import com.ziad_emad_dev.in_time.viewmodels.AuthViewModel
 import java.util.concurrent.TimeUnit
 
 class ActivationAccount : Fragment() {
 
     private var _binding: FragmentActivationAccountBinding? = null
     private val binding get() = _binding!!
+
+    private val viewModel: AuthViewModel by viewModels()
 
     val millisInFuture = 5 * 60 * 1000 // 5 minutes in milliseconds
     val countDownInterval = 1000 // 1 second
@@ -35,9 +37,19 @@ class ActivationAccount : Fragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
+        focusOnEditTextLayout()
         countDownTimer.start()
         clickOnNextButton()
         resendOTP()
+        responseComing()
+    }
+
+    private fun focusOnEditTextLayout() {
+        binding.otpView.setOnFocusChangeListener { _, hasFocus ->
+            if (hasFocus) {
+                binding.otpView.setLineColor(R.drawable.pin_line)
+            }
+        }
     }
 
     private val countDownTimer = object : CountDownTimer(millisInFuture.toLong(), countDownInterval.toLong()) {
@@ -56,8 +68,10 @@ class ActivationAccount : Fragment() {
     private fun clickOnNextButton() {
         binding.nextButton.setOnClickListener {
             val otpCode = binding.otpView.text.toString()
+            val email = requireArguments().getString("email").toString()
             if (!otpCodeEmptyError(otpCode)) {
-                checkOTP(otpCode)
+                startLoading()
+                viewModel.activateAccount(otpCode, email)
             }
         }
     }
@@ -70,16 +84,32 @@ class ActivationAccount : Fragment() {
         return otpCode.isEmpty() || otpCode.length < 4
     }
 
-    private fun checkOTP(otpCode: String) {
-        val email = arguments?.getString("email").toString()
-        ActivateAccount().activateAccount(email, otpCode, object : ActivateAccount.ActivationCodeCallback {
-            override fun onResult(message: String) {
-                checkCodeAndNetwork(message)
-            }
-        })
+    private fun startLoading() {
+        binding.otpView.isEnabled = false
+        binding.otpTimer.isEnabled = false
+        binding.nextButton.isEnabled = false
+        binding.nextButton.setBackgroundResource(R.drawable.button_loading_background)
+        binding.nextButton.setTextColor(resources.getColor(R.color.grey_5, null))
+        binding.nextButton.text = getString(R.string.loading)
+    }
+
+    private fun stopLoading() {
+        binding.otpView.isEnabled = true
+        binding.otpTimer.isEnabled = true
+        binding.nextButton.isEnabled = true
+        binding.nextButton.setBackgroundResource(R.drawable.button_background)
+        binding.nextButton.setTextColor(resources.getColor(R.color.white, null))
+        binding.nextButton.text = getString(R.string.next)
+    }
+
+    private fun responseComing() {
+        viewModel.message.observe(viewLifecycleOwner) {
+            checkCodeAndNetwork(it)
+        }
     }
 
     private fun checkCodeAndNetwork(message: String) {
+        stopLoading()
         when (message) {
             "this account is now active" -> {
                 binding.otpView.setLineColor(Color.GREEN)
@@ -102,13 +132,10 @@ class ActivationAccount : Fragment() {
     private fun resendOTP() {
         binding.otpTimer.setOnClickListener {
             if (binding.otpTimer.text == getString(R.string.now)) {
-                val email = arguments?.getString("email").toString()
-                val password = arguments?.getString("password").toString()
-                ResendActivationCode().resendActivationCode(email, password, object : ResendActivationCode.ResendActivationCodeCallback {
-                    override fun onResult(message: String) {
-                        Toast.makeText(requireContext(), message, Toast.LENGTH_SHORT).show()
-                    }
-                })
+                val email = requireArguments().getString("email").toString()
+                val password = requireArguments().getString("password").toString()
+                viewModel.resendActivationCode(email, password)
+                Toast.makeText(requireContext(), "Resend OTP, Check Your Email", Toast.LENGTH_SHORT).show()
                 countDownTimer.start()
             }
         }

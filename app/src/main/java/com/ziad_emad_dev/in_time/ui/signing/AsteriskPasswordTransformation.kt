@@ -1,4 +1,4 @@
-package com.ziad_emad_dev.in_time.ui
+package com.ziad_emad_dev.in_time.ui.signing
 
 import android.text.method.PasswordTransformationMethod
 import android.view.View

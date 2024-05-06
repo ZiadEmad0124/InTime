@@ -1,25 +1,28 @@
-package com.ziad_emad_dev.in_time.ui.signing
+package com.ziad_emad_dev.in_time.ui.signing.signin_or_signup
 
 import android.content.Intent
 import android.os.Bundle
+import android.text.method.PasswordTransformationMethod
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.Toast
 import androidx.fragment.app.Fragment
+import androidx.fragment.app.viewModels
 import androidx.navigation.fragment.findNavController
 import com.ziad_emad_dev.in_time.R
 import com.ziad_emad_dev.in_time.databinding.FragmentSignInBinding
 import com.ziad_emad_dev.in_time.network.auth.SessionManager
-import com.ziad_emad_dev.in_time.network.auth.sign_in.SignInUser
-import com.ziad_emad_dev.in_time.ui.AsteriskPasswordTransformation
-import com.ziad_emad_dev.in_time.ui.forgetPassword.ForgetPassword
 import com.ziad_emad_dev.in_time.ui.home.HomePage
+import com.ziad_emad_dev.in_time.ui.signing.AsteriskPasswordTransformation
+import com.ziad_emad_dev.in_time.viewmodels.AuthViewModel
 
 class SignIn : Fragment() {
 
     private var _binding: FragmentSignInBinding? = null
     private val binding get() = _binding!!
+
+    private val viewModel: AuthViewModel by viewModels()
 
     private lateinit var sessionManager: SessionManager
 
@@ -38,9 +41,10 @@ class SignIn : Fragment() {
 
         signInWith()
         focusOnEditTextLayout()
+        passwordToggle()
         clickOnButtons()
+        responseComing()
 
-//        Error
         binding.password.transformationMethod = AsteriskPasswordTransformation()
     }
 
@@ -69,10 +73,22 @@ class SignIn : Fragment() {
         }
     }
 
+    private fun passwordToggle() {
+        binding.passwordLayout.setEndIconOnClickListener {
+            val selection = binding.password.selectionEnd
+            val hasPasswordTransformation = binding.password.transformationMethod is PasswordTransformationMethod
+            if (hasPasswordTransformation) {
+                binding.password.transformationMethod = null
+            } else {
+                binding.password.transformationMethod = AsteriskPasswordTransformation()
+            }
+            binding.password.setSelection(selection)
+        }
+    }
+
     private fun clickOnButtons() {
         binding.forgetPasswordButton.setOnClickListener {
-            val intent = Intent(activity, ForgetPassword::class.java)
-            startActivity(intent)
+            findNavController().navigate(R.id.action_signIn_to_emailToResetPassword)
         }
 
         binding.signUpButton.setOnClickListener {
@@ -85,7 +101,8 @@ class SignIn : Fragment() {
             clearFocusEditTextLayout()
             if (!(emailEmptyError(email) && passwordEmptyError(password))) {
                 if (!(emailValidationError(email) || passwordValidationError(password))) {
-                    isAccountRegistered(email, password)
+                    startLoading()
+                    viewModel.signIn(email, password)
                 }
             }
         }
@@ -113,24 +130,24 @@ class SignIn : Fragment() {
     }
 
     private fun passwordValidationError(password: String): Boolean {
-        var isErrorFound = false
         if (password.length < 8) {
             binding.passwordLayout.error = getString(R.string.password_must_be_at_least_8_characters)
-            isErrorFound = true
+           return true
         } else if (!password.matches(Regex(".*[a-z].*"))) {
             binding.passwordLayout.error = getString(R.string.password_must_contain_at_least_one_lowercase_letter)
-            isErrorFound = true
+            return true
         } else if (!password.matches(Regex(".*[A-Z].*"))) {
             binding.passwordLayout.error = getString(R.string.password_must_contain_at_least_one_uppercase_letter)
-            isErrorFound = true
+            return true
         } else if (!password.matches(Regex(".*[0-9].*"))) {
             binding.passwordLayout.error = getString(R.string.password_must_contain_at_least_one_digit)
-            isErrorFound = true
+            return true
         } else if (!password.matches(Regex(".*[!@#\$_%^&*+(,)/\"\':?-].*"))) {
             binding.passwordLayout.error = getString(R.string.password_must_contain_at_least_one_special_character)
-            isErrorFound = true
+            return true
+        } else {
+            return false
         }
-        return isErrorFound
     }
 
     private fun emailNotRegistered() {
@@ -141,20 +158,50 @@ class SignIn : Fragment() {
         binding.passwordLayout.error = getString(R.string.wrong_password)
     }
 
+    private fun startLoading() {
+        binding.email.isEnabled = false
+        binding.password.isEnabled = false
+        binding.forgetPasswordButton.isEnabled = false
+        binding.signUpButton.isEnabled = false
+        binding.logInButton.isEnabled = false
+        binding.logInButton.setBackgroundResource(R.drawable.button_loading_background)
+        binding.logInButton.setTextColor(resources.getColor(R.color.grey_5, null))
+        binding.logInButton.text = getString(R.string.loading)
+    }
+
+    private fun stopLoading() {
+        binding.email.isEnabled = true
+        binding.password.isEnabled = true
+        binding.forgetPasswordButton.isEnabled = true
+        binding.signUpButton.isEnabled = true
+        binding.logInButton.isEnabled = true
+        binding.logInButton.setBackgroundResource(R.drawable.button_background)
+        binding.logInButton.setTextColor(resources.getColor(R.color.white, null))
+        binding.logInButton.text = getString(R.string.login)
+    }
+
     private fun clearFocusEditTextLayout() {
         binding.email.clearFocus()
         binding.password.clearFocus()
     }
 
-    private fun isAccountRegistered(email: String, password: String) {
-        SignInUser().signIn(email, password, object : SignInUser.SignInCallback {
-            override fun onResult(message: String, accessToken: String?, refreshToken: String?) {
-                checkAccountAndNetwork(message, accessToken, refreshToken)
-            }
-        })
+    private fun responseComing() {
+        viewModel.message.observe(viewLifecycleOwner) {
+            checkAccountAndNetwork(it)
+        }
     }
 
-    private fun checkAccountAndNetwork(message: String, accessToken: String?, refreshToken: String?) {
+    private fun saveTokens() {
+        viewModel.accessToken.observe(viewLifecycleOwner) {
+            sessionManager.saveAuthToken(it)
+        }
+        viewModel.refreshToken.observe(viewLifecycleOwner) {
+            sessionManager.saveRefreshToken(it)
+        }
+    }
+
+    private fun checkAccountAndNetwork(message: String) {
+        stopLoading()
         when (message) {
             "user not registered" -> {
                 emailNotRegistered()
@@ -165,8 +212,7 @@ class SignIn : Fragment() {
             }
 
             "true" -> {
-                sessionManager.saveAuthToken(accessToken!!)
-                sessionManager.saveRefreshToken(refreshToken!!)
+                saveTokens()
                 val intent = Intent(activity, HomePage::class.java)
                 startActivity(intent)
                 requireActivity().finish()

@@ -5,7 +5,7 @@
     android:layout_height="match_parent"
     android:fillViewport="true"
     android:scrollbars="none"
-    tools:context=".ui.signing.ActivationAccount">
+    tools:context=".ui.signing.activation.ActivationAccount">
 
     <LinearLayout
         android:layout_width="match_parent"
@@ -80,7 +80,7 @@
 
         </LinearLayout>
 
-        <Button
+        <com.google.android.material.button.MaterialButton
             android:id="@+id/nextButton"
             style="@style/InTime.Button"
             android:layout_width="match_parent"

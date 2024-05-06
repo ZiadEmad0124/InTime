@@ -1,21 +1,25 @@
-package com.ziad_emad_dev.in_time.ui.signing
+package com.ziad_emad_dev.in_time.ui.signing.signin_or_signup
 
 import android.os.Bundle
+import android.text.method.PasswordTransformationMethod
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.Toast
 import androidx.fragment.app.Fragment
+import androidx.fragment.app.viewModels
 import androidx.navigation.fragment.findNavController
 import com.ziad_emad_dev.in_time.R
 import com.ziad_emad_dev.in_time.databinding.FragmentSignUpBinding
-import com.ziad_emad_dev.in_time.network.auth.sign_up.SignUpUser
-import com.ziad_emad_dev.in_time.ui.AsteriskPasswordTransformation
+import com.ziad_emad_dev.in_time.ui.signing.AsteriskPasswordTransformation
+import com.ziad_emad_dev.in_time.viewmodels.AuthViewModel
 
 class SignUp : Fragment() {
 
     private var _binding: FragmentSignUpBinding? = null
     private val binding get() = _binding!!
+
+    private val viewModel: AuthViewModel by viewModels()
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
@@ -30,9 +34,10 @@ class SignUp : Fragment() {
 
         signUpWith()
         focusOnEditTextLayout()
+        passwordToggle()
         clickOnButtons()
+        responseComing()
 
-//        Error
         binding.password.transformationMethod = AsteriskPasswordTransformation()
     }
 
@@ -79,6 +84,19 @@ class SignUp : Fragment() {
         }
     }
 
+    private fun passwordToggle() {
+        binding.passwordLayout.setEndIconOnClickListener {
+            val selection = binding.password.selectionEnd
+            val hasPasswordTransformation = binding.password.transformationMethod is PasswordTransformationMethod
+            if (hasPasswordTransformation) {
+                binding.password.transformationMethod = null
+            } else {
+                binding.password.transformationMethod = AsteriskPasswordTransformation()
+            }
+            binding.password.setSelection(selection)
+        }
+    }
+
     private fun clickOnButtons() {
         binding.logInButton.setOnClickListener {
             findNavController().navigate(R.id.action_SignUp_to_signIn)
@@ -92,7 +110,8 @@ class SignUp : Fragment() {
             clearFocusEditTextLayout()
             if (!(nameEmptyError(name) && emailEmptyError(email) && phoneEmptyError(phone) && passwordEmptyError(password))) {
                 if (!(nameValidationError(name) || emailValidationError(email) || phoneValidationError(phone) || passwordValidationError(password))) {
-                    signAccount(name, email, phone, password)
+                    startLoading()
+                    viewModel.signUp(name, email, phone, password)
                 }
             }
         }
@@ -148,28 +167,52 @@ class SignUp : Fragment() {
     }
 
     private fun passwordValidationError(password: String): Boolean {
-        var isPasswordError = false
         if (password.length < 8) {
             binding.passwordLayout.error = getString(R.string.password_must_be_at_least_8_characters)
-            isPasswordError = true
+            return true
         } else if (!password.matches(Regex(".*[a-z].*"))) {
             binding.passwordLayout.error = getString(R.string.password_must_contain_at_least_one_lowercase_letter)
-            isPasswordError = true
+            return true
         } else if (!password.matches(Regex(".*[A-Z].*"))) {
             binding.passwordLayout.error = getString(R.string.password_must_contain_at_least_one_uppercase_letter)
-            isPasswordError = true
+            return true
         } else if (!password.matches(Regex(".*[0-9].*"))) {
             binding.passwordLayout.error = getString(R.string.password_must_contain_at_least_one_digit)
-            isPasswordError = true
+            return true
         } else if (!password.matches(Regex(".*[!@#\$_%^&*+(,)/\"\':?-].*"))) {
             binding.passwordLayout.error = getString(R.string.password_must_contain_at_least_one_special_character)
-            isPasswordError = true
+            return true
+        } else {
+            return false
         }
-        return isPasswordError
     }
 
     private fun emailAlreadyExists() {
         binding.emailLayout.error = getString(R.string.this_email_already_exists)
+    }
+
+    private fun startLoading() {
+        binding.name.isEnabled = false
+        binding.email.isEnabled = false
+        binding.phone.isEnabled = false
+        binding.password.isEnabled = false
+        binding.logInButton.isEnabled = false
+        binding.signUpButton.isEnabled = false
+        binding.signUpButton.setBackgroundResource(R.drawable.button_loading_background)
+        binding.signUpButton.setTextColor(resources.getColor(R.color.grey_5, null))
+        binding.signUpButton.text = getString(R.string.loading)
+    }
+
+    private fun stopLoading() {
+        binding.name.isEnabled = true
+        binding.email.isEnabled = true
+        binding.phone.isEnabled = true
+        binding.password.isEnabled = true
+        binding.logInButton.isEnabled = true
+        binding.signUpButton.isEnabled = true
+        binding.signUpButton.setBackgroundResource(R.drawable.button_background)
+        binding.signUpButton.setTextColor(resources.getColor(R.color.white, null))
+        binding.signUpButton.text = getString(R.string.sign_up)
     }
 
     private fun clearFocusEditTextLayout() {
@@ -179,15 +222,14 @@ class SignUp : Fragment() {
         binding.password.clearFocus()
     }
 
-    private fun signAccount(name: String, email: String, phone: String, password: String) {
-        SignUpUser().signUp(name, email, phone, password, object : SignUpUser.SignUpCallback {
-            override fun onResult(message: String) {
-                checkAccountAndNetwork(message)
-            }
-        })
+    private fun responseComing() {
+        viewModel.message.observe(viewLifecycleOwner) {
+            checkAccountAndNetwork(it)
+        }
     }
 
     private fun checkAccountAndNetwork(message: String) {
+        stopLoading()
         when (message) {
             "this email already exists" -> {
                 emailAlreadyExists()

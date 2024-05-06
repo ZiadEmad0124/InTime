@@ -2,7 +2,7 @@ package com.ziad_emad_dev.in_time.network.auth.new_password
 
 import com.google.gson.annotations.SerializedName
 
-data class NewPasswordRequest(
+data class ResetPasswordRequest(
     @SerializedName("email")
     val email: String,
 

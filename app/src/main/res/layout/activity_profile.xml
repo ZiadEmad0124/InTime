@@ -41,6 +41,7 @@
                 app:civ_border_width="@dimen/standard_5" />
 
             <TextView
+                android:id="@+id/profileUsername"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginTop="@dimen/standard_25"
@@ -51,6 +52,7 @@
                 android:textStyle="bold" />
 
             <TextView
+                android:id="@+id/logOut"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginTop="@dimen/standard_10"
@@ -86,7 +88,7 @@
                     android:layout_height="wrap_content" />
 
                 <include
-                    android:id="@+id/profileUsername"
+                    android:id="@+id/profilePhone"
                     layout="@layout/layout_profile_data"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content" />
@@ -100,6 +102,7 @@
             </LinearLayout>
 
             <com.google.android.material.button.MaterialButton
+                android:id="@+id/editButton"
                 style="@style/InTime.MaterialButton.EditProfile"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"

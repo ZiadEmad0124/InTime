@@ -4,18 +4,23 @@ import com.ziad_emad_dev.in_time.network.auth.activation.ActivationRequest
 import com.ziad_emad_dev.in_time.network.auth.activation.ActivationResponse
 import com.ziad_emad_dev.in_time.network.auth.check_email.CheckEmailRequest
 import com.ziad_emad_dev.in_time.network.auth.check_email.CheckEmailResponse
-import com.ziad_emad_dev.in_time.network.auth.new_password.NewPasswordRequest
-import com.ziad_emad_dev.in_time.network.auth.new_password.NewPasswordResponse
+import com.ziad_emad_dev.in_time.network.auth.new_password.ResetPasswordRequest
+import com.ziad_emad_dev.in_time.network.auth.new_password.ResetPasswordResponse
+import com.ziad_emad_dev.in_time.network.auth.refresh_token.RefreshTokenRequest
+import com.ziad_emad_dev.in_time.network.auth.refresh_token.RefreshTokenResponse
 import com.ziad_emad_dev.in_time.network.auth.resend_activation_code.ResendActivationCodeRequest
 import com.ziad_emad_dev.in_time.network.auth.resend_activation_code.ResendActivationCodeResponse
 import com.ziad_emad_dev.in_time.network.auth.sign_in.SignInRequest
 import com.ziad_emad_dev.in_time.network.auth.sign_in.SignInResponse
 import com.ziad_emad_dev.in_time.network.auth.sign_up.SignUpRequest
 import com.ziad_emad_dev.in_time.network.auth.sign_up.SignUpResponse
-import retrofit2.Call
+import com.ziad_emad_dev.in_time.network.user.UserResponse
+import retrofit2.Response
 import retrofit2.Retrofit
 import retrofit2.converter.gson.GsonConverterFactory
 import retrofit2.http.Body
+import retrofit2.http.GET
+import retrofit2.http.Header
 import retrofit2.http.POST
 import retrofit2.http.Path
 
@@ -28,6 +33,10 @@ private const val ACTIVATION_CODE_URL = "auth/activation/{code}"
 private const val RESEND_ACTIVATION_CODE_URL = "auth/resendactivationcode"
 private const val CHECK_EMAIL_URL = "auth/forgetpassword"
 private const val CHANGE_PASSWORD_URL = "auth/forgetpassword/changepassword/{code}"
+private const val REFRESH_TOKEN_URL = "auth/refreshToken"
+
+//  User Endpoints
+private const val USER_URL = "user/"
 
 private val retrofit = Retrofit.Builder()
     .baseUrl(BASE_URL)
@@ -36,23 +45,33 @@ private val retrofit = Retrofit.Builder()
 
 interface InTimeApiServices {
 
+//  Auth
+
     @POST(SIGNIN_URL)
-    fun signIn(@Body request: SignInRequest): Call<SignInResponse>
+    suspend fun signIn(@Body request: SignInRequest): Response<SignInResponse>
 
     @POST(SIGNUP_URL)
-    fun signUp(@Body request: SignUpRequest): Call<SignUpResponse>
+    suspend fun signUp(@Body request: SignUpRequest): Response<SignUpResponse>
 
     @POST(ACTIVATION_CODE_URL)
-    fun sendCode(@Path("code") code: String, @Body request: ActivationRequest): Call<ActivationResponse>
+    suspend fun activateAccount(@Path("code") code: String, @Body request: ActivationRequest): Response<ActivationResponse>
 
     @POST(RESEND_ACTIVATION_CODE_URL)
-    fun resendActivationCode(@Body request: ResendActivationCodeRequest): Call<ResendActivationCodeResponse>
+    suspend fun resendActivationCode(@Body request: ResendActivationCodeRequest): Response<ResendActivationCodeResponse>
 
     @POST(CHECK_EMAIL_URL)
-    fun checkEmail(@Body request: CheckEmailRequest): Call<CheckEmailResponse>
+    suspend fun checkEmail(@Body request: CheckEmailRequest): Response<CheckEmailResponse>
 
     @POST(CHANGE_PASSWORD_URL)
-    fun newPassword(@Path("code") code: String, @Body request: NewPasswordRequest): Call<NewPasswordResponse>
+    suspend fun resetPassword(@Path("code") code: String, @Body request: ResetPasswordRequest): Response<ResetPasswordResponse>
+
+    @POST(REFRESH_TOKEN_URL)
+    suspend fun refreshToken(@Body request: RefreshTokenRequest): Response<RefreshTokenResponse>
+
+//  User
+
+    @GET(USER_URL)
+    suspend fun fetchUser(@Header("Authorization") token: String): Response<UserResponse>
 }
 
 object InTimeApi {

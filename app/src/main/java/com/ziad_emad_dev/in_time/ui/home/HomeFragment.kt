@@ -10,11 +10,16 @@ import com.ziad_emad_dev.in_time.R
 import com.ziad_emad_dev.in_time.databinding.FragmentHomeBinding
 import com.ziad_emad_dev.in_time.ui.notification.NotificationActivity
 import com.ziad_emad_dev.in_time.ui.profile.ProfileActivity
+import com.ziad_emad_dev.in_time.viewmodels.HomeViewModel
 
 class HomeFragment : Fragment() {
 
     private var _binding: FragmentHomeBinding? = null
     private val binding get() = _binding!!
+
+    private val viewModel by lazy {
+        HomeViewModel(requireContext())
+    }
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
@@ -43,6 +48,10 @@ class HomeFragment : Fragment() {
         }
 
         binding.myToolbar.menu.setOnClickListener {
+            viewModel.refreshToken()
+//            viewModel.refreshTokenMessage.observe(viewLifecycleOwner) {
+//                Toast.makeText(requireContext(), it, Toast.LENGTH_LONG).show()
+//            }
             val intent = Intent(requireContext(), ProfileActivity::class.java)
             startActivity(intent)
         }
