@@ -19,6 +19,7 @@ class HomeViewModel(context: Context) : ViewModel() {
     val refreshTokenMessage get() = _refreshTokenMessage
 
     fun refreshToken() {
+
         viewModelScope.launch {
             val request = RefreshTokenRequest(SessionManager(context).fetchRefreshToken().toString())
 
@@ -27,7 +28,7 @@ class HomeViewModel(context: Context) : ViewModel() {
                 if (response.isSuccessful) {
                     SessionManager(context).saveAuthToken(response.body()?.newAccessToken.toString())
                     SessionManager(context).saveRefreshToken(response.body()?.newRefreshToken.toString())
-                    _refreshTokenMessage.value = "Refresh Success"
+                    _refreshTokenMessage.value = "Refresh Succeed"
                 } else {
                     _refreshTokenMessage.value = "Refresh Failed"
                 }

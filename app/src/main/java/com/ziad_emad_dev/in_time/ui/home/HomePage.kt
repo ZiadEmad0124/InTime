@@ -25,7 +25,6 @@ class HomePage : AppCompatActivity() {
         setContentView(binding.root)
 
         customMiddleBottomNavBarIcon()
-
         clickOnItemInBottomNavBar()
     }
 

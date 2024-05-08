@@ -7,6 +7,7 @@ import android.os.CountDownTimer
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.view.animation.AnimationUtils
 import android.widget.Toast
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
@@ -85,21 +86,16 @@ class ActivationAccount : Fragment() {
     }
 
     private fun startLoading() {
-        binding.otpView.isEnabled = false
-        binding.otpTimer.isEnabled = false
-        binding.nextButton.isEnabled = false
-        binding.nextButton.setBackgroundResource(R.drawable.button_loading_background)
-        binding.nextButton.setTextColor(resources.getColor(R.color.grey_5, null))
-        binding.nextButton.text = getString(R.string.loading)
+        binding.blockingView.visibility = View.VISIBLE
+        binding.loadingLayout.visibility = View.VISIBLE
+        val rotateAnimation = AnimationUtils.loadAnimation(requireContext(), R.anim.animation_rotate)
+        binding.loadingIcon.startAnimation(rotateAnimation)
     }
 
     private fun stopLoading() {
-        binding.otpView.isEnabled = true
-        binding.otpTimer.isEnabled = true
-        binding.nextButton.isEnabled = true
-        binding.nextButton.setBackgroundResource(R.drawable.button_background)
-        binding.nextButton.setTextColor(resources.getColor(R.color.white, null))
-        binding.nextButton.text = getString(R.string.next)
+        binding.blockingView.visibility = View.INVISIBLE
+        binding.loadingLayout.visibility = View.INVISIBLE
+        binding.loadingIcon.clearAnimation()
     }
 
     private fun responseComing() {

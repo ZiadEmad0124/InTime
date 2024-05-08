@@ -12,18 +12,17 @@
         android:supportsRtl="true"
         android:theme="@style/Theme.InTime"
         tools:targetApi="31">
-
         <activity
             android:name=".ui.home.projects.my_project.MyProject"
             android:exported="false" />
         <activity
-            android:name=".ui.profile.ProfileActivity"
+            android:name=".ui.create.CreateTask"
             android:exported="false" />
         <activity
             android:name=".ui.notification.NotificationActivity"
             android:exported="false" />
         <activity
-            android:name=".ui.create.CreateTask"
+            android:name=".ui.profile.ProfilePage"
             android:exported="false" />
         <activity
             android:name=".ui.home.HomePage"
@@ -47,7 +46,6 @@
         <meta-data
             android:name="preloaded_fonts"
             android:resource="@array/preloaded_fonts" />
-
     </application>
 
 </manifest>

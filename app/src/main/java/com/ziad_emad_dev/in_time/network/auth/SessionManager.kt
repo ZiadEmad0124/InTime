@@ -35,4 +35,16 @@ class SessionManager(context: Context) {
     fun fetchRefreshToken(): String? {
         return sharedPreferences.getString(REFRESH_TOKEN, null)
     }
+
+    fun clearAuthToken() {
+        val editor = sharedPreferences.edit()
+        editor.remove(ACCESS_TOKEN)
+        editor.apply()
+    }
+
+    fun clearRefreshToken() {
+        val editor = sharedPreferences.edit()
+        editor.remove(REFRESH_TOKEN)
+        editor.apply()
+    }
 }

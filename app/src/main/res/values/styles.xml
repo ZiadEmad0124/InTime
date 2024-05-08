@@ -16,7 +16,6 @@
         <item name="android:textStyle">bold</item>
         <item name="android:textSize">18sp</item>
         <item name="android:padding">@dimen/standard_15</item>
-        <item name="iconGravity">end</item>
     </style>
 
     <style name="InTime.TextInputLayout" parent="Widget.MaterialComponents.TextInputLayout.OutlinedBox">
@@ -154,6 +153,34 @@
         <item name="cardCornerRadius">@dimen/border_radius_16</item>
         <item name="strokeColor">@color/secondary</item>
         <item name="strokeWidth">@dimen/stroke_width</item>
+    </style>
+
+    <style name="InTime.CardView.LogOut" parent="Widget.MaterialComponents.CardView">
+        <item name="cardBackgroundColor">@color/white</item>
+        <item name="cardCornerRadius">@dimen/border_radius_16</item>
+        <item name="strokeColor">@color/primary</item>
+        <item name="strokeWidth">@dimen/stroke_width</item>
+        <item name="cardElevation">@dimen/standard_5</item>
+    </style>
+
+    <style name="InTime.LogOutButton" parent="Widget.Material3.Button">
+        <item name="backgroundTint">@null</item>
+        <item name="android:background">@drawable/button_background</item>
+        <item name="android:textColor">@color/white</item>
+        <item name="fontFamily">@font/roboto</item>
+        <item name="android:textStyle">bold</item>
+        <item name="android:textSize">18sp</item>
+    </style>
+
+    <style name="InTime.CancelLogOutButton" parent="Widget.Material3.Button.IconButton.Outlined">
+        <item name="cardBackgroundColor">@color/white</item>
+        <item name="strokeColor">@color/primary</item>
+        <item name="strokeWidth">@dimen/stroke_width</item>
+        <item name="cornerRadius">@dimen/border_radius_16</item>
+        <item name="android:textColor">@color/primary</item>
+        <item name="fontFamily">@font/roboto</item>
+        <item name="android:textStyle">bold</item>
+        <item name="android:textSize">18sp</item>
     </style>
 
 </resources>

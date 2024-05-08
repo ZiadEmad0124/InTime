@@ -13,5 +13,6 @@
     <dimen name="standard_40">40dp</dimen>
     <dimen name="standard_50">50dp</dimen>
     <dimen name="standard_100">100dp</dimen>
+    <dimen name="fab_margin">16dp</dimen>
 
 </resources>

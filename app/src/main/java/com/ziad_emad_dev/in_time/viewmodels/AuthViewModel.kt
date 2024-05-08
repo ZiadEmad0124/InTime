@@ -80,8 +80,8 @@ class AuthViewModel : ViewModel() {
                     _message.value = response.body()?.message.toString()
                 } else {
                     val errorResponse = response.errorBody()?.string()
-                    val errorSignUpResponse = Gson().fromJson(errorResponse, ActivationResponse::class.java)
-                    _message.value = errorSignUpResponse?.message.toString()
+                    val errorActivationRequest = Gson().fromJson(errorResponse, ActivationResponse::class.java)
+                    _message.value = errorActivationRequest?.message.toString()
                 }
             } catch (e: Exception) {
                 _message.value = "Failed Connect, Try Again"
@@ -99,8 +99,8 @@ class AuthViewModel : ViewModel() {
                     _message.value = response.body()?.message.toString()
                 } else {
                     val errorResponse = response.errorBody()?.string()
-                    val errorActivationResponse = Gson().fromJson(errorResponse, ResendActivationCodeResponse::class.java)
-                    _message.value = errorActivationResponse?.message.toString()
+                    val errorResendActivationCodeRequest = Gson().fromJson(errorResponse, ResendActivationCodeResponse::class.java)
+                    _message.value = errorResendActivationCodeRequest?.message.toString()
                 }
             } catch (e: Exception) {
                 _message.value = "Failed Connect, Try Again"
@@ -118,8 +118,8 @@ class AuthViewModel : ViewModel() {
                     _message.value = response.body()?.success.toString()
                 } else {
                     val errorResponse = response.errorBody()?.string()
-                    val errorLogInResponse = Gson().fromJson(errorResponse, CheckEmailResponse::class.java)
-                    _message.value = errorLogInResponse.success.toString()
+                    val errorCheckEmailRequest = Gson().fromJson(errorResponse, CheckEmailResponse::class.java)
+                    _message.value = errorCheckEmailRequest.success.toString()
                 }
             } catch (e: Exception) {
                 _message.value = "Failed Connect, Try Again"
@@ -137,8 +137,8 @@ class AuthViewModel : ViewModel() {
                     _message.value = response.body()?.message.toString()
                 } else {
                     val errorResponse = response.errorBody()?.string()
-                    val errorActivationResponse = Gson().fromJson(errorResponse, ResetPasswordResponse::class.java)
-                    _message.value = errorActivationResponse?.message.toString()
+                    val errorResetPasswordRequest = Gson().fromJson(errorResponse, ResetPasswordResponse::class.java)
+                    _message.value = errorResetPasswordRequest?.message.toString()
                 }
             } catch (e: Exception) {
                 _message.value = "Failed Connect, Try Again"

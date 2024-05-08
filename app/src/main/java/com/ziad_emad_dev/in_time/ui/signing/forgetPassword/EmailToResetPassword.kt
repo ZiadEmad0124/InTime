@@ -4,6 +4,7 @@ import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.view.animation.AnimationUtils
 import android.widget.Toast
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
@@ -79,19 +80,16 @@ class EmailToResetPassword : Fragment() {
     }
 
     private fun startLoading() {
-        binding.email.isEnabled = false
-        binding.sendOTPButton.isEnabled = false
-        binding.sendOTPButton.setBackgroundResource(R.drawable.button_loading_background)
-        binding.sendOTPButton.setTextColor(resources.getColor(R.color.grey_5, null))
-        binding.sendOTPButton.text = getString(R.string.loading)
+        binding.blockingView.visibility = View.VISIBLE
+        binding.loadingLayout.visibility = View.VISIBLE
+        val rotateAnimation = AnimationUtils.loadAnimation(requireContext(), R.anim.animation_rotate)
+        binding.loadingIcon.startAnimation(rotateAnimation)
     }
 
     private fun stopLoading() {
-        binding.email.isEnabled = true
-        binding.sendOTPButton.isEnabled = true
-        binding.sendOTPButton.setBackgroundResource(R.drawable.button_background)
-        binding.sendOTPButton.setTextColor(resources.getColor(R.color.white, null))
-        binding.sendOTPButton.text = getString(R.string.send_otp)
+        binding.blockingView.visibility = View.INVISIBLE
+        binding.loadingLayout.visibility = View.INVISIBLE
+        binding.loadingIcon.clearAnimation()
     }
 
     private fun clearFocusEditTextLayout() {

@@ -17,7 +17,7 @@
             android:layout_height="30dp"
             android:layout_gravity="center"
             android:importantForAccessibility="no"
-            tools:src="@drawable/ic_username" />
+            tools:src="@drawable/ic_name" />
 
         <LinearLayout
             android:layout_width="match_parent"

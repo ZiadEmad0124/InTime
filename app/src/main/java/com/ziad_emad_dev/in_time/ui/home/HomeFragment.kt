@@ -9,23 +9,23 @@ import androidx.fragment.app.Fragment
 import com.ziad_emad_dev.in_time.R
 import com.ziad_emad_dev.in_time.databinding.FragmentHomeBinding
 import com.ziad_emad_dev.in_time.ui.notification.NotificationActivity
-import com.ziad_emad_dev.in_time.ui.profile.ProfileActivity
-import com.ziad_emad_dev.in_time.viewmodels.HomeViewModel
+import com.ziad_emad_dev.in_time.ui.profile.ProfilePage
 
 class HomeFragment : Fragment() {
 
     private var _binding: FragmentHomeBinding? = null
     private val binding get() = _binding!!
 
-    private val viewModel by lazy {
-        HomeViewModel(requireContext())
-    }
-
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View {
         _binding = FragmentHomeBinding.inflate(inflater, container, false)
+        return binding.root
+    }
+
+    override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
+        super.onViewCreated(view, savedInstanceState)
 
         myToolbar()
 
@@ -35,8 +35,6 @@ class HomeFragment : Fragment() {
 
         myFirstTasks()
         mySecondTasks()
-
-        return binding.root
     }
 
     private fun myToolbar() {
@@ -48,11 +46,7 @@ class HomeFragment : Fragment() {
         }
 
         binding.myToolbar.menu.setOnClickListener {
-            viewModel.refreshToken()
-//            viewModel.refreshTokenMessage.observe(viewLifecycleOwner) {
-//                Toast.makeText(requireContext(), it, Toast.LENGTH_LONG).show()
-//            }
-            val intent = Intent(requireContext(), ProfileActivity::class.java)
+            val intent = Intent(requireContext(), ProfilePage::class.java)
             startActivity(intent)
         }
     }
@@ -60,7 +54,7 @@ class HomeFragment : Fragment() {
     private fun completedTasks() {
         binding.completedTasks.let {
             it.icon.setImageResource(R.drawable.ic_completed)
-            it.icon.setBackgroundColor(resources.getColor(R.color.primary))
+            it.icon.setBackgroundColor(resources.getColor(R.color.primary, null))
             it.name.text = getString(R.string.completed)
             it.points.text = 27.toString()
             it.details.text = getString(R.string.tasks)
@@ -70,7 +64,7 @@ class HomeFragment : Fragment() {
     private fun totalScore() {
         binding.totalScore.let {
             it.icon.setImageResource(R.drawable.ic_score)
-            it.icon.setBackgroundColor(resources.getColor(R.color.orange))
+            it.icon.setBackgroundColor(resources.getColor(R.color.orange, null))
             it.name.text = getString(R.string.total_score)
             it.points.text = 250.toString()
             it.details.text = getString(R.string.points)

@@ -6,6 +6,7 @@ import android.text.method.PasswordTransformationMethod
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.view.animation.AnimationUtils
 import android.widget.Toast
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
@@ -159,25 +160,16 @@ class SignIn : Fragment() {
     }
 
     private fun startLoading() {
-        binding.email.isEnabled = false
-        binding.password.isEnabled = false
-        binding.forgetPasswordButton.isEnabled = false
-        binding.signUpButton.isEnabled = false
-        binding.logInButton.isEnabled = false
-        binding.logInButton.setBackgroundResource(R.drawable.button_loading_background)
-        binding.logInButton.setTextColor(resources.getColor(R.color.grey_5, null))
-        binding.logInButton.text = getString(R.string.loading)
+        binding.blockingView.visibility = View.VISIBLE
+        binding.loadingLayout.visibility = View.VISIBLE
+        val rotateAnimation = AnimationUtils.loadAnimation(requireContext(), R.anim.animation_rotate)
+        binding.loadingIcon.startAnimation(rotateAnimation)
     }
 
     private fun stopLoading() {
-        binding.email.isEnabled = true
-        binding.password.isEnabled = true
-        binding.forgetPasswordButton.isEnabled = true
-        binding.signUpButton.isEnabled = true
-        binding.logInButton.isEnabled = true
-        binding.logInButton.setBackgroundResource(R.drawable.button_background)
-        binding.logInButton.setTextColor(resources.getColor(R.color.white, null))
-        binding.logInButton.text = getString(R.string.login)
+        binding.blockingView.visibility = View.INVISIBLE
+        binding.loadingLayout.visibility = View.INVISIBLE
+        binding.loadingIcon.clearAnimation()
     }
 
     private fun clearFocusEditTextLayout() {

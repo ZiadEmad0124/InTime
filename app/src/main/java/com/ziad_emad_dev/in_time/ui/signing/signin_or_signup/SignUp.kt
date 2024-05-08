@@ -5,10 +5,13 @@ import android.text.method.PasswordTransformationMethod
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.view.animation.AnimationUtils
+import android.widget.EditText
 import android.widget.Toast
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
 import androidx.navigation.fragment.findNavController
+import com.google.android.material.textfield.TextInputLayout
 import com.ziad_emad_dev.in_time.R
 import com.ziad_emad_dev.in_time.databinding.FragmentSignUpBinding
 import com.ziad_emad_dev.in_time.ui.signing.AsteriskPasswordTransformation
@@ -34,7 +37,8 @@ class SignUp : Fragment() {
 
         signUpWith()
         focusOnEditTextLayout()
-        passwordToggle()
+        passwordToggle(binding.passwordLayout, binding.password)
+        passwordToggle(binding.confirmPasswordLayout, binding.confirmPassword)
         clickOnButtons()
         responseComing()
 
@@ -78,22 +82,32 @@ class SignUp : Fragment() {
                 binding.passwordLayout.error = null
             } else {
                 if (!passwordEmptyError(binding.password.text.toString().trim())) {
-                    passwordValidationError(binding.password.text.toString().trim())
+                    passwordValidationError(binding.passwordLayout, binding.password.text.toString().trim())
+                }
+            }
+        }
+        binding.confirmPassword.setOnFocusChangeListener { _, hasFocus ->
+            if (hasFocus) {
+                binding.confirmPasswordLayout.error = null
+            } else {
+                if (!confirmPasswordEmptyError(binding.confirmPassword.text.toString().trim())) {
+                    passwordValidationError(binding.confirmPasswordLayout, binding.confirmPassword.text.toString().trim())
+                    passwordsMatchError(binding.password.text.toString().trim(), binding.confirmPassword.text.toString().trim())
                 }
             }
         }
     }
 
-    private fun passwordToggle() {
-        binding.passwordLayout.setEndIconOnClickListener {
-            val selection = binding.password.selectionEnd
-            val hasPasswordTransformation = binding.password.transformationMethod is PasswordTransformationMethod
+    private fun passwordToggle(passwordLayout: TextInputLayout, password: EditText) {
+        passwordLayout.setEndIconOnClickListener {
+            val selection = password.selectionEnd
+            val hasPasswordTransformation = password.transformationMethod is PasswordTransformationMethod
             if (hasPasswordTransformation) {
-                binding.password.transformationMethod = null
+                password.transformationMethod = null
             } else {
-                binding.password.transformationMethod = AsteriskPasswordTransformation()
+                password.transformationMethod = AsteriskPasswordTransformation()
             }
-            binding.password.setSelection(selection)
+            password.setSelection(selection)
         }
     }
 
@@ -107,11 +121,18 @@ class SignUp : Fragment() {
             val email = binding.email.text.toString().trim()
             val phone = binding.phone.text.toString().trim()
             val password = binding.password.text.toString().trim()
+            val confirmPassword = binding.confirmPassword.text.toString().trim()
             clearFocusEditTextLayout()
             if (!(nameEmptyError(name) && emailEmptyError(email) && phoneEmptyError(phone) && passwordEmptyError(password))) {
-                if (!(nameValidationError(name) || emailValidationError(email) || phoneValidationError(phone) || passwordValidationError(password))) {
-                    startLoading()
-                    viewModel.signUp(name, email, phone, password)
+                if (!(nameValidationError(name) ||
+                            emailValidationError(email) ||
+                            phoneValidationError(phone) ||
+                            passwordValidationError(binding.passwordLayout, password) ||
+                            passwordValidationError(binding.confirmPasswordLayout ,confirmPassword))) {
+                    if (!passwordsMatchError(password, confirmPassword)) {
+                        startLoading()
+                        viewModel.signUp(name, email, phone, password)
+                    }
                 }
             }
         }
@@ -145,6 +166,13 @@ class SignUp : Fragment() {
         return password.isEmpty()
     }
 
+    private fun confirmPasswordEmptyError(confirmPassword: String): Boolean {
+        if (confirmPassword.isEmpty()) {
+            binding.confirmPasswordLayout.error = getString(R.string.empty_field)
+        }
+        return confirmPassword.isEmpty()
+    }
+
     private fun nameValidationError(name: String): Boolean {
         if (name.length < 3) {
             binding.nameLayout.error = getString(R.string.name_error)
@@ -166,25 +194,32 @@ class SignUp : Fragment() {
         return phone.length < 11
     }
 
-    private fun passwordValidationError(password: String): Boolean {
+    private fun passwordValidationError(passwordLayout: TextInputLayout, password: String): Boolean {
         if (password.length < 8) {
-            binding.passwordLayout.error = getString(R.string.password_must_be_at_least_8_characters)
+            passwordLayout.error = getString(R.string.password_must_be_at_least_8_characters)
             return true
         } else if (!password.matches(Regex(".*[a-z].*"))) {
-            binding.passwordLayout.error = getString(R.string.password_must_contain_at_least_one_lowercase_letter)
+            passwordLayout.error = getString(R.string.password_must_contain_at_least_one_lowercase_letter)
             return true
         } else if (!password.matches(Regex(".*[A-Z].*"))) {
-            binding.passwordLayout.error = getString(R.string.password_must_contain_at_least_one_uppercase_letter)
+            passwordLayout.error = getString(R.string.password_must_contain_at_least_one_uppercase_letter)
             return true
         } else if (!password.matches(Regex(".*[0-9].*"))) {
-            binding.passwordLayout.error = getString(R.string.password_must_contain_at_least_one_digit)
+            passwordLayout.error = getString(R.string.password_must_contain_at_least_one_digit)
             return true
         } else if (!password.matches(Regex(".*[!@#\$_%^&*+(,)/\"\':?-].*"))) {
-            binding.passwordLayout.error = getString(R.string.password_must_contain_at_least_one_special_character)
+            passwordLayout.error = getString(R.string.password_must_contain_at_least_one_special_character)
             return true
         } else {
             return false
         }
+    }
+
+    private fun passwordsMatchError(password: String, confirmPassword: String): Boolean {
+        if (password != confirmPassword) {
+            binding.confirmPasswordLayout.error = getString(R.string.password_not_match)
+        }
+        return password != confirmPassword
     }
 
     private fun emailAlreadyExists() {
@@ -192,27 +227,16 @@ class SignUp : Fragment() {
     }
 
     private fun startLoading() {
-        binding.name.isEnabled = false
-        binding.email.isEnabled = false
-        binding.phone.isEnabled = false
-        binding.password.isEnabled = false
-        binding.logInButton.isEnabled = false
-        binding.signUpButton.isEnabled = false
-        binding.signUpButton.setBackgroundResource(R.drawable.button_loading_background)
-        binding.signUpButton.setTextColor(resources.getColor(R.color.grey_5, null))
-        binding.signUpButton.text = getString(R.string.loading)
+        binding.blockingView.visibility = View.VISIBLE
+        binding.loadingLayout.visibility = View.VISIBLE
+        val rotateAnimation = AnimationUtils.loadAnimation(requireContext(), R.anim.animation_rotate)
+        binding.loadingIcon.startAnimation(rotateAnimation)
     }
 
     private fun stopLoading() {
-        binding.name.isEnabled = true
-        binding.email.isEnabled = true
-        binding.phone.isEnabled = true
-        binding.password.isEnabled = true
-        binding.logInButton.isEnabled = true
-        binding.signUpButton.isEnabled = true
-        binding.signUpButton.setBackgroundResource(R.drawable.button_background)
-        binding.signUpButton.setTextColor(resources.getColor(R.color.white, null))
-        binding.signUpButton.text = getString(R.string.sign_up)
+        binding.blockingView.visibility = View.INVISIBLE
+        binding.loadingLayout.visibility = View.INVISIBLE
+        binding.loadingIcon.clearAnimation()
     }
 
     private fun clearFocusEditTextLayout() {

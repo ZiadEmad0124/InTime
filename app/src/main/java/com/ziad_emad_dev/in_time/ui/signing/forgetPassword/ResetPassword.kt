@@ -8,6 +8,7 @@ import android.text.method.PasswordTransformationMethod
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.view.animation.AnimationUtils
 import android.widget.EditText
 import android.widget.Toast
 import androidx.fragment.app.Fragment
@@ -177,25 +178,16 @@ class ResetPassword : Fragment() {
     }
 
     private fun startLoading() {
-        binding.otpView.isEnabled = false
-        binding.otpTimer.isEnabled = false
-        binding.password.isEnabled = false
-        binding.confirmPassword.isEnabled = false
-        binding.saveNewPasswordButton.isEnabled = false
-        binding.saveNewPasswordButton.setBackgroundResource(R.drawable.button_loading_background)
-        binding.saveNewPasswordButton.setTextColor(resources.getColor(R.color.grey_5, null))
-        binding.saveNewPasswordButton.text = getString(R.string.loading)
+        binding.blockingView.visibility = View.VISIBLE
+        binding.loadingLayout.visibility = View.VISIBLE
+        val rotateAnimation = AnimationUtils.loadAnimation(requireContext(), R.anim.animation_rotate)
+        binding.loadingIcon.startAnimation(rotateAnimation)
     }
 
     private fun stopLoading() {
-        binding.otpView.isEnabled = true
-        binding.otpTimer.isEnabled = true
-        binding.password.isEnabled = true
-        binding.confirmPassword.isEnabled = true
-        binding.saveNewPasswordButton.isEnabled = true
-        binding.saveNewPasswordButton.setBackgroundResource(R.drawable.button_background)
-        binding.saveNewPasswordButton.setTextColor(resources.getColor(R.color.white, null))
-        binding.saveNewPasswordButton.text = getString(R.string.save_new_password)
+        binding.blockingView.visibility = View.INVISIBLE
+        binding.loadingLayout.visibility = View.INVISIBLE
+        binding.loadingIcon.clearAnimation()
     }
 
     private fun clearFocusEditTextLayout() {

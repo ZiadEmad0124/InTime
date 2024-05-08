@@ -12,9 +12,12 @@ import com.ziad_emad_dev.in_time.network.auth.resend_activation_code.ResendActiv
 import com.ziad_emad_dev.in_time.network.auth.resend_activation_code.ResendActivationCodeResponse
 import com.ziad_emad_dev.in_time.network.auth.sign_in.SignInRequest
 import com.ziad_emad_dev.in_time.network.auth.sign_in.SignInResponse
+import com.ziad_emad_dev.in_time.network.auth.sign_out.SignOutRequest
+import com.ziad_emad_dev.in_time.network.auth.sign_out.SignOutResponse
 import com.ziad_emad_dev.in_time.network.auth.sign_up.SignUpRequest
 import com.ziad_emad_dev.in_time.network.auth.sign_up.SignUpResponse
 import com.ziad_emad_dev.in_time.network.user.UserResponse
+import okhttp3.OkHttpClient
 import retrofit2.Response
 import retrofit2.Retrofit
 import retrofit2.converter.gson.GsonConverterFactory
@@ -23,6 +26,7 @@ import retrofit2.http.GET
 import retrofit2.http.Header
 import retrofit2.http.POST
 import retrofit2.http.Path
+import java.util.concurrent.TimeUnit
 
 private const val BASE_URL = "https://intime-9hga.onrender.com/api/v1/"
 
@@ -34,12 +38,19 @@ private const val RESEND_ACTIVATION_CODE_URL = "auth/resendactivationcode"
 private const val CHECK_EMAIL_URL = "auth/forgetpassword"
 private const val CHANGE_PASSWORD_URL = "auth/forgetpassword/changepassword/{code}"
 private const val REFRESH_TOKEN_URL = "auth/refreshToken"
+private const val SIGNOUT_URL = "auth/signOut"
 
 //  User Endpoints
 private const val USER_URL = "user/"
 
+private val okHttpClient = OkHttpClient.Builder()
+    .readTimeout(300, TimeUnit.SECONDS)
+    .connectTimeout(300, TimeUnit.SECONDS)
+    .build()
+
 private val retrofit = Retrofit.Builder()
     .baseUrl(BASE_URL)
+    .client(okHttpClient)
     .addConverterFactory(GsonConverterFactory.create())
     .build()
 
@@ -67,6 +78,9 @@ interface InTimeApiServices {
 
     @POST(REFRESH_TOKEN_URL)
     suspend fun refreshToken(@Body request: RefreshTokenRequest): Response<RefreshTokenResponse>
+
+    @POST(SIGNOUT_URL)
+    suspend fun signOut(@Body request: SignOutRequest): Response<SignOutResponse>
 
 //  User
 
