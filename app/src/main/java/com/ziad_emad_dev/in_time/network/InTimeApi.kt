@@ -16,15 +16,21 @@ import com.ziad_emad_dev.in_time.network.auth.sign_out.SignOutRequest
 import com.ziad_emad_dev.in_time.network.auth.sign_out.SignOutResponse
 import com.ziad_emad_dev.in_time.network.auth.sign_up.SignUpRequest
 import com.ziad_emad_dev.in_time.network.auth.sign_up.SignUpResponse
+import com.ziad_emad_dev.in_time.network.delete_account.DeleteAccountResponse
+import com.ziad_emad_dev.in_time.network.edit_profile.EditProfileResponse
 import com.ziad_emad_dev.in_time.network.user.UserResponse
+import okhttp3.MultipartBody
 import okhttp3.OkHttpClient
+import okhttp3.RequestBody
 import retrofit2.Response
 import retrofit2.Retrofit
 import retrofit2.converter.gson.GsonConverterFactory
 import retrofit2.http.Body
 import retrofit2.http.GET
 import retrofit2.http.Header
+import retrofit2.http.Multipart
 import retrofit2.http.POST
+import retrofit2.http.Part
 import retrofit2.http.Path
 import java.util.concurrent.TimeUnit
 
@@ -42,6 +48,8 @@ private const val SIGNOUT_URL = "auth/signOut"
 
 //  User Endpoints
 private const val USER_URL = "user/"
+private const val DELETE_ACCOUNT_URL = "user/deleteUser"
+private const val EDIT_PROFILE_URL = "user/editProfile"
 
 private val okHttpClient = OkHttpClient.Builder()
     .readTimeout(300, TimeUnit.SECONDS)
@@ -86,6 +94,17 @@ interface InTimeApiServices {
 
     @GET(USER_URL)
     suspend fun fetchUser(@Header("Authorization") token: String): Response<UserResponse>
+
+    @POST(DELETE_ACCOUNT_URL)
+    suspend fun deleteAccount(@Header("Authorization") token: String): Response<DeleteAccountResponse>
+
+    @Multipart
+    @POST(EDIT_PROFILE_URL)
+    suspend fun editProfile(
+        @Header("Authorization") token: String,
+        @Part("name") name: RequestBody, @Part("phone") phone: RequestBody,
+        @Part("age") age: RequestBody, @Part image: MultipartBody.Part
+    ): Response<EditProfileResponse>
 }
 
 object InTimeApi {

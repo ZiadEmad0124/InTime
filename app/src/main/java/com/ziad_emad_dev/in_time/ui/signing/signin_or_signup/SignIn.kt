@@ -6,7 +6,6 @@ import android.text.method.PasswordTransformationMethod
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import android.view.animation.AnimationUtils
 import android.widget.Toast
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
@@ -133,7 +132,7 @@ class SignIn : Fragment() {
     private fun passwordValidationError(password: String): Boolean {
         if (password.length < 8) {
             binding.passwordLayout.error = getString(R.string.password_must_be_at_least_8_characters)
-           return true
+            return true
         } else if (!password.matches(Regex(".*[a-z].*"))) {
             binding.passwordLayout.error = getString(R.string.password_must_contain_at_least_one_lowercase_letter)
             return true
@@ -161,15 +160,16 @@ class SignIn : Fragment() {
 
     private fun startLoading() {
         binding.blockingView.visibility = View.VISIBLE
-        binding.loadingLayout.visibility = View.VISIBLE
-        val rotateAnimation = AnimationUtils.loadAnimation(requireContext(), R.anim.animation_rotate)
-        binding.loadingIcon.startAnimation(rotateAnimation)
+        binding.logInButton.setBackgroundResource(R.drawable.button_loading_background)
+        binding.logInButton.text = null
+        binding.progressCircular.visibility = View.VISIBLE
     }
 
     private fun stopLoading() {
-        binding.blockingView.visibility = View.INVISIBLE
-        binding.loadingLayout.visibility = View.INVISIBLE
-        binding.loadingIcon.clearAnimation()
+        binding.progressCircular.visibility = View.GONE
+        binding.logInButton.setBackgroundResource(R.drawable.button_background)
+        binding.logInButton.text = getString(R.string.login)
+        binding.blockingView.visibility = View.GONE
     }
 
     private fun clearFocusEditTextLayout() {
@@ -178,17 +178,17 @@ class SignIn : Fragment() {
     }
 
     private fun responseComing() {
-        viewModel.message.observe(viewLifecycleOwner) {
-            checkAccountAndNetwork(it)
+        viewModel.message.observe(viewLifecycleOwner) { message ->
+            checkAccountAndNetwork(message)
         }
     }
 
     private fun saveTokens() {
-        viewModel.accessToken.observe(viewLifecycleOwner) {
-            sessionManager.saveAuthToken(it)
+        viewModel.accessToken.observe(viewLifecycleOwner) { accessToken ->
+            sessionManager.saveAuthToken(accessToken)
         }
-        viewModel.refreshToken.observe(viewLifecycleOwner) {
-            sessionManager.saveRefreshToken(it)
+        viewModel.refreshToken.observe(viewLifecycleOwner) { refreshToken ->
+            sessionManager.saveRefreshToken(refreshToken)
         }
     }
 
@@ -201,6 +201,13 @@ class SignIn : Fragment() {
 
             "wrong password" -> {
                 passwordWrong()
+            }
+
+            "you have to activate your account first" -> {
+                val email = binding.email.text.toString().trim()
+                val password = binding.password.text.toString().trim()
+                val action = SignInDirections.actionSignInToActivationAccount(email = email, password = password)
+                findNavController().navigate(action)
             }
 
             "true" -> {

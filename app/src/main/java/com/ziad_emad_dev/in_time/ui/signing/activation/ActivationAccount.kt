@@ -7,7 +7,6 @@ import android.os.CountDownTimer
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import android.view.animation.AnimationUtils
 import android.widget.Toast
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
@@ -25,7 +24,7 @@ class ActivationAccount : Fragment() {
     private val viewModel: AuthViewModel by viewModels()
 
     val millisInFuture = 5 * 60 * 1000 // 5 minutes in milliseconds
-    val countDownInterval = 1000 // 1 second
+    val countDownInterval = 1000 // 1 second in milliseconds
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
@@ -46,29 +45,30 @@ class ActivationAccount : Fragment() {
     }
 
     private fun focusOnEditTextLayout() {
-        binding.otpView.setOnFocusChangeListener { _, hasFocus ->
+        binding.otpCode.setOnFocusChangeListener { _, hasFocus ->
             if (hasFocus) {
-                binding.otpView.setLineColor(R.drawable.pin_line)
+
+                binding.otpCode.setLineColor(R.drawable.pin_line)
             }
         }
     }
 
     private val countDownTimer = object : CountDownTimer(millisInFuture.toLong(), countDownInterval.toLong()) {
-        @SuppressLint("DefaultLocale")
-        override fun onTick(millisUntilFinished: Long) {
-            val minutes = TimeUnit.MILLISECONDS.toMinutes(millisUntilFinished)
-            val seconds = TimeUnit.MILLISECONDS.toSeconds(millisUntilFinished) - TimeUnit.MINUTES.toSeconds(minutes)
-            binding.otpTimer.text = String.format("in %02d:%02d", minutes, seconds)
-        }
+            @SuppressLint("DefaultLocale")
+            override fun onTick(millisUntilFinished: Long) {
+                val minutes = TimeUnit.MILLISECONDS.toMinutes(millisUntilFinished)
+                val seconds = TimeUnit.MILLISECONDS.toSeconds(millisUntilFinished) - TimeUnit.MINUTES.toSeconds(minutes)
+                binding.otpTimer.text = String.format("in %02d:%02d", minutes, seconds)
+            }
 
-        override fun onFinish() {
-            binding.otpTimer.text = getString(R.string.now)
+            override fun onFinish() {
+                binding.otpTimer.text = getString(R.string.now)
+            }
         }
-    }
 
     private fun clickOnNextButton() {
         binding.nextButton.setOnClickListener {
-            val otpCode = binding.otpView.text.toString()
+            val otpCode = binding.otpCode.text.toString()
             val email = requireArguments().getString("email").toString()
             if (!otpCodeEmptyError(otpCode)) {
                 startLoading()
@@ -79,7 +79,8 @@ class ActivationAccount : Fragment() {
 
     private fun otpCodeEmptyError(otpCode: String): Boolean {
         if (otpCode.isEmpty() || otpCode.length < 4) {
-            binding.otpView.setLineColor(Color.RED)
+
+            binding.otpCode.setLineColor(Color.RED)
             Toast.makeText(requireContext(), "Please Enter The Code Contain 4 Digits", Toast.LENGTH_SHORT).show()
         }
         return otpCode.isEmpty() || otpCode.length < 4
@@ -87,20 +88,24 @@ class ActivationAccount : Fragment() {
 
     private fun startLoading() {
         binding.blockingView.visibility = View.VISIBLE
-        binding.loadingLayout.visibility = View.VISIBLE
-        val rotateAnimation = AnimationUtils.loadAnimation(requireContext(), R.anim.animation_rotate)
-        binding.loadingIcon.startAnimation(rotateAnimation)
+
+        binding.otpCode.setLineColor(R.drawable.pin_line)
+
+        binding.nextButton.setBackgroundResource(R.drawable.button_loading_background)
+        binding.nextButton.text = null
+        binding.progressCircular.visibility = View.VISIBLE
     }
 
     private fun stopLoading() {
-        binding.blockingView.visibility = View.INVISIBLE
-        binding.loadingLayout.visibility = View.INVISIBLE
-        binding.loadingIcon.clearAnimation()
+        binding.progressCircular.visibility = View.GONE
+        binding.nextButton.setBackgroundResource(R.drawable.button_background)
+        binding.nextButton.text = getString(R.string.next)
+        binding.blockingView.visibility = View.GONE
     }
 
     private fun responseComing() {
-        viewModel.message.observe(viewLifecycleOwner) {
-            checkCodeAndNetwork(it)
+        viewModel.message.observe(viewLifecycleOwner) { message ->
+            checkCodeAndNetwork(message)
         }
     }
 
@@ -108,18 +113,20 @@ class ActivationAccount : Fragment() {
         stopLoading()
         when (message) {
             "this account is now active" -> {
-                binding.otpView.setLineColor(Color.GREEN)
+                binding.otpCode.setLineColor(Color.GREEN)
                 findNavController().navigate(R.id.action_activation_Account_to_signIn)
                 Toast.makeText(requireContext(), "This account is active now, SignIn", Toast.LENGTH_SHORT).show()
             }
 
             "Failed Connect, Try Again" -> {
-                binding.otpView.setLineColor(Color.RED)
+
+                binding.otpCode.setLineColor(Color.RED)
                 Toast.makeText(requireContext(), message, Toast.LENGTH_SHORT).show()
             }
 
             else -> {
-                binding.otpView.setLineColor(Color.RED)
+
+                binding.otpCode.setLineColor(Color.RED)
                 Toast.makeText(requireContext(), "Code is Wrong, Try Again", Toast.LENGTH_SHORT).show()
             }
         }

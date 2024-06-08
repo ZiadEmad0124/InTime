@@ -7,7 +7,6 @@ import android.view.ViewGroup
 import androidx.fragment.app.Fragment
 import androidx.recyclerview.widget.LinearSnapHelper
 import androidx.recyclerview.widget.SnapHelper
-import com.ziad_emad_dev.in_time.R
 import com.ziad_emad_dev.in_time.databinding.FragmentCalenderBinding
 import com.ziad_emad_dev.in_time.ui.calender.CalendarAdapter
 import com.ziad_emad_dev.in_time.ui.calender.CalendarDateModel
@@ -44,17 +43,11 @@ class CalenderFragment : Fragment() {
         calendarNextMonth.add(Calendar.MONTH, 1)
         calendarLastMonth.add(Calendar.MONTH, -1)
 
-        myToolbar()
-
         setUpAdapter()
         setUpClickListener()
         setUpCalendar()
 
         binding.recyclerView.layoutManager?.scrollToPosition(todayDate - 2)
-    }
-
-    private fun myToolbar() {
-        binding.myToolbar.title.text = getString(R.string.agenda)
     }
 
     private fun setUpAdapter() {

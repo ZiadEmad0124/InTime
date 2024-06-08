@@ -4,7 +4,6 @@ import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import android.view.animation.AnimationUtils
 import android.widget.Toast
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
@@ -81,15 +80,16 @@ class EmailToResetPassword : Fragment() {
 
     private fun startLoading() {
         binding.blockingView.visibility = View.VISIBLE
-        binding.loadingLayout.visibility = View.VISIBLE
-        val rotateAnimation = AnimationUtils.loadAnimation(requireContext(), R.anim.animation_rotate)
-        binding.loadingIcon.startAnimation(rotateAnimation)
+        binding.sendOTPButton.setBackgroundResource(R.drawable.button_loading_background)
+        binding.sendOTPButton.text = null
+        binding.progressCircular.visibility = View.VISIBLE
     }
 
     private fun stopLoading() {
-        binding.blockingView.visibility = View.INVISIBLE
-        binding.loadingLayout.visibility = View.INVISIBLE
-        binding.loadingIcon.clearAnimation()
+        binding.progressCircular.visibility = View.GONE
+        binding.sendOTPButton.setBackgroundResource(R.drawable.button_background)
+        binding.sendOTPButton.text = getString(R.string.send_otp)
+        binding.blockingView.visibility = View.GONE
     }
 
     private fun clearFocusEditTextLayout() {
@@ -97,8 +97,8 @@ class EmailToResetPassword : Fragment() {
     }
 
     private fun responseComing() {
-        viewModel.message.observe(viewLifecycleOwner) {
-            checkEmailAndNetwork(it)
+        viewModel.message.observe(viewLifecycleOwner) { message ->
+            checkEmailAndNetwork(message)
         }
     }
 

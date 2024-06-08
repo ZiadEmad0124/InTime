@@ -1,6 +1,5 @@
 package com.ziad_emad_dev.in_time.ui.home
 
-import android.content.Intent
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
@@ -8,8 +7,6 @@ import android.view.ViewGroup
 import androidx.fragment.app.Fragment
 import com.ziad_emad_dev.in_time.R
 import com.ziad_emad_dev.in_time.databinding.FragmentHomeBinding
-import com.ziad_emad_dev.in_time.ui.notification.NotificationActivity
-import com.ziad_emad_dev.in_time.ui.profile.ProfilePage
 
 class HomeFragment : Fragment() {
 
@@ -27,28 +24,12 @@ class HomeFragment : Fragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
-        myToolbar()
-
         completedTasks()
         totalScore()
         inProgress()
 
         myFirstTasks()
         mySecondTasks()
-    }
-
-    private fun myToolbar() {
-        binding.myToolbar.title.text = getString(R.string.time)
-
-        binding.myToolbar.notification.setOnClickListener {
-            val intent = Intent(requireContext(), NotificationActivity::class.java)
-            startActivity(intent)
-        }
-
-        binding.myToolbar.menu.setOnClickListener {
-            val intent = Intent(requireContext(), ProfilePage::class.java)
-            startActivity(intent)
-        }
     }
 
     private fun completedTasks() {

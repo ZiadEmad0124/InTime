@@ -10,7 +10,7 @@ class SessionManager(context: Context) {
         private const val REFRESH_TOKEN = "Refresh Token"
     }
 
-    private var sharedPreferences: SharedPreferences = context.getSharedPreferences("InTime", Context.MODE_PRIVATE)
+    private var sharedPreferences: SharedPreferences = context.getSharedPreferences("Session", Context.MODE_PRIVATE)
 
     fun saveAuthToken(token: String) {
         val editor = sharedPreferences.edit()

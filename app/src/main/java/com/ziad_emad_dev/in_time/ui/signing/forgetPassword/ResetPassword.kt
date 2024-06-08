@@ -8,7 +8,6 @@ import android.text.method.PasswordTransformationMethod
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import android.view.animation.AnimationUtils
 import android.widget.EditText
 import android.widget.Toast
 import androidx.fragment.app.Fragment
@@ -55,9 +54,11 @@ class ResetPassword : Fragment() {
     }
 
     private fun focusOnEditTextLayout() {
-        binding.otpView.setOnFocusChangeListener { _, hasFocus ->
+
+        binding.otpCode.setOnFocusChangeListener { _, hasFocus ->
             if (hasFocus) {
-                binding.otpView.setLineColor(R.drawable.pin_line)
+
+                binding.otpCode.setLineColor(R.drawable.pin_line)
             }
         }
         binding.password.setOnFocusChangeListener { _, hasFocus ->
@@ -109,7 +110,7 @@ class ResetPassword : Fragment() {
 
     private fun clickOnNewPasswordButton() {
         binding.saveNewPasswordButton.setOnClickListener {
-            val otpCode = binding.otpView.text.toString()
+            val otpCode = binding.otpCode.text.toString()
             val email = requireArguments().getString("email").toString()
             val password = binding.password.text.toString().trim()
             val confirmPassword = binding.confirmPassword.text.toString().trim()
@@ -129,7 +130,8 @@ class ResetPassword : Fragment() {
 
     private fun otpCodeEmptyError(otpCode: String): Boolean {
         if (otpCode.isEmpty() || otpCode.length < 4) {
-            binding.otpView.setLineColor(Color.RED)
+
+            binding.otpCode.setLineColor(Color.RED)
             Toast.makeText(requireContext(), "Please Enter The Code Contain 4 Digits", Toast.LENGTH_SHORT).show()
         }
         return otpCode.isEmpty() || otpCode.length < 4
@@ -179,15 +181,19 @@ class ResetPassword : Fragment() {
 
     private fun startLoading() {
         binding.blockingView.visibility = View.VISIBLE
-        binding.loadingLayout.visibility = View.VISIBLE
-        val rotateAnimation = AnimationUtils.loadAnimation(requireContext(), R.anim.animation_rotate)
-        binding.loadingIcon.startAnimation(rotateAnimation)
+
+        binding.otpCode.setLineColor(R.drawable.pin_line)
+
+        binding.saveNewPasswordButton.setBackgroundResource(R.drawable.button_loading_background)
+        binding.saveNewPasswordButton.text = null
+        binding.progressCircular.visibility = View.VISIBLE
     }
 
     private fun stopLoading() {
-        binding.blockingView.visibility = View.INVISIBLE
-        binding.loadingLayout.visibility = View.INVISIBLE
-        binding.loadingIcon.clearAnimation()
+        binding.progressCircular.visibility = View.GONE
+        binding.saveNewPasswordButton.setBackgroundResource(R.drawable.button_background)
+        binding.saveNewPasswordButton.text = getString(R.string.save_new_password)
+        binding.blockingView.visibility = View.GONE
     }
 
     private fun clearFocusEditTextLayout() {
@@ -201,8 +207,8 @@ class ResetPassword : Fragment() {
     }
 
     private fun responseComing() {
-        viewModel.message.observe(viewLifecycleOwner) {
-            checkCodePasswordAndNetwork(it)
+        viewModel.message.observe(viewLifecycleOwner) { message ->
+            checkCodePasswordAndNetwork(message)
         }
     }
 
@@ -210,12 +216,13 @@ class ResetPassword : Fragment() {
         stopLoading()
         when (message) {
             "Invalid OTP" -> {
-                binding.otpView.setLineColor(Color.RED)
+
+                binding.otpCode.setLineColor(Color.RED)
                 Toast.makeText(requireContext(), "Code is Wrong, Try Again", Toast.LENGTH_SHORT).show()
             }
 
-            "password changed" -> {
-                binding.otpView.setLineColor(Color.GREEN)
+            "true" -> {
+                binding.otpCode.setLineColor(Color.GREEN)
                 findNavController().navigate(R.id.action_resetPassword_to_signIn)
                 Toast.makeText(requireContext(), "Password Changed Successfully, SignIn Now", Toast.LENGTH_SHORT).show()
             }
@@ -234,7 +241,7 @@ class ResetPassword : Fragment() {
     private fun resendOTP() {
         binding.otpTimer.setOnClickListener {
             if (binding.otpTimer.text == getString(R.string.now)) {
-                val otpCode = binding.otpView.text.toString()
+                val otpCode = binding.otpCode.text.toString()
                 val email = requireArguments().getString("email").toString()
                 val password = binding.password.text.toString().trim()
                 val confirmPassword = binding.confirmPassword.text.toString().trim()

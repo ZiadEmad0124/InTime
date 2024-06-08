@@ -53,7 +53,7 @@
                 android:textStyle="bold" />
 
             <com.chaos.view.PinView
-                android:id="@+id/otpView"
+                android:id="@+id/otpCode"
                 style="@style/InTime.PinView"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
@@ -66,7 +66,6 @@
                 android:layout_marginTop="@dimen/standard_25">
 
                 <TextView
-                    android:id="@+id/resendOTP"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:fontFamily="@font/roboto"
@@ -88,13 +87,27 @@
 
             </LinearLayout>
 
-            <Button
-                android:id="@+id/nextButton"
-                style="@style/InTime.Button"
+            <FrameLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_marginTop="@dimen/standard_25"
-                android:text="@string/next" />
+                android:layout_marginTop="@dimen/standard_25">
+
+                <Button
+                    android:id="@+id/nextButton"
+                    style="@style/InTime.Button"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:text="@string/next" />
+
+                <ProgressBar
+                    android:id="@+id/progressCircular"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="center"
+                    android:indeterminateTint="@color/grey_5"
+                    android:visibility="gone" />
+
+            </FrameLayout>
 
         </LinearLayout>
 
@@ -107,31 +120,10 @@
         android:background="@android:color/transparent"
         android:clickable="true"
         android:focusable="true"
-        android:visibility="invisible"
+        android:visibility="gone"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent" />
-
-    <LinearLayout
-        android:id="@+id/loadingLayout"
-        android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:background="@color/grey_6"
-        android:gravity="center"
-        android:visibility="invisible"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent">
-
-        <ImageView
-            android:id="@+id/loadingIcon"
-            android:layout_width="100dp"
-            android:layout_height="100dp"
-            android:importantForAccessibility="no"
-            android:src="@drawable/ic_loading" />
-
-    </LinearLayout>
 
 </androidx.constraintlayout.widget.ConstraintLayout>

@@ -5,7 +5,6 @@ import android.text.method.PasswordTransformationMethod
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import android.view.animation.AnimationUtils
 import android.widget.EditText
 import android.widget.Toast
 import androidx.fragment.app.Fragment
@@ -123,12 +122,18 @@ class SignUp : Fragment() {
             val password = binding.password.text.toString().trim()
             val confirmPassword = binding.confirmPassword.text.toString().trim()
             clearFocusEditTextLayout()
-            if (!(nameEmptyError(name) && emailEmptyError(email) && phoneEmptyError(phone) && passwordEmptyError(password))) {
+            if (!(nameEmptyError(name) &&
+                        emailEmptyError(email) &&
+                        phoneEmptyError(phone) &&
+                        passwordEmptyError(password) &&
+                        passwordEmptyError(confirmPassword))
+            ) {
                 if (!(nameValidationError(name) ||
                             emailValidationError(email) ||
                             phoneValidationError(phone) ||
                             passwordValidationError(binding.passwordLayout, password) ||
-                            passwordValidationError(binding.confirmPasswordLayout ,confirmPassword))) {
+                            passwordValidationError(binding.confirmPasswordLayout, confirmPassword))
+                ) {
                     if (!passwordsMatchError(password, confirmPassword)) {
                         startLoading()
                         viewModel.signUp(name, email, phone, password)
@@ -228,15 +233,16 @@ class SignUp : Fragment() {
 
     private fun startLoading() {
         binding.blockingView.visibility = View.VISIBLE
-        binding.loadingLayout.visibility = View.VISIBLE
-        val rotateAnimation = AnimationUtils.loadAnimation(requireContext(), R.anim.animation_rotate)
-        binding.loadingIcon.startAnimation(rotateAnimation)
+        binding.signUpButton.setBackgroundResource(R.drawable.button_loading_background)
+        binding.signUpButton.text = null
+        binding.progressCircular.visibility = View.VISIBLE
     }
 
     private fun stopLoading() {
-        binding.blockingView.visibility = View.INVISIBLE
-        binding.loadingLayout.visibility = View.INVISIBLE
-        binding.loadingIcon.clearAnimation()
+        binding.progressCircular.visibility = View.GONE
+        binding.signUpButton.setBackgroundResource(R.drawable.button_background)
+        binding.signUpButton.text = getString(R.string.sign_up)
+        binding.blockingView.visibility = View.GONE
     }
 
     private fun clearFocusEditTextLayout() {
@@ -247,8 +253,8 @@ class SignUp : Fragment() {
     }
 
     private fun responseComing() {
-        viewModel.message.observe(viewLifecycleOwner) {
-            checkAccountAndNetwork(it)
+        viewModel.message.observe(viewLifecycleOwner) { message ->
+            checkAccountAndNetwork(message)
         }
     }
 
@@ -260,7 +266,9 @@ class SignUp : Fragment() {
             }
 
             "check your mail to activate your account" -> {
-                val action = SignUpDirections.actionSignUpToActivationAccount(binding.email.text.toString().trim(), binding.password.text.toString().trim())
+                val email = binding.email.text.toString().trim()
+                val password = binding.password.text.toString().trim()
+                val action = SignUpDirections.actionSignUpToActivationAccount(email = email, password = password)
                 findNavController().navigate(action)
             }
 

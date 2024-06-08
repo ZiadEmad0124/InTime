@@ -75,7 +75,7 @@ class AuthViewModel : ViewModel() {
 
         viewModelScope.launch {
             try {
-                val response = InTimeApi.retrofitService.activateAccount(code, request)
+                val response = InTimeApi.retrofitService.activateAccount(code = code, request)
                 if (response.isSuccessful) {
                     _message.value = response.body()?.message.toString()
                 } else {
@@ -90,7 +90,7 @@ class AuthViewModel : ViewModel() {
     }
 
     fun resendActivationCode(email: String, password: String) {
-        val request = ResendActivationCodeRequest(email, password)
+        val request = ResendActivationCodeRequest(email = email, password = password)
 
         viewModelScope.launch {
             try {
@@ -128,13 +128,13 @@ class AuthViewModel : ViewModel() {
     }
 
     fun resetPassword(code: String, email: String, password: String, confirmPassword: String) {
-        val request = ResetPasswordRequest(email, password, confirmPassword)
+        val request = ResetPasswordRequest(email = email, password = password, confirmPassword = confirmPassword)
 
         viewModelScope.launch {
             try {
-                val response = InTimeApi.retrofitService.resetPassword(code, request)
+                val response = InTimeApi.retrofitService.resetPassword(code = code, request)
                 if (response.isSuccessful) {
-                    _message.value = response.body()?.message.toString()
+                    _message.value = response.body()?.success.toString()
                 } else {
                     val errorResponse = response.errorBody()?.string()
                     val errorResetPasswordRequest = Gson().fromJson(errorResponse, ResetPasswordResponse::class.java)

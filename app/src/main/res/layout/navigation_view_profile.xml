@@ -1,0 +1,92 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@color/white">
+
+    <LinearLayout
+        android:id="@+id/profileContainer"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_margin="@dimen/standard_25"
+        android:orientation="vertical">
+
+        <de.hdodenhof.circleimageview.CircleImageView
+            android:id="@+id/profileImage"
+            android:layout_width="100dp"
+            android:layout_height="100dp"
+            android:src="@drawable/ic_profile"
+            app:civ_border_color="@color/primary"
+            app:civ_border_width="2dp" />
+
+        <TextView
+            android:id="@+id/profileName"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="@dimen/standard_25"
+            android:fontFamily="@font/roboto_medium"
+            android:textColor="@color/blue_dark"
+            android:textSize="24sp"
+            android:textStyle="bold"
+            tools:text="Ziad Emad" />
+
+        <TextView
+            android:id="@+id/viewProfile"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="5dp"
+            android:fontFamily="@font/roboto_medium"
+            android:text="@string/view_profile"
+            android:textColor="@color/grey_8"
+            android:textSize="16sp" />
+
+    </LinearLayout>
+
+    <View
+        android:id="@+id/separator"
+        android:layout_width="match_parent"
+        android:layout_height="2dp"
+        android:layout_below="@id/profileContainer"
+        android:background="@color/sky_3" />
+
+    <TextView
+        android:id="@+id/profile"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_below="@id/separator"
+        android:layout_marginVertical="@dimen/standard_10"
+        android:drawablePadding="@dimen/standard_15"
+        android:fontFamily="@font/roboto_medium"
+        android:padding="15dp"
+        android:text="@string/profile"
+        android:textColor="@color/secondary"
+        android:textSize="26sp"
+        app:drawableStartCompat="@drawable/ic_profile_icon" />
+
+    <TextView
+        android:id="@+id/settings"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_below="@id/profile"
+        android:layout_marginVertical="@dimen/standard_10"
+        android:drawablePadding="@dimen/standard_15"
+        android:fontFamily="@font/roboto_medium"
+        android:padding="15dp"
+        android:text="@string/settings"
+        android:textColor="@color/secondary"
+        android:textSize="26sp"
+        app:drawableStartCompat="@drawable/ic_settings" />
+
+
+    <Button
+        android:id="@+id/logOut"
+        style="@style/InTime.Button"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_alignParentBottom="true"
+        android:layout_margin="@dimen/standard_15"
+        android:text="@string/log_out" />
+
+</RelativeLayout>

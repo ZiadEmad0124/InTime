@@ -5,7 +5,7 @@
     android:layout_height="wrap_content"
     android:gravity="center"
     android:orientation="vertical"
-    android:paddingVertical="@dimen/standard_10">
+    android:paddingTop="@dimen/standard_10">
 
     <TextView
         android:id="@+id/signTextView"

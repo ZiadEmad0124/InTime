@@ -2,128 +2,62 @@ package com.ziad_emad_dev.in_time.ui.profile
 
 import android.app.AlertDialog
 import android.content.Intent
+import android.graphics.Color
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
-import android.view.ViewGroup
-import android.view.animation.AnimationUtils
 import android.widget.Button
 import android.widget.Toast
-import androidx.fragment.app.Fragment
-import androidx.navigation.fragment.findNavController
+import androidx.activity.viewModels
+import androidx.appcompat.app.AppCompatActivity
 import com.ziad_emad_dev.in_time.R
-import com.ziad_emad_dev.in_time.databinding.FragmentProfileBinding
+import com.ziad_emad_dev.in_time.databinding.ActivityProfileBinding
+import com.ziad_emad_dev.in_time.network.ProfileManager
 import com.ziad_emad_dev.in_time.ui.signing.SignPage
 import com.ziad_emad_dev.in_time.viewmodels.ProfileViewModel
 
-class Profile : Fragment() {
+class Profile : AppCompatActivity() {
 
-    private var _binding: FragmentProfileBinding? = null
-    private val binding get() = _binding!!
+    private lateinit var binding: ActivityProfileBinding
 
-    private val viewModel by lazy {
-        ProfileViewModel(requireContext())
-    }
+    private lateinit var profileManager: ProfileManager
 
-    override fun onCreateView(
-        inflater: LayoutInflater, container: ViewGroup?,
-        savedInstanceState: Bundle?
-    ): View {
-        _binding = FragmentProfileBinding.inflate(inflater, container, false)
-        return binding.root
-    }
+    private val viewModel: ProfileViewModel by viewModels()
 
-    override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
-        super.onViewCreated(view, savedInstanceState)
+    override fun onCreate(savedInstanceState: Bundle?) {
+        super.onCreate(savedInstanceState)
+        binding = ActivityProfileBinding.inflate(layoutInflater)
+        setContentView(binding.root)
+
+        profileManager = ProfileManager(this)
 
         myToolbar()
-
         fitchProfile()
-
-        profileUsername()
-        profileName()
-        profileEmail()
-        profilePhone()
-        profilePassword()
-
-        clickOnEditButton()
-
-        signOut()
+        clickOnDeleteAccountButton()
     }
 
     private fun myToolbar() {
         binding.myToolbar.title.text = getString(R.string.my_profile)
         binding.myToolbar.back.setOnClickListener {
-            activity?.finish()
+            finish()
         }
     }
 
-    private fun profileUsername() {
-        viewModel.name.observe(viewLifecycleOwner) {
-            binding.profileUsername.text = it
-        }
+    private fun fitchProfile() {
+        binding.profileName.text = profileManager.getProfileName()
     }
 
-    private fun profileName() {
-        binding.profileName.let { name ->
-            name.icon.setImageResource(R.drawable.ic_name)
-            name.title.text = getString(R.string.name)
-            viewModel.name.observe(viewLifecycleOwner) {
-                name.details.text = it
-            }
-        }
-    }
-
-    private fun profileEmail() {
-        binding.profileEmail.let { email ->
-            email.icon.setImageResource(R.drawable.ic_email)
-            email.title.text = getString(R.string.email)
-            viewModel.email.observe(viewLifecycleOwner) {
-                email.details.text = it
-            }
-        }
-    }
-
-    private fun profilePhone() {
-        binding.profilePhone.let { phone ->
-            phone.icon.setImageResource(R.drawable.ic_phone)
-            phone.title.text = getString(R.string.phone)
-            viewModel.phone.observe(viewLifecycleOwner) {
-                phone.details.text = it
-            }
-        }
-    }
-
-    private fun profilePassword() {
-        binding.profilePassword.let { password ->
-            password.icon.setImageResource(R.drawable.ic_password_lock)
-            password.title.text = getString(R.string.password)
-            password.details.text = getString(R.string.password_pattern)
-        }
-    }
-
-    private fun clickOnEditButton() {
-        binding.editButton.setOnClickListener {
-            val action = ProfileDirections.actionProfileToEditProfile(
-                binding.profileName.details.text.toString(),
-                binding.profileEmail.details.text.toString(),
-                binding.profilePhone.details.text.toString()
-            )
-            findNavController().navigate(action)
-        }
-    }
-
-    private fun signOut() {
-        binding.logOut.setOnClickListener {
-
-            val alertDialog = LayoutInflater.from(requireContext()).inflate(R.layout.log_out_dialog, null)
-            val alertBuilder = AlertDialog.Builder(requireContext()).setView(alertDialog)
+    private fun clickOnDeleteAccountButton() {
+        binding.deleteAccountButton.setOnClickListener {
+            val alertDialog = LayoutInflater.from(this).inflate(R.layout.delete_account_dialog, null)
+            val alertBuilder = AlertDialog.Builder(this).setView(alertDialog)
             val alertInstance = alertBuilder.show()
             alertInstance.window?.setBackgroundDrawableResource(R.color.transparent)
 
-            val logOutButton = alertDialog.findViewById<Button>(R.id.logOutButton)
-            logOutButton.setOnClickListener {
-                logOut()
+            val deleteAccountButton = alertDialog.findViewById<Button>(R.id.deleteAccountButton)
+            deleteAccountButton.setOnClickListener {
+                alertInstance.dismiss()
+                deleteAccount(alertInstance)
             }
 
             val cancelButton = alertDialog.findViewById<Button>(R.id.cancelButton)
@@ -133,71 +67,42 @@ class Profile : Fragment() {
         }
     }
 
-    private fun logOut() {
-        binding.loadingIcon.visibility = View.VISIBLE
-        val rotateAnimation = AnimationUtils.loadAnimation(requireContext(), R.anim.animation_rotate)
-        binding.loadingIcon.startAnimation(rotateAnimation)
+    private fun deleteAccount(alertDialog: AlertDialog) {
+        startLoading()
 
         viewModel.refreshToken()
 
-        viewModel.refreshTokenMessage.observe(viewLifecycleOwner) { message ->
+        viewModel.refreshTokenMessage.observe(this) { message ->
             if (message == "Refresh Succeed") {
-                viewModel.signOut()
+                viewModel.deleteAccount()
             } else {
-                binding.loadingIcon.clearAnimation()
-                binding.loadingIcon.visibility = View.INVISIBLE
-                binding.page.visibility = View.INVISIBLE
-                binding.loadingIcon.setImageResource(R.drawable.ic_no_connection)
-                Toast.makeText(requireContext(), "Failed Connect", Toast.LENGTH_SHORT).show()
+                failedConnect()
+                alertDialog.dismiss()
             }
         }
-        viewModel.signOutMessage.observe(viewLifecycleOwner) { message ->
-            if (message == "true") {
-                val intent = Intent(requireContext(), SignPage::class.java)
+        viewModel.deleteAccountMessage.observe(this) { message ->
+            if (message == "Deleted Succeed") {
+                val intent = Intent(this, SignPage::class.java)
+                intent.flags = Intent.FLAG_ACTIVITY_CLEAR_TASK or Intent.FLAG_ACTIVITY_NEW_TASK
                 startActivity(intent)
-                activity?.finish()
             } else {
-                binding.loadingIcon.clearAnimation()
-                binding.loadingIcon.visibility = View.INVISIBLE
-                binding.page.visibility = View.INVISIBLE
-                binding.loadingIcon.setImageResource(R.drawable.ic_no_connection)
-                Toast.makeText(requireContext(), "Failed Connect", Toast.LENGTH_SHORT).show()
+                failedConnect()
+                alertDialog.dismiss()
             }
         }
     }
 
-    private fun fitchProfile() {
-        val rotateAnimation = AnimationUtils.loadAnimation(requireContext(), R.anim.animation_rotate)
-        binding.loadingIcon.startAnimation(rotateAnimation)
-
-        viewModel.refreshToken()
-
-        viewModel.refreshTokenMessage.observe(viewLifecycleOwner) { message ->
-            if (message == "Refresh Succeed") {
-                viewModel.fetchProfile()
-            } else {
-                binding.loadingIcon.clearAnimation()
-                binding.loadingIcon.setImageResource(R.drawable.ic_no_connection)
-                Toast.makeText(requireContext(), "Failed Connect", Toast.LENGTH_SHORT).show()
-            }
-        }
-
-        viewModel.fetchProfileMessage.observe(viewLifecycleOwner) { message ->
-            if (message == "true") {
-                binding.loadingIcon.clearAnimation()
-                binding.page.visibility = View.VISIBLE
-                binding.loadingIcon.visibility = View.INVISIBLE
-            } else {
-                binding.loadingIcon.clearAnimation()
-                binding.loadingIcon.setImageResource(R.drawable.ic_no_connection)
-                Toast.makeText(requireContext(), "Failed Connect", Toast.LENGTH_SHORT).show()
-            }
-        }
+    private fun startLoading() {
+        binding.blockingView.visibility = View.VISIBLE
+        binding.deleteAccountButton.setBackgroundResource(R.drawable.button_loading_background)
+        binding.deleteAccountButton.text = null
+        binding.progressCircular.visibility = View.VISIBLE
     }
 
-    override fun onDestroy() {
-        super.onDestroy()
-
-        _binding = null
+    private fun failedConnect() {
+        binding.blockingView.visibility = View.VISIBLE
+        binding.blockingView.setBackgroundColor(Color.WHITE)
+        binding.noConnection.visibility = View.VISIBLE
+        Toast.makeText(this, "Failed Connect", Toast.LENGTH_SHORT).show()
     }
 }

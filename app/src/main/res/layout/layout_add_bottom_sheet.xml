@@ -13,8 +13,7 @@
         android:padding="@dimen/standard_15">
 
         <com.google.android.material.card.MaterialCardView
-            android:id="@+id/create_task_Button"
-            style="@style/InTime.CardView.Add"
+            android:id="@+id/createTaskButton"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:layout_marginEnd="@dimen/standard_5"
@@ -51,8 +50,7 @@
         </com.google.android.material.card.MaterialCardView>
 
         <com.google.android.material.card.MaterialCardView
-            android:id="@+id/create_project_Button"
-            style="@style/InTime.CardView.Add"
+            android:id="@+id/createProjectButton"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:layout_marginStart="@dimen/standard_5"

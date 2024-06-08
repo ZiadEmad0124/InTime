@@ -4,6 +4,7 @@
     <dimen name="border_radius_8">8dp</dimen>
     <dimen name="border_radius_16">16dp</dimen>
     <dimen name="stroke_width">1dp</dimen>
+    <dimen name="date_card_elevation">3dp</dimen>
     <dimen name="standard_5">5dp</dimen>
     <dimen name="standard_10">10dp</dimen>
     <dimen name="standard_15">15dp</dimen>

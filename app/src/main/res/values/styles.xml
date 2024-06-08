@@ -18,15 +18,25 @@
         <item name="android:padding">@dimen/standard_15</item>
     </style>
 
+    <style name="InTime.Button.Loading" parent="Widget.Material3.Button">
+        <item name="backgroundTint">@null</item>
+        <item name="android:background">@drawable/button_loading_background</item>
+        <item name="android:textColor">@color/black</item>
+        <item name="fontFamily">@font/roboto</item>
+        <item name="android:textStyle">bold</item>
+        <item name="android:textSize">18sp</item>
+        <item name="android:padding">@dimen/standard_15</item>
+    </style>
+
     <style name="InTime.TextInputLayout" parent="Widget.MaterialComponents.TextInputLayout.OutlinedBox">
         <item name="boxCornerRadiusTopEnd">@dimen/border_radius_16</item>
         <item name="boxCornerRadiusTopStart">@dimen/border_radius_16</item>
         <item name="boxCornerRadiusBottomEnd">@dimen/border_radius_16</item>
         <item name="boxCornerRadiusBottomStart">@dimen/border_radius_16</item>
         <item name="boxStrokeColor">@color/primary</item>
-        <item name="boxStrokeWidth">1dp</item>
+        <item name="boxStrokeWidth">@dimen/stroke_width</item>
         <item name="maxLines">1</item>
-        <item name="hintTextColor">@color/secondary</item>
+        <item name="hintTextColor">@color/primary</item>
         <item name="fontFamily">@font/roboto_medium</item>
     </style>
 
@@ -52,19 +62,19 @@
         <item name="itemRadius">@dimen/border_radius_8</item>
         <item name="android:textColor">@color/blue_dark</item>
         <item name="android:textSize">30sp</item>
-    </style>
-
-    <style name="InTime.BottomNavigationView.ActiveIndicator" parent="Widget.Material3.BottomNavigationView.ActiveIndicator">
-        <item name="android:color">@color/white_5</item>
+        <item name="android:inputType">number</item>
     </style>
 
     <style name="InTime.BottomNavigationView" parent="Widget.Material3.BottomNavigationView">
         <item name="android:background">@color/white</item>
-        <item name="itemActiveIndicatorStyle">@style/InTime.BottomNavigationView.ActiveIndicator
-        </item>
+        <item name="itemActiveIndicatorStyle">@style/InTime.BottomNavigationView.ActiveIndicator</item>
         <item name="itemIconTint">@color/secondary</item>
         <item name="itemTextColor">@color/secondary</item>
         <item name="labelVisibilityMode">labeled</item>
+    </style>
+
+    <style name="InTime.BottomNavigationView.ActiveIndicator" parent="Widget.Material3.BottomNavigationView.ActiveIndicator">
+        <item name="android:color">@color/white_5</item>
     </style>
 
     <style name="InTime.CardView.Add" parent="Widget.MaterialComponents.CardView">
@@ -107,15 +117,6 @@
         <item name="iconTint">@color/primary</item>
     </style>
 
-    <style name="InTime.MaterialButton.EditProfile" parent="ThemeOverlay.Material3.TextInputEditText">
-        <item name="android:background">@drawable/button_background</item>
-        <item name="backgroundTint">@null</item>
-        <item name="android:textSize">26sp</item>
-        <item name="android:fontFamily">@font/roboto</item>
-        <item name="iconGravity">textEnd</item>
-        <item name="iconPadding">@dimen/standard_10</item>
-    </style>
-
     <style name="InTime.TabLayout" parent="Widget.Material3.TabLayout">
         <item name="android:background">@drawable/tab_layout_background</item>
         <item name="android:fontFamily">@font/roboto</item>
@@ -145,7 +146,7 @@
         <item name="cardCornerRadius">@dimen/border_radius_16</item>
         <item name="strokeColor">@color/white</item>
         <item name="strokeWidth">@dimen/stroke_width</item>
-        <item name="cardElevation">3dp</item>
+        <item name="cardElevation">@dimen/date_card_elevation</item>
     </style>
 
     <style name="InTime.CardView.ProjectTasks" parent="Widget.MaterialComponents.CardView">
@@ -155,24 +156,12 @@
         <item name="strokeWidth">@dimen/stroke_width</item>
     </style>
 
-    <style name="InTime.CardView.LogOut" parent="Widget.MaterialComponents.CardView">
+    <style name="InTime.CardView.AlertDialog" parent="Widget.MaterialComponents.CardView">
         <item name="cardBackgroundColor">@color/white</item>
         <item name="cardCornerRadius">@dimen/border_radius_16</item>
-        <item name="strokeColor">@color/primary</item>
-        <item name="strokeWidth">@dimen/stroke_width</item>
-        <item name="cardElevation">@dimen/standard_5</item>
     </style>
 
-    <style name="InTime.LogOutButton" parent="Widget.Material3.Button">
-        <item name="backgroundTint">@null</item>
-        <item name="android:background">@drawable/button_background</item>
-        <item name="android:textColor">@color/white</item>
-        <item name="fontFamily">@font/roboto</item>
-        <item name="android:textStyle">bold</item>
-        <item name="android:textSize">18sp</item>
-    </style>
-
-    <style name="InTime.CancelLogOutButton" parent="Widget.Material3.Button.IconButton.Outlined">
+    <style name="InTime.Button.Cancel" parent="Widget.Material3.Button.IconButton.Outlined">
         <item name="cardBackgroundColor">@color/white</item>
         <item name="strokeColor">@color/primary</item>
         <item name="strokeWidth">@dimen/stroke_width</item>
@@ -181,6 +170,24 @@
         <item name="fontFamily">@font/roboto</item>
         <item name="android:textStyle">bold</item>
         <item name="android:textSize">18sp</item>
+    </style>
+
+    <style name="InTime.Button.UploadImage" parent="Widget.Material3.Button">
+        <item name="backgroundTint">@null</item>
+        <item name="android:background">@drawable/button_upload_image_background</item>
+        <item name="android:textColor">@color/white</item>
+        <item name="fontFamily">@font/roboto</item>
+        <item name="android:textStyle">bold</item>
+        <item name="android:textSize">16sp</item>
+    </style>
+
+    <style name="InTime.Button.RemoveImage" parent="Widget.Material3.Button.IconButton.Outlined">
+        <item name="backgroundTint">@null</item>
+        <item name="android:background">@drawable/button_remove_image_background</item>
+        <item name="android:textColor">@color/grey_7</item>
+        <item name="fontFamily">@font/roboto</item>
+        <item name="android:textStyle">bold</item>
+        <item name="android:textSize">16sp</item>
     </style>
 
 </resources>

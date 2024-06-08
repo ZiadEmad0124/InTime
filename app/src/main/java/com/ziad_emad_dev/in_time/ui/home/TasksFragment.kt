@@ -26,15 +26,9 @@ class TasksFragment : Fragment() {
     ): View {
         _binding = FragmentTasksBinding.inflate(inflater, container, false)
 
-        myToolbar()
-
         myTabsBar()
 
         return binding.root
-    }
-
-    private fun myToolbar() {
-        binding.myToolbar.title.text = getString(R.string.tasks)
     }
 
     @SuppressLint("NotifyDataSetChanged")

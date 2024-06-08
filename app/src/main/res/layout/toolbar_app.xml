@@ -24,14 +24,13 @@
         android:textStyle="bold" />
 
     <ImageButton
-        android:id="@+id/menu"
+        android:id="@+id/lastAction"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_gravity="end"
         android:layout_marginEnd="@dimen/standard_15"
         android:background="@color/transparent"
         android:importantForAccessibility="no"
-        android:padding="@dimen/standard_10"
-        android:src="@drawable/ic_menu" />
+        android:padding="@dimen/standard_10" />
 
 </com.google.android.material.appbar.MaterialToolbar>
