@@ -2,17 +2,16 @@ package com.ziad_emad_dev.in_time.ui.profile
 
 import android.app.AlertDialog
 import android.content.Intent
-import android.graphics.Color
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.widget.Button
 import android.widget.Toast
-import androidx.activity.viewModels
 import androidx.appcompat.app.AppCompatActivity
+import com.bumptech.glide.Glide
 import com.ziad_emad_dev.in_time.R
 import com.ziad_emad_dev.in_time.databinding.ActivityProfileBinding
-import com.ziad_emad_dev.in_time.network.ProfileManager
+import com.ziad_emad_dev.in_time.network.profile.ProfileManager
 import com.ziad_emad_dev.in_time.ui.signing.SignPage
 import com.ziad_emad_dev.in_time.viewmodels.ProfileViewModel
 
@@ -22,7 +21,9 @@ class Profile : AppCompatActivity() {
 
     private lateinit var profileManager: ProfileManager
 
-    private val viewModel: ProfileViewModel by viewModels()
+    private val viewModel by lazy {
+        ProfileViewModel(this)
+    }
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -44,7 +45,21 @@ class Profile : AppCompatActivity() {
     }
 
     private fun fitchProfile() {
+        Glide.with(this)
+            .load(profileManager.getProfileAvatar())
+            .placeholder(R.drawable.ic_profile)
+            .error(R.drawable.ic_profile)
+            .into(binding.profileImage)
         binding.profileName.text = profileManager.getProfileName()
+        binding.profileTitle.text = profileManager.getProfileTitle()
+        binding.profileAbout.text = profileManager.getProfileAbout()
+        binding.level.text = 0.toString()
+        binding.rank.text = if (profileManager.getTotalPoints() < 100) {
+            0.toString()
+        } else {
+            (profileManager.getTotalPoints() / 100).toString()
+        }
+        binding.totalPoints.text = profileManager.getTotalPoints().toString()
     }
 
     private fun clickOnDeleteAccountButton() {
@@ -56,8 +71,8 @@ class Profile : AppCompatActivity() {
 
             val deleteAccountButton = alertDialog.findViewById<Button>(R.id.deleteAccountButton)
             deleteAccountButton.setOnClickListener {
+                deleteAccount()
                 alertInstance.dismiss()
-                deleteAccount(alertInstance)
             }
 
             val cancelButton = alertDialog.findViewById<Button>(R.id.cancelButton)
@@ -67,42 +82,31 @@ class Profile : AppCompatActivity() {
         }
     }
 
-    private fun deleteAccount(alertDialog: AlertDialog) {
+    private fun deleteAccount() {
         startLoading()
-
-        viewModel.refreshToken()
-
-        viewModel.refreshTokenMessage.observe(this) { message ->
-            if (message == "Refresh Succeed") {
-                viewModel.deleteAccount()
-            } else {
-                failedConnect()
-                alertDialog.dismiss()
-            }
-        }
+        viewModel.deleteAccount()
         viewModel.deleteAccountMessage.observe(this) { message ->
-            if (message == "Deleted Succeed") {
+            if (message == "true") {
                 val intent = Intent(this, SignPage::class.java)
                 intent.flags = Intent.FLAG_ACTIVITY_CLEAR_TASK or Intent.FLAG_ACTIVITY_NEW_TASK
                 startActivity(intent)
             } else {
-                failedConnect()
-                alertDialog.dismiss()
+                failedConnect(message)
             }
         }
     }
 
     private fun startLoading() {
         binding.blockingView.visibility = View.VISIBLE
-        binding.deleteAccountButton.setBackgroundResource(R.drawable.button_loading_background)
+        binding.deleteAccountButton.setBackgroundResource(R.drawable.button_loading)
         binding.deleteAccountButton.text = null
         binding.progressCircular.visibility = View.VISIBLE
     }
 
-    private fun failedConnect() {
-        binding.blockingView.visibility = View.VISIBLE
-        binding.blockingView.setBackgroundColor(Color.WHITE)
-        binding.noConnection.visibility = View.VISIBLE
-        Toast.makeText(this, "Failed Connect", Toast.LENGTH_SHORT).show()
+    private fun failedConnect(message: String) {
+        binding.blockingView.visibility = View.GONE
+        binding.deleteAccountButton.setBackgroundResource(R.drawable.button_delete_account)
+        binding.deleteAccountButton.text = getString(R.string.delete_account)
+        Toast.makeText(this, message, Toast.LENGTH_SHORT).show()
     }
 }

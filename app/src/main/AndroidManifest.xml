@@ -15,7 +15,10 @@
         android:theme="@style/Theme.InTime"
         tools:targetApi="31">
         <activity
-            android:name=".ui.settings.Settings"
+            android:name=".ui.create.CreateProject"
+            android:exported="false" />
+        <activity
+            android:name=".ui.profile.ChangePassword"
             android:exported="false" />
         <activity
             android:name=".ui.home.projects.my_project.MyProject"
@@ -24,7 +27,7 @@
             android:name=".ui.create.CreateTask"
             android:exported="false" />
         <activity
-            android:name=".ui.profile.EditProfile"
+            android:name=".ui.profile.Settings"
             android:exported="false" />
         <activity
             android:name=".ui.profile.Profile"

@@ -16,9 +16,13 @@ import com.ziad_emad_dev.in_time.network.auth.sign_out.SignOutRequest
 import com.ziad_emad_dev.in_time.network.auth.sign_out.SignOutResponse
 import com.ziad_emad_dev.in_time.network.auth.sign_up.SignUpRequest
 import com.ziad_emad_dev.in_time.network.auth.sign_up.SignUpResponse
-import com.ziad_emad_dev.in_time.network.delete_account.DeleteAccountResponse
-import com.ziad_emad_dev.in_time.network.edit_profile.EditProfileResponse
-import com.ziad_emad_dev.in_time.network.user.UserResponse
+import com.ziad_emad_dev.in_time.network.profile.change_password.ChangePasswordRequest
+import com.ziad_emad_dev.in_time.network.profile.change_password.ChangePasswordResponse
+import com.ziad_emad_dev.in_time.network.profile.delete_account.DeleteAccountResponse
+import com.ziad_emad_dev.in_time.network.profile.edit_profile.EditProfileResponse
+import com.ziad_emad_dev.in_time.network.profile.remove_avatar.RemoveAvatarResponse
+import com.ziad_emad_dev.in_time.network.profile.user.UserResponse
+import com.ziad_emad_dev.in_time.network.tasks.create_task.TaskResponse
 import okhttp3.MultipartBody
 import okhttp3.OkHttpClient
 import okhttp3.RequestBody
@@ -26,6 +30,7 @@ import retrofit2.Response
 import retrofit2.Retrofit
 import retrofit2.converter.gson.GsonConverterFactory
 import retrofit2.http.Body
+import retrofit2.http.DELETE
 import retrofit2.http.GET
 import retrofit2.http.Header
 import retrofit2.http.Multipart
@@ -42,7 +47,7 @@ private const val SIGNUP_URL = "auth/signup"
 private const val ACTIVATION_CODE_URL = "auth/activation/{code}"
 private const val RESEND_ACTIVATION_CODE_URL = "auth/resendactivationcode"
 private const val CHECK_EMAIL_URL = "auth/forgetpassword"
-private const val CHANGE_PASSWORD_URL = "auth/forgetpassword/changepassword/{code}"
+private const val FORGET_PASSWORD_URL = "auth/forgetpassword/changepassword/{code}"
 private const val REFRESH_TOKEN_URL = "auth/refreshToken"
 private const val SIGNOUT_URL = "auth/signOut"
 
@@ -50,6 +55,11 @@ private const val SIGNOUT_URL = "auth/signOut"
 private const val USER_URL = "user/"
 private const val DELETE_ACCOUNT_URL = "user/deleteUser"
 private const val EDIT_PROFILE_URL = "user/editProfile"
+private const val REMOVE_AVATAR_URL = "user/deleteProfilePhoto"
+private const val CHANGE_PASSWORD_URL = "user/changePassword"
+
+//  Tasks Endpoints
+private const val CREATE_TASK_URL = "user/tasks/addUserTask"
 
 private val okHttpClient = OkHttpClient.Builder()
     .readTimeout(300, TimeUnit.SECONDS)
@@ -81,7 +91,7 @@ interface InTimeApiServices {
     @POST(CHECK_EMAIL_URL)
     suspend fun checkEmail(@Body request: CheckEmailRequest): Response<CheckEmailResponse>
 
-    @POST(CHANGE_PASSWORD_URL)
+    @POST(FORGET_PASSWORD_URL)
     suspend fun resetPassword(@Path("code") code: String, @Body request: ResetPasswordRequest): Response<ResetPasswordResponse>
 
     @POST(REFRESH_TOKEN_URL)
@@ -95,16 +105,64 @@ interface InTimeApiServices {
     @GET(USER_URL)
     suspend fun fetchUser(@Header("Authorization") token: String): Response<UserResponse>
 
-    @POST(DELETE_ACCOUNT_URL)
+    @DELETE(DELETE_ACCOUNT_URL)
     suspend fun deleteAccount(@Header("Authorization") token: String): Response<DeleteAccountResponse>
 
     @Multipart
     @POST(EDIT_PROFILE_URL)
     suspend fun editProfile(
         @Header("Authorization") token: String,
-        @Part("name") name: RequestBody, @Part("phone") phone: RequestBody,
-        @Part("age") age: RequestBody, @Part image: MultipartBody.Part
+        @Part("name") name: RequestBody,
+        @Part("title") title: RequestBody,
+        @Part("phone") phone: RequestBody,
+        @Part("about") about: RequestBody,
+        @Part avatar: MultipartBody.Part
     ): Response<EditProfileResponse>
+
+    @Multipart
+    @POST(EDIT_PROFILE_URL)
+    suspend fun editProfileWithoutAvatar(
+        @Header("Authorization") token: String,
+        @Part("name") name: RequestBody,
+        @Part("title") title: RequestBody,
+        @Part("phone") phone: RequestBody,
+        @Part("about") about: RequestBody,
+    ): Response<EditProfileResponse>
+
+    @DELETE(REMOVE_AVATAR_URL)
+    suspend fun removeAvatar(@Header("Authorization") token: String): Response<RemoveAvatarResponse>
+
+    @POST(CHANGE_PASSWORD_URL)
+    suspend fun changePassword(@Header("Authorization") token: String, @Body request: ChangePasswordRequest): Response<ChangePasswordResponse>
+
+//  Tasks
+
+    @Multipart
+    @POST(CREATE_TASK_URL)
+    suspend fun createTask(
+        @Header("Authorization") token: String,
+        @Part("name") name: RequestBody,
+        @Part("disc") disc: RequestBody,
+        @Part("tag") tag: RequestBody,
+        @Part("priority") priority: RequestBody,
+        @Part steps: List<MultipartBody.Part>,
+        @Part image: MultipartBody.Part,
+        @Part("startAt") startAt: RequestBody,
+        @Part("endAt") endAt: RequestBody,
+    ): Response<TaskResponse>
+
+    @Multipart
+    @POST(CREATE_TASK_URL)
+    suspend fun createTaskWithoutImage(
+        @Header("Authorization") token: String,
+        @Part("name") name: RequestBody,
+        @Part("disc") disc: RequestBody,
+        @Part("tag") tag: RequestBody,
+        @Part("priority") priority: RequestBody,
+        @Part steps: List<MultipartBody.Part>,
+        @Part("startAt") startAt: RequestBody,
+        @Part("endAt") endAt: RequestBody,
+    ): Response<TaskResponse>
 }
 
 object InTimeApi {

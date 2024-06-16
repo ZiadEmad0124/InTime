@@ -1,4 +1,4 @@
-package com.ziad_emad_dev.in_time.network.user
+package com.ziad_emad_dev.in_time.network.profile.user
 
 import com.google.gson.annotations.SerializedName
 
@@ -12,6 +12,15 @@ data class Record(
     @SerializedName("phone")
     val phone: Int,
 
+    @SerializedName("avatar")
+    val avatar: String,
+
     @SerializedName("points")
-    val points: Points
+    val points: Points,
+
+    @SerializedName("title")
+    val title: String? = null,
+
+    @SerializedName("about")
+    val about: String? = null,
 )

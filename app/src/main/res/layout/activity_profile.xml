@@ -31,14 +31,12 @@
 
             <de.hdodenhof.circleimageview.CircleImageView
                 android:id="@+id/profileImage"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
+                android:layout_width="200dp"
+                android:layout_height="200dp"
                 android:layout_marginTop="@dimen/standard_100"
-                android:minWidth="150dp"
-                android:minHeight="150dp"
                 android:src="@drawable/ic_profile"
                 app:civ_border_color="@color/primary"
-                app:civ_border_width="@dimen/standard_5" />
+                app:civ_border_width="3dp" />
 
             <TextView
                 android:id="@+id/profileName"
@@ -107,7 +105,7 @@
                     android:orientation="vertical">
 
                     <TextView
-                        android:id="@+id/Rank"
+                        android:id="@+id/rank"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:textColor="@color/black"
@@ -137,7 +135,7 @@
                     android:orientation="vertical">
 
                     <TextView
-                        android:id="@+id/tasksDone"
+                        android:id="@+id/totalPoints"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:textColor="@color/black"
@@ -148,7 +146,7 @@
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:layout_marginTop="@dimen/standard_10"
-                        android:text="@string/tasks_done"
+                        android:text="@string/total_points"
                         android:textAlignment="center"
                         android:textColor="@color/secondary"
                         android:textSize="21sp" />
@@ -194,12 +192,12 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_gravity="center"
-            android:indeterminateTint="@color/grey_5"
+            android:indeterminateTint="@color/white"
             android:visibility="gone" />
 
     </FrameLayout>
 
-    <LinearLayout
+    <View
         android:id="@+id/blockingView"
         android:layout_width="match_parent"
         android:layout_height="0dp"
@@ -211,16 +209,6 @@
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@id/myToolbar">
-
-        <ImageView
-            android:id="@+id/noConnection"
-            android:layout_width="80dp"
-            android:layout_height="80dp"
-            android:importantForAccessibility="no"
-            android:src="@drawable/ic_no_connection"
-            android:visibility="gone" />
-
-    </LinearLayout>
+        app:layout_constraintTop_toTopOf="parent" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>

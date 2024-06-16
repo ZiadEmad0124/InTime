@@ -71,6 +71,7 @@
             </LinearLayout>
 
             <EditText
+                android:id="@+id/taskName"
                 style="@style/InTime.TextInputEditText.CreateTask"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
@@ -115,6 +116,7 @@
                 app:layout_constraintTop_toBottomOf="@id/view1" />
 
             <EditText
+                android:id="@+id/taskDetails"
                 style="@style/InTime.TextInputEditText.CreateTask"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
@@ -180,6 +182,7 @@
                 android:layout_height="wrap_content">
 
                 <EditText
+                    android:id="@+id/taskTag"
                     style="@style/InTime.TextInputEditText.CreateTask"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
@@ -192,7 +195,7 @@
                     android:inputType="text" />
 
                 <Button
-                    android:id="@+id/uploadCover"
+                    android:id="@+id/uploadCoverButton"
                     style="@style/InTime.Button"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"

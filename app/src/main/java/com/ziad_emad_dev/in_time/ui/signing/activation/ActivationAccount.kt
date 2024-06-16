@@ -9,7 +9,6 @@ import android.view.View
 import android.view.ViewGroup
 import android.widget.Toast
 import androidx.fragment.app.Fragment
-import androidx.fragment.app.viewModels
 import androidx.navigation.fragment.findNavController
 import com.ziad_emad_dev.in_time.R
 import com.ziad_emad_dev.in_time.databinding.FragmentActivationAccountBinding
@@ -21,7 +20,9 @@ class ActivationAccount : Fragment() {
     private var _binding: FragmentActivationAccountBinding? = null
     private val binding get() = _binding!!
 
-    private val viewModel: AuthViewModel by viewModels()
+    private val viewModel by lazy {
+        AuthViewModel(requireContext())
+    }
 
     val millisInFuture = 5 * 60 * 1000 // 5 minutes in milliseconds
     val countDownInterval = 1000 // 1 second in milliseconds
@@ -91,7 +92,7 @@ class ActivationAccount : Fragment() {
 
         binding.otpCode.setLineColor(R.drawable.pin_line)
 
-        binding.nextButton.setBackgroundResource(R.drawable.button_loading_background)
+        binding.nextButton.setBackgroundResource(R.drawable.button_loading)
         binding.nextButton.text = null
         binding.progressCircular.visibility = View.VISIBLE
     }
@@ -112,22 +113,26 @@ class ActivationAccount : Fragment() {
     private fun checkCodeAndNetwork(message: String) {
         stopLoading()
         when (message) {
-            "this account is now active" -> {
+            "true" -> {
                 binding.otpCode.setLineColor(Color.GREEN)
+                Toast.makeText(requireContext(), "This account is active now, SignIn", Toast.LENGTH_LONG).show()
                 findNavController().navigate(R.id.action_activation_Account_to_signIn)
-                Toast.makeText(requireContext(), "This account is active now, SignIn", Toast.LENGTH_SHORT).show()
+            }
+
+            "Invalid OTP" -> {
+
+                binding.otpCode.setLineColor(Color.RED)
+                Toast.makeText(requireContext(), "Code is wrong, Try again", Toast.LENGTH_SHORT).show()
             }
 
             "Failed Connect, Try Again" -> {
-
-                binding.otpCode.setLineColor(Color.RED)
                 Toast.makeText(requireContext(), message, Toast.LENGTH_SHORT).show()
             }
 
             else -> {
 
                 binding.otpCode.setLineColor(Color.RED)
-                Toast.makeText(requireContext(), "Code is Wrong, Try Again", Toast.LENGTH_SHORT).show()
+                Toast.makeText(requireContext(), message, Toast.LENGTH_SHORT).show()
             }
         }
     }
@@ -136,8 +141,7 @@ class ActivationAccount : Fragment() {
         binding.otpTimer.setOnClickListener {
             if (binding.otpTimer.text == getString(R.string.now)) {
                 val email = requireArguments().getString("email").toString()
-                val password = requireArguments().getString("password").toString()
-                viewModel.resendActivationCode(email, password)
+                viewModel.resendActivationCode(email)
                 Toast.makeText(requireContext(), "Resend OTP, Check Your Email", Toast.LENGTH_SHORT).show()
                 countDownTimer.start()
             }

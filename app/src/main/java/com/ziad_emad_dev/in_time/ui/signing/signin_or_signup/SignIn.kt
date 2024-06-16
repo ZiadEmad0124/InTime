@@ -8,11 +8,9 @@ import android.view.View
 import android.view.ViewGroup
 import android.widget.Toast
 import androidx.fragment.app.Fragment
-import androidx.fragment.app.viewModels
 import androidx.navigation.fragment.findNavController
 import com.ziad_emad_dev.in_time.R
 import com.ziad_emad_dev.in_time.databinding.FragmentSignInBinding
-import com.ziad_emad_dev.in_time.network.auth.SessionManager
 import com.ziad_emad_dev.in_time.ui.home.HomePage
 import com.ziad_emad_dev.in_time.ui.signing.AsteriskPasswordTransformation
 import com.ziad_emad_dev.in_time.viewmodels.AuthViewModel
@@ -22,9 +20,9 @@ class SignIn : Fragment() {
     private var _binding: FragmentSignInBinding? = null
     private val binding get() = _binding!!
 
-    private val viewModel: AuthViewModel by viewModels()
-
-    private lateinit var sessionManager: SessionManager
+    private val viewModel by lazy {
+        AuthViewModel(requireContext())
+    }
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
@@ -36,8 +34,6 @@ class SignIn : Fragment() {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-
-        sessionManager = SessionManager(requireContext())
 
         signInWith()
         focusOnEditTextLayout()
@@ -160,7 +156,7 @@ class SignIn : Fragment() {
 
     private fun startLoading() {
         binding.blockingView.visibility = View.VISIBLE
-        binding.logInButton.setBackgroundResource(R.drawable.button_loading_background)
+        binding.logInButton.setBackgroundResource(R.drawable.button_loading)
         binding.logInButton.text = null
         binding.progressCircular.visibility = View.VISIBLE
     }
@@ -183,15 +179,6 @@ class SignIn : Fragment() {
         }
     }
 
-    private fun saveTokens() {
-        viewModel.accessToken.observe(viewLifecycleOwner) { accessToken ->
-            sessionManager.saveAuthToken(accessToken)
-        }
-        viewModel.refreshToken.observe(viewLifecycleOwner) { refreshToken ->
-            sessionManager.saveRefreshToken(refreshToken)
-        }
-    }
-
     private fun checkAccountAndNetwork(message: String) {
         stopLoading()
         when (message) {
@@ -205,13 +192,12 @@ class SignIn : Fragment() {
 
             "you have to activate your account first" -> {
                 val email = binding.email.text.toString().trim()
-                val password = binding.password.text.toString().trim()
-                val action = SignInDirections.actionSignInToActivationAccount(email = email, password = password)
+                val action = SignInDirections.actionSignInToActivationAccount(email = email)
+                viewModel.resendActivationCode(email)
                 findNavController().navigate(action)
             }
 
             "true" -> {
-                saveTokens()
                 val intent = Intent(activity, HomePage::class.java)
                 startActivity(intent)
                 requireActivity().finish()

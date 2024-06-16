@@ -1,4 +1,4 @@
-package com.ziad_emad_dev.in_time.network.delete_account
+package com.ziad_emad_dev.in_time.network.profile.delete_account
 
 import com.google.gson.annotations.SerializedName
 
@@ -7,5 +7,8 @@ data class DeleteAccountResponse(
     val success: Boolean,
 
     @SerializedName("messages")
-    val messages: List<String>
+    val messages: List<String>? = null,
+
+    @SerializedName("message")
+    val message: String? = null,
 )

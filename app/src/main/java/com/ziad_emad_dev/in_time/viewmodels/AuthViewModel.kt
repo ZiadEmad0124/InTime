@@ -1,10 +1,12 @@
 package com.ziad_emad_dev.in_time.viewmodels
 
+import android.content.Context
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.google.gson.Gson
 import com.ziad_emad_dev.in_time.network.InTimeApi
+import com.ziad_emad_dev.in_time.network.auth.SessionManager
 import com.ziad_emad_dev.in_time.network.auth.activation.ActivationRequest
 import com.ziad_emad_dev.in_time.network.auth.activation.ActivationResponse
 import com.ziad_emad_dev.in_time.network.auth.check_email.CheckEmailRequest
@@ -19,16 +21,12 @@ import com.ziad_emad_dev.in_time.network.auth.sign_up.SignUpRequest
 import com.ziad_emad_dev.in_time.network.auth.sign_up.SignUpResponse
 import kotlinx.coroutines.launch
 
-class AuthViewModel : ViewModel() {
+class AuthViewModel(context: Context) : ViewModel() {
+
+    private val sessionManager = SessionManager(context)
 
     private val _message = MutableLiveData<String>()
     val message get() = _message
-
-    private val _accessToken = MutableLiveData<String>()
-    val accessToken get() = _accessToken
-
-    private val _refreshToken = MutableLiveData<String>()
-    val refreshToken get() = _refreshToken
 
     fun signIn(email: String, password: String) {
         val request = SignInRequest(email = email, password = password)
@@ -37,9 +35,9 @@ class AuthViewModel : ViewModel() {
             try {
                 val response = InTimeApi.retrofitService.signIn(request)
                 if (response.isSuccessful) {
+                    sessionManager.saveAuthToken(response.body()?.accessToken.toString())
+                    sessionManager.saveRefreshToken(response.body()?.refreshToken.toString())
                     _message.value = response.body()?.success.toString()
-                    _accessToken.value = response.body()?.accessToken.toString()
-                    _refreshToken.value = response.body()?.refreshToken.toString()
                 } else {
                     val errorResponse = response.errorBody()?.string()
                     val errorSignInResponse = Gson().fromJson(errorResponse, SignInResponse::class.java)
@@ -77,7 +75,7 @@ class AuthViewModel : ViewModel() {
             try {
                 val response = InTimeApi.retrofitService.activateAccount(code = code, request)
                 if (response.isSuccessful) {
-                    _message.value = response.body()?.message.toString()
+                    _message.value = response.body()?.success.toString()
                 } else {
                     val errorResponse = response.errorBody()?.string()
                     val errorActivationRequest = Gson().fromJson(errorResponse, ActivationResponse::class.java)
@@ -89,8 +87,8 @@ class AuthViewModel : ViewModel() {
         }
     }
 
-    fun resendActivationCode(email: String, password: String) {
-        val request = ResendActivationCodeRequest(email = email, password = password)
+    fun resendActivationCode(email: String) {
+        val request = ResendActivationCodeRequest(email = email)
 
         viewModelScope.launch {
             try {

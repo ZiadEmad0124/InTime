@@ -1,14 +1,17 @@
 package com.ziad_emad_dev.in_time.ui.signing.signin_or_signup
 
 import android.os.Bundle
+import android.text.Editable
+import android.text.InputFilter
+import android.text.TextWatcher
 import android.text.method.PasswordTransformationMethod
+import android.view.KeyEvent
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.EditText
 import android.widget.Toast
 import androidx.fragment.app.Fragment
-import androidx.fragment.app.viewModels
 import androidx.navigation.fragment.findNavController
 import com.google.android.material.textfield.TextInputLayout
 import com.ziad_emad_dev.in_time.R
@@ -21,7 +24,9 @@ class SignUp : Fragment() {
     private var _binding: FragmentSignUpBinding? = null
     private val binding get() = _binding!!
 
-    private val viewModel: AuthViewModel by viewModels()
+    private val viewModel by lazy {
+        AuthViewModel(requireContext())
+    }
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
@@ -41,6 +46,7 @@ class SignUp : Fragment() {
         clickOnButtons()
         responseComing()
 
+        phoneNumber()
         binding.password.transformationMethod = AsteriskPasswordTransformation()
     }
 
@@ -118,7 +124,7 @@ class SignUp : Fragment() {
         binding.signUpButton.setOnClickListener {
             val name = binding.name.text.toString().trim()
             val email = binding.email.text.toString().trim()
-            val phone = binding.phone.text.toString().trim()
+            val phone = binding.phone.text.toString().substring(2).trim()
             val password = binding.password.text.toString().trim()
             val confirmPassword = binding.confirmPassword.text.toString().trim()
             clearFocusEditTextLayout()
@@ -126,14 +132,12 @@ class SignUp : Fragment() {
                         emailEmptyError(email) &&
                         phoneEmptyError(phone) &&
                         passwordEmptyError(password) &&
-                        passwordEmptyError(confirmPassword))
-            ) {
+                        passwordEmptyError(confirmPassword))) {
                 if (!(nameValidationError(name) ||
                             emailValidationError(email) ||
                             phoneValidationError(phone) ||
                             passwordValidationError(binding.passwordLayout, password) ||
-                            passwordValidationError(binding.confirmPasswordLayout, confirmPassword))
-                ) {
+                            passwordValidationError(binding.confirmPasswordLayout, confirmPassword))) {
                     if (!passwordsMatchError(password, confirmPassword)) {
                         startLoading()
                         viewModel.signUp(name, email, phone, password)
@@ -227,13 +231,41 @@ class SignUp : Fragment() {
         return password != confirmPassword
     }
 
+    private fun phoneNumber() {
+        binding.phone.setText(getString(R.string._20))
+        binding.phone.setSelection(binding.phone.text?.length!!)
+
+        val maxLength = 13
+        binding.phone.filters = arrayOf<InputFilter>(InputFilter.LengthFilter(maxLength))
+
+        binding.phone.addTextChangedListener(object : TextWatcher {
+            override fun beforeTextChanged(s: CharSequence, start: Int, count: Int, after: Int) {}
+
+            override fun onTextChanged(s: CharSequence, start: Int, before: Int, count: Int) {}
+
+            override fun afterTextChanged(s: Editable) {
+                if (s.length < 3) {
+                    binding.phone.setText(getString(R.string._20))
+                    binding.phone.setSelection(binding.phone.text?.length!!)
+                } else if (!s.startsWith("+20")) {
+                    binding.phone.setText(getString(R.string._phone, s.substring(3)))
+                    binding.phone.setSelection(binding.phone.text?.length!!)
+                }
+            }
+        })
+
+        binding.phone.setOnKeyListener { _, keyCode, _ ->
+            binding.phone.selectionStart <= 2 && (keyCode == KeyEvent.KEYCODE_DEL || keyCode == KeyEvent.KEYCODE_FORWARD_DEL)
+        }
+    }
+
     private fun emailAlreadyExists() {
         binding.emailLayout.error = getString(R.string.this_email_already_exists)
     }
 
     private fun startLoading() {
         binding.blockingView.visibility = View.VISIBLE
-        binding.signUpButton.setBackgroundResource(R.drawable.button_loading_background)
+        binding.signUpButton.setBackgroundResource(R.drawable.button_loading)
         binding.signUpButton.text = null
         binding.progressCircular.visibility = View.VISIBLE
     }
@@ -267,8 +299,7 @@ class SignUp : Fragment() {
 
             "check your mail to activate your account" -> {
                 val email = binding.email.text.toString().trim()
-                val password = binding.password.text.toString().trim()
-                val action = SignUpDirections.actionSignUpToActivationAccount(email = email, password = password)
+                val action = SignUpDirections.actionSignUpToActivationAccount(email = email)
                 findNavController().navigate(action)
             }
 

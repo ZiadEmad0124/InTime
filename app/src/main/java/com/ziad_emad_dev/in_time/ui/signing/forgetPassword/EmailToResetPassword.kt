@@ -6,7 +6,6 @@ import android.view.View
 import android.view.ViewGroup
 import android.widget.Toast
 import androidx.fragment.app.Fragment
-import androidx.fragment.app.viewModels
 import androidx.navigation.fragment.findNavController
 import com.ziad_emad_dev.in_time.R
 import com.ziad_emad_dev.in_time.databinding.FragmentEmailToResetPasswordBinding
@@ -17,7 +16,9 @@ class EmailToResetPassword : Fragment() {
     private var _binding: FragmentEmailToResetPasswordBinding? = null
     private val binding get() = _binding!!
 
-    private val viewModel: AuthViewModel by viewModels()
+    private val viewModel by lazy {
+        AuthViewModel(requireContext())
+    }
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
@@ -80,7 +81,7 @@ class EmailToResetPassword : Fragment() {
 
     private fun startLoading() {
         binding.blockingView.visibility = View.VISIBLE
-        binding.sendOTPButton.setBackgroundResource(R.drawable.button_loading_background)
+        binding.sendOTPButton.setBackgroundResource(R.drawable.button_loading)
         binding.sendOTPButton.text = null
         binding.progressCircular.visibility = View.VISIBLE
     }

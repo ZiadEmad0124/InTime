@@ -20,7 +20,7 @@
 
     <style name="InTime.Button.Loading" parent="Widget.Material3.Button">
         <item name="backgroundTint">@null</item>
-        <item name="android:background">@drawable/button_loading_background</item>
+        <item name="android:background">@drawable/button_loading</item>
         <item name="android:textColor">@color/black</item>
         <item name="fontFamily">@font/roboto</item>
         <item name="android:textStyle">bold</item>
@@ -174,7 +174,7 @@
 
     <style name="InTime.Button.UploadImage" parent="Widget.Material3.Button">
         <item name="backgroundTint">@null</item>
-        <item name="android:background">@drawable/button_upload_image_background</item>
+        <item name="android:background">@drawable/button_upload_image</item>
         <item name="android:textColor">@color/white</item>
         <item name="fontFamily">@font/roboto</item>
         <item name="android:textStyle">bold</item>
@@ -183,7 +183,7 @@
 
     <style name="InTime.Button.RemoveImage" parent="Widget.Material3.Button.IconButton.Outlined">
         <item name="backgroundTint">@null</item>
-        <item name="android:background">@drawable/button_remove_image_background</item>
+        <item name="android:background">@drawable/button_remove_image</item>
         <item name="android:textColor">@color/grey_7</item>
         <item name="fontFamily">@font/roboto</item>
         <item name="android:textStyle">bold</item>

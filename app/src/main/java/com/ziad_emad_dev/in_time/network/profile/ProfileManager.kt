@@ -1,4 +1,4 @@
-package com.ziad_emad_dev.in_time.network
+package com.ziad_emad_dev.in_time.network.profile
 
 import android.content.Context
 
@@ -6,13 +6,15 @@ class ProfileManager(context: Context) {
 
     private val sharedPreferences = context.getSharedPreferences("Profile", Context.MODE_PRIVATE)
 
-    fun saveProfile(name: String, title: String, email: String, phone: String, about: String) {
+    fun saveProfile(name: String, title: String, email: String, phone: String, avatar: String, about: String, totalPoints: Int) {
         sharedPreferences.edit().apply {
             putString("name", name)
             putString("title", title)
             putString("email", email)
             putString("phone", phone)
+            putString("avatar", avatar)
             putString("about", about)
+            putInt("totalPoints", totalPoints)
             apply()
         }
     }
@@ -30,10 +32,18 @@ class ProfileManager(context: Context) {
     }
 
     fun getProfilePhone(): String {
-        return sharedPreferences.getString("phone", "") ?: ""
+        return "0${sharedPreferences.getString("phone", "")}"
+    }
+
+    fun getProfileAvatar(): String {
+        return sharedPreferences.getString("avatar", "") ?: ""
     }
 
     fun getProfileAbout(): String {
         return sharedPreferences.getString("about", "") ?: ""
+    }
+
+    fun getTotalPoints(): Int {
+        return sharedPreferences.getInt("totalPoints", 0)
     }
 }

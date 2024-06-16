@@ -83,7 +83,7 @@
     <string name="empty_field">Empty Field</string>
     <string name="wrong_password">Wrong Password</string>
     <string name="name_error">Name must be 3 letters at least</string>
-    <string name="phone_error">phone must be 11 number</string>
+    <string name="phone_error">phone must be 10 number</string>
     <string name="password_error"><![CDATA[password must be more than 8 and contain digits, upper letter & lower letter and don\'t contain space]]></string>
     <string name="now">Now</string>
     <string name="email_not_registered">Email not registered</string>
@@ -124,4 +124,13 @@
     <string name="are_you_sure_you_want_to_delete_your_account">Are you sure you want to delete your account?</string>
     <string name="open_gallery">Open Gallery</string>
     <string name="save">Save</string>
+    <string name="total_points">Total Points</string>
+    <string name="change_password">Change Password</string>
+    <string name="current_password">Current Password</string>
+    <string name="must_be_different_from_the_current_password">Must be different from the current password</string>
+    <string name="password_changed_successfully">Password Changed Successfully</string>
+    <string name="_20">+20</string>
+    <string name="_20_Phone">+20%1$s</string>
+    <string name="_phone">+20%1$s</string>
+    <string name="my_new_phone">+20%1$s</string>
 </resources>

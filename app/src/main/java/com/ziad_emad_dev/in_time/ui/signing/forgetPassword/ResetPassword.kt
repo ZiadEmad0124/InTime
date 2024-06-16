@@ -11,7 +11,6 @@ import android.view.ViewGroup
 import android.widget.EditText
 import android.widget.Toast
 import androidx.fragment.app.Fragment
-import androidx.fragment.app.viewModels
 import androidx.navigation.fragment.findNavController
 import com.google.android.material.textfield.TextInputLayout
 import com.ziad_emad_dev.in_time.R
@@ -25,7 +24,9 @@ class ResetPassword : Fragment() {
     private var _binding: FragmentResetPasswordBinding? = null
     private val binding get() = _binding!!
 
-    private val viewModel: AuthViewModel by viewModels()
+    private val viewModel by lazy {
+        AuthViewModel(requireContext())
+    }
 
     val millisInFuture = 5 * 60 * 1000
     val countDownInterval = 1000
@@ -184,7 +185,7 @@ class ResetPassword : Fragment() {
 
         binding.otpCode.setLineColor(R.drawable.pin_line)
 
-        binding.saveNewPasswordButton.setBackgroundResource(R.drawable.button_loading_background)
+        binding.saveNewPasswordButton.setBackgroundResource(R.drawable.button_loading)
         binding.saveNewPasswordButton.text = null
         binding.progressCircular.visibility = View.VISIBLE
     }
@@ -223,8 +224,8 @@ class ResetPassword : Fragment() {
 
             "true" -> {
                 binding.otpCode.setLineColor(Color.GREEN)
-                findNavController().navigate(R.id.action_resetPassword_to_signIn)
                 Toast.makeText(requireContext(), "Password Changed Successfully, SignIn Now", Toast.LENGTH_SHORT).show()
+                findNavController().navigate(R.id.action_resetPassword_to_signIn)
             }
 
             "password must be unique" -> {

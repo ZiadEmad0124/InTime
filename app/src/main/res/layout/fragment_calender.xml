@@ -33,7 +33,8 @@
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
                 android:layout_weight="1"
-                android:gravity="center">
+                android:gravity="center"
+                tools:ignore="UseCompoundDrawables">
 
                 <TextView
                     android:id="@+id/monthTextView"
@@ -45,23 +46,13 @@
                     android:textStyle="bold"
                     tools:text="April" />
 
-                <com.google.android.material.card.MaterialCardView
+                <ImageView
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_marginStart="@dimen/standard_10"
-                    app:cardBackgroundColor="@color/transparent"
-                    app:cardCornerRadius="@dimen/border_radius_16"
-                    app:strokeColor="@color/grey_3"
-                    app:strokeWidth="@dimen/stroke_width">
-
-                    <ImageView
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:importantForAccessibility="no"
-                        android:padding="@dimen/standard_5"
-                        android:src="@drawable/ic_month_calender" />
-
-                </com.google.android.material.card.MaterialCardView>
+                    android:importantForAccessibility="no"
+                    android:padding="@dimen/standard_5"
+                    android:src="@drawable/ic_month_calender" />
 
             </LinearLayout>
 

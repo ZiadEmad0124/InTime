@@ -12,17 +12,20 @@ import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.view.GravityCompat
 import androidx.fragment.app.Fragment
+import com.bumptech.glide.Glide
 import com.google.android.material.bottomnavigation.BottomNavigationItemView
 import com.google.android.material.bottomnavigation.BottomNavigationMenuView
 import com.google.android.material.bottomsheet.BottomSheetDialog
 import com.ziad_emad_dev.in_time.R
 import com.ziad_emad_dev.in_time.databinding.ActivityHomePageBinding
-import com.ziad_emad_dev.in_time.network.ProfileManager
+import com.ziad_emad_dev.in_time.network.auth.SessionManager
+import com.ziad_emad_dev.in_time.network.profile.ProfileManager
+import com.ziad_emad_dev.in_time.ui.create.CreateProject
 import com.ziad_emad_dev.in_time.ui.create.CreateTask
 import com.ziad_emad_dev.in_time.ui.notification.NotificationActivity
-import com.ziad_emad_dev.in_time.ui.profile.EditProfile
+import com.ziad_emad_dev.in_time.ui.profile.ChangePassword
 import com.ziad_emad_dev.in_time.ui.profile.Profile
-import com.ziad_emad_dev.in_time.ui.settings.Settings
+import com.ziad_emad_dev.in_time.ui.profile.Settings
 import com.ziad_emad_dev.in_time.ui.signing.SignPage
 import com.ziad_emad_dev.in_time.viewmodels.HomeViewModel
 
@@ -31,6 +34,7 @@ class HomePage : AppCompatActivity() {
 
     private lateinit var binding: ActivityHomePageBinding
 
+    private lateinit var sessionManager: SessionManager
     private lateinit var profileManager: ProfileManager
 
     private val viewModel by lazy {
@@ -42,20 +46,31 @@ class HomePage : AppCompatActivity() {
         binding = ActivityHomePageBinding.inflate(layoutInflater)
         setContentView(binding.root)
 
+        sessionManager = SessionManager(this)
         profileManager = ProfileManager(this)
 
+        startLoading()
+        refreshProfile()
+
         myToolbar()
+
         customMiddleBottomNavBarIcon()
         clickOnItemInBottomNavBar()
 
-        fitchProfile()
         goToProfile()
-        goToEditProfile()
         goToSettings()
+        goToChangePassword()
+
         signOut()
     }
 
     private fun myToolbar() {
+        Glide.with(this)
+            .load(profileManager.getProfileAvatar())
+            .placeholder(R.drawable.ic_profile)
+            .error(R.drawable.ic_profile)
+            .into(binding.myToolbar.profile)
+
         binding.myToolbar.notification.setOnClickListener {
             val intent = Intent(this, NotificationActivity::class.java)
             startActivity(intent)
@@ -133,62 +148,17 @@ class HomePage : AppCompatActivity() {
         }
         val createProjectButton = view.findViewById<View>(R.id.createProjectButton)
         createProjectButton.setOnClickListener {
-
+            val intent = Intent(this, CreateProject::class.java)
+            startActivity(intent)
             dialog.dismiss()
         }
         dialog.show()
     }
 
-    private fun fitchProfile() {
-        viewModel.refreshToken()
-        viewModel.refreshTokenMessage.observe(this) { message ->
-            if (message == "Refresh Succeed") {
-                viewModel.fetchProfile()
-            } else {
-                failedConnect()
-            }
-        }
-        viewModel.fetchProfileMessage.observe(this) { message ->
-            if (message == "true") {
-                binding.blockingView.visibility = View.GONE
-                saveProfile()
-                navigationViewProfile()
-            } else {
-                failedConnect()
-            }
-        }
-    }
-
-    private fun saveProfile() {
-        viewModel.name.observe(this) { name ->
-            viewModel.title.observe(this) { title ->
-                viewModel.email.observe(this) { email ->
-                    viewModel.phone.observe(this) { phone ->
-                        viewModel.about.observe(this) { about ->
-                            profileManager.saveProfile(name, title, email, phone, about)
-                        }
-                    }
-                }
-            }
-        }
-    }
-
-    private fun navigationViewProfile() {
-        binding.navigationView.profileName.text = profileManager.getProfileName()
-    }
-
     private fun goToProfile() {
-        binding.navigationView.profileContainer.setOnClickListener {
-            binding.drawerLayout.closeDrawer(GravityCompat.START)
-            val intent = Intent(this, Profile::class.java)
-            startActivity(intent)
-        }
-    }
-
-    private fun goToEditProfile() {
         binding.navigationView.profile.setOnClickListener {
             binding.drawerLayout.closeDrawer(GravityCompat.START)
-            val intent = Intent(this, EditProfile::class.java)
+            val intent = Intent(this, Profile::class.java)
             startActivity(intent)
         }
     }
@@ -198,6 +168,53 @@ class HomePage : AppCompatActivity() {
             binding.drawerLayout.closeDrawer(GravityCompat.START)
             val intent = Intent(this, Settings::class.java)
             startActivity(intent)
+            finish()
+        }
+    }
+
+    private fun goToChangePassword() {
+        binding.navigationView.changePassword.setOnClickListener {
+            binding.drawerLayout.closeDrawer(GravityCompat.START)
+            val intent = Intent(this, ChangePassword::class.java)
+            startActivity(intent)
+        }
+    }
+
+    private fun navigationViewProfile() {
+        Glide.with(this)
+            .load(profileManager.getProfileAvatar())
+            .placeholder(R.drawable.ic_profile)
+            .error(R.drawable.ic_profile)
+            .into(binding.navigationView.profileImage)
+        binding.navigationView.profileName.text = profileManager.getProfileName()
+    }
+
+    private fun myToolbarAvatar() {
+        Glide.with(this)
+            .load(profileManager.getProfileAvatar())
+            .placeholder(R.drawable.ic_profile)
+            .error(R.drawable.ic_profile)
+            .into(binding.myToolbar.profile)
+    }
+
+    private fun refreshProfile() {
+        viewModel.refreshToken()
+        viewModel.refreshTokenMessage.observe(this) { message ->
+            if (message == "true") {
+                viewModel.fetchProfile()
+            } else {
+                failedConnect()
+            }
+        }
+
+        viewModel.fetchProfileMessage.observe(this) { message ->
+            if (message == "true") {
+                stopLoading()
+                navigationViewProfile()
+                myToolbarAvatar()
+            } else {
+                failedConnect()
+            }
         }
     }
 
@@ -210,9 +227,9 @@ class HomePage : AppCompatActivity() {
 
             val logOutButton = alertDialog.findViewById<Button>(R.id.logOutButton)
             logOutButton.setOnClickListener {
-                alertInstance.dismiss()
+                logOut()
                 binding.drawerLayout.closeDrawer(GravityCompat.START)
-                logOut(alertInstance)
+                alertInstance.dismiss()
             }
 
             val cancelButton = alertDialog.findViewById<Button>(R.id.cancelButton)
@@ -222,42 +239,33 @@ class HomePage : AppCompatActivity() {
         }
     }
 
-    private fun logOut(alertDialog: AlertDialog) {
-        startLogOut()
-
-        viewModel.refreshToken()
-
-        viewModel.refreshTokenMessage.observe(this) { message ->
-            if (message == "Refresh Succeed") {
-                viewModel.signOut()
-            } else {
-                failedConnect()
-                alertDialog.dismiss()
-            }
-        }
+    private fun logOut() {
+        startLoading()
+        binding.noConnection.visibility = View.GONE
+        viewModel.signOut()
         viewModel.signOutMessage.observe(this) { message ->
-            if (message == "true") {
-                val intent = Intent(this, SignPage::class.java)
-                intent.flags = Intent.FLAG_ACTIVITY_CLEAR_TASK or Intent.FLAG_ACTIVITY_NEW_TASK
-                startActivity(intent)
-            } else {
-                failedConnect()
-                alertDialog.dismiss()
+            if (message != "true") {
+                sessionManager.clearAuthToken()
+                sessionManager.clearRefreshToken()
             }
+            val intent = Intent(this, SignPage::class.java)
+            intent.flags = Intent.FLAG_ACTIVITY_CLEAR_TASK or Intent.FLAG_ACTIVITY_NEW_TASK
+            startActivity(intent)
         }
     }
 
-    private fun startLogOut() {
+    private fun startLoading() {
         binding.blockingView.visibility = View.VISIBLE
-        binding.progressCircular.visibility = View.VISIBLE
-        binding.noConnection.visibility = View.GONE
+    }
+
+    private fun stopLoading() {
+        binding.blockingView.visibility = View.GONE
     }
 
     private fun failedConnect() {
-        binding.progressCircular.visibility = View.GONE
-        binding.noConnection.visibility = View.VISIBLE
-        binding.blockingView.setBackgroundColor(getColor(R.color.white))
-        Toast.makeText(this, "Failed Connect", Toast.LENGTH_SHORT).show()
+        binding.blockingView.visibility = View.GONE
+        binding.blockingViewNoConnection.visibility = View.VISIBLE
+        Toast.makeText(this, "Failed Connect, Try Again", Toast.LENGTH_SHORT).show()
     }
 
     @Deprecated("This function is Deprecated")
