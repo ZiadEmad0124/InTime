@@ -53,8 +53,8 @@ class Profile : AppCompatActivity() {
         binding.profileName.text = profileManager.getProfileName()
         binding.profileTitle.text = profileManager.getProfileTitle()
         binding.profileAbout.text = profileManager.getProfileAbout()
-        binding.level.text = 0.toString()
-        binding.rank.text = if (profileManager.getTotalPoints() < 100) {
+        binding.rank.text = profileManager.getRank().toString()
+        binding.level.text = if (profileManager.getTotalPoints() < 100) {
             0.toString()
         } else {
             (profileManager.getTotalPoints() / 100).toString()
@@ -64,7 +64,7 @@ class Profile : AppCompatActivity() {
 
     private fun clickOnDeleteAccountButton() {
         binding.deleteAccountButton.setOnClickListener {
-            val alertDialog = LayoutInflater.from(this).inflate(R.layout.delete_account_dialog, null)
+            val alertDialog = LayoutInflater.from(this).inflate(R.layout.layout_delete_account_dialog, null)
             val alertBuilder = AlertDialog.Builder(this).setView(alertDialog)
             val alertInstance = alertBuilder.show()
             alertInstance.window?.setBackgroundDrawableResource(R.color.transparent)
@@ -87,6 +87,7 @@ class Profile : AppCompatActivity() {
         viewModel.deleteAccount()
         viewModel.deleteAccountMessage.observe(this) { message ->
             if (message == "true") {
+                profileManager.clearProfile()
                 val intent = Intent(this, SignPage::class.java)
                 intent.flags = Intent.FLAG_ACTIVITY_CLEAR_TASK or Intent.FLAG_ACTIVITY_NEW_TASK
                 startActivity(intent)

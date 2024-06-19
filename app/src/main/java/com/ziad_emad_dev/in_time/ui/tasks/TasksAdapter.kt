@@ -1,31 +1,30 @@
 package com.ziad_emad_dev.in_time.ui.tasks
 
 import android.content.Context
+import android.content.Intent
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import android.widget.ImageView
 import android.widget.TextView
-import androidx.core.content.ContextCompat
 import androidx.recyclerview.widget.RecyclerView
 import androidx.recyclerview.widget.RecyclerView.ViewHolder
 import com.google.android.material.card.MaterialCardView
 import com.ziad_emad_dev.in_time.R
+import com.ziad_emad_dev.in_time.network.tasks.Task
+import com.ziad_emad_dev.in_time.ui.tasks.task.TaskPage
+import java.text.SimpleDateFormat
+import java.util.Locale
 
-class TasksAdapter(
-    private val context: Context,
-    private val taskType: String,
-    private val tasks: ArrayList<Task>
-) :
+class TasksAdapter(private val context: Context, private val taskType: String, private val tasks: ArrayList<Task>) :
     RecyclerView.Adapter<TasksAdapter.TasksViewHolder>() {
 
     class TasksViewHolder(itemView: View) : ViewHolder(itemView) {
         val taskCard: MaterialCardView = itemView.findViewById(R.id.taskCard)
         val taskIndicator: View = itemView.findViewById(R.id.taskIndicator)
-        val taskDate: TextView = itemView.findViewById(R.id.taskDate)
-        val taskTitle: TextView = itemView.findViewById(R.id.taskTitle)
+        val taskEndDate: TextView = itemView.findViewById(R.id.taskEndDate)
+        val taskName: TextView = itemView.findViewById(R.id.taskName)
+        val taskTag: TextView = itemView.findViewById(R.id.taskTag)
         val taskDescription: TextView = itemView.findViewById(R.id.taskDescription)
-        val taskOptions: ImageView = itemView.findViewById(R.id.taskOptions)
     }
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): TasksViewHolder {
@@ -40,30 +39,43 @@ class TasksAdapter(
 
     override fun onBindViewHolder(holder: TasksViewHolder, position: Int) {
 
-        when (taskType) {
-            TaskStatus.BACKLOG -> {
-                holder.taskCard.strokeColor = ContextCompat.getColor(context, R.color.red)
-                holder.taskIndicator.setBackgroundResource(R.color.red)
+        val color = when (taskType) {
+            "In Progress" -> {
+
+                R.color.orange
             }
 
-            TaskStatus.IN_PROGRESS -> {
-                holder.taskCard.strokeColor = ContextCompat.getColor(context, R.color.secondary)
-                holder.taskIndicator.setBackgroundResource(R.color.secondary)
+            "Completed" -> {
+
+                R.color.green
             }
 
-            TaskStatus.COMPLETED -> {
-                holder.taskCard.strokeColor = ContextCompat.getColor(context, R.color.green)
-                holder.taskIndicator.setBackgroundResource(R.color.green)
+            else -> {
+
+                R.color.red
             }
         }
 
+        holder.taskCard.strokeColor = context.getColor(color)
+        holder.taskIndicator.setBackgroundColor(context.getColor(color))
+
         val task = tasks[position]
-        holder.taskDate.text = context.getString(R.string.to_do_task_date, "11.30Am", "12.30 Pm")
-        holder.taskTitle.text = task.title
-        holder.taskDescription.text = task.description
 
-        holder.taskOptions.setOnClickListener {
+        holder.taskName.text = task.name
 
+        holder.taskTag.text = task.tag?.name?.ifEmpty { "No Tag"}
+
+        holder.taskDescription.text = task.disc.ifEmpty { "No Description" }
+
+        val inputFormat = SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss.SSS'Z'", Locale.getDefault())
+        val outputFormat = SimpleDateFormat("HH:mm dd MMM yyyy", Locale.getDefault())
+        val date = inputFormat.parse(task.endAt)
+        holder.taskEndDate.text = context.getString(R.string.end_at, outputFormat.format(date!!))
+
+        holder.taskCard.setOnClickListener {
+            val intent = Intent(context, TaskPage::class.java)
+            intent.putExtra("task", task)
+            context.startActivity(intent)
         }
     }
 }

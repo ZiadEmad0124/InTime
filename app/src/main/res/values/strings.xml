@@ -106,7 +106,6 @@
     <string name="are_you_sure_you_want_to_log_out">Are you sure you want to log out?</string>
     <string name="cancel">Cancel</string>
     <string name="update">Update</string>
-    <string name="my_phone">0%1$s</string>
     <string name="select_your_option">Select Your Option</string>
     <string name="take_a_photo">Take a Photo</string>
     <string name="choose_from_gallery">Choose From Gallery</string>
@@ -130,7 +129,17 @@
     <string name="must_be_different_from_the_current_password">Must be different from the current password</string>
     <string name="password_changed_successfully">Password Changed Successfully</string>
     <string name="_20">+20</string>
-    <string name="_20_Phone">+20%1$s</string>
     <string name="_phone">+20%1$s</string>
-    <string name="my_new_phone">+20%1$s</string>
+    <string name="my_phone">+2%1$s</string>
+    <string name="delete">Delete</string>
+    <string name="delete_cover">Delete Cover</string>
+    <string name="uploaded">uploaded</string>
+    <string name="no_projects_found">No Projects Found</string>
+    <string name="no_tasks_found">No Tasks Found</string>
+    <string name="end_at">End At: %1$s</string>
+    <string name="description">Description</string>
+    <string name="update_task">Update Task</string>
+    <string name="from_date">From: %1$s</string>
+    <string name="to_date">To: %1$s</string>
+    <string name="no_steps_found">No Steps Found</string>
 </resources>

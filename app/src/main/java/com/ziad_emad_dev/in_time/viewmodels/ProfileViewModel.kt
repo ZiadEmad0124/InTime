@@ -57,7 +57,7 @@ class ProfileViewModel(context: Context) : ViewModel() {
             try {
                 val response = InTimeApi.retrofitService.fetchUser("Bearer ${sessionManager.fetchAuthToken()}")
                 if (response.isSuccessful) {
-                        val title = when (response.body()?.record?.title) {
+                    val title = when (response.body()?.record?.title) {
                         null -> "User"
                         else -> response.body()?.record?.title.toString()
                     }
@@ -66,13 +66,16 @@ class ProfileViewModel(context: Context) : ViewModel() {
                         else -> response.body()?.record?.about.toString()
                     }
                     profileManager.saveProfile(
+                        response.body()?.record?.id.toString(),
                         response.body()?.record?.name.toString(),
                         title,
                         response.body()?.record?.email.toString(),
                         response.body()?.record?.phone.toString(),
                         "https://intime-9hga.onrender.com/api/v1/images/${response.body()?.record?.avatar.toString()}",
                         about,
-                        response.body()?.record?.points?.totalPoints ?: 0)
+                        response.body()?.record?.points?.totalPoints ?: 0,
+                        response.body()?.record?.tasks?.completedTasks ?: 0,
+                        response.body()?.record?.tasks?.onGoingTasks ?: 0)
                     _fetchProfileMessage.value = response.body()?.success.toString()
                 } else {
                     _fetchProfileMessage.value = "fetch profile Failed"
@@ -83,42 +86,24 @@ class ProfileViewModel(context: Context) : ViewModel() {
         }
     }
 
-    fun editProfile(name: String, title: String, phone: String, about: String, imageFile: File) {
+    fun editProfile(name: String, title: String, phone: String, about: String, imageFile: File?) {
 
         val myName = name.toRequestBody("text/plain".toMediaTypeOrNull())
         val myTitle = title.toRequestBody("text/plain".toMediaTypeOrNull())
         val myPhone = phone.toRequestBody("text/plain".toMediaTypeOrNull())
         val myAbout = about.toRequestBody("text/plain".toMediaTypeOrNull())
 
-        val requestFile = imageFile.asRequestBody("image/jpeg".toMediaTypeOrNull())
-        val avatar = MultipartBody.Part.createFormData("avatar", imageFile.name, requestFile)
+        val avatar = if (imageFile == null) {
+            null
+        } else {
+            val requestFile = imageFile.asRequestBody("image/jpeg".toMediaTypeOrNull())
+            MultipartBody.Part.createFormData("avatar", imageFile.name, requestFile)
+        }
 
         viewModelScope.launch {
             try {
                 val response = InTimeApi.retrofitService.editProfile("Bearer ${sessionManager.fetchAuthToken().toString()}",
                     myName, myTitle, myPhone, myAbout, avatar)
-                if (response.isSuccessful) {
-                    _editProfileMessage.value = response.body()?.success.toString()
-                } else {
-                    _editProfileMessage.value = "Edit Profile Failed"
-                }
-            } catch (e: Exception) {
-                _editProfileMessage.value = "Failed Connect, Try Again"
-            }
-        }
-    }
-
-    fun editProfile(name: String, title: String, phone: String, about: String) {
-
-        val myName = name.toRequestBody("text/plain".toMediaTypeOrNull())
-        val myTitle = title.toRequestBody("text/plain".toMediaTypeOrNull())
-        val myPhone = phone.toRequestBody("text/plain".toMediaTypeOrNull())
-        val myAbout = about.toRequestBody("text/plain".toMediaTypeOrNull())
-
-        viewModelScope.launch {
-            try {
-                val response = InTimeApi.retrofitService.editProfileWithoutAvatar("Bearer ${sessionManager.fetchAuthToken().toString()}",
-                    myName, myTitle, myPhone, myAbout)
                 if (response.isSuccessful) {
                     _editProfileMessage.value = response.body()?.success.toString()
                 } else {

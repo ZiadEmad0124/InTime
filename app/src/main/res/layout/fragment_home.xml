@@ -1,110 +1,361 @@
 <?xml version="1.0" encoding="utf-8"?>
-<ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:fillViewport="true"
-    android:scrollbars="none"
     tools:context=".ui.home.HomeFragment">
 
+    <ScrollView
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:fillViewport="true"
+        android:scrollbars="none">
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="0dp"
+            android:orientation="vertical">
+
+            <SearchView
+                android:id="@+id/searchBar"
+                style="@style/InTime.SearchBar"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_margin="@dimen/standard_10"
+                android:padding="@dimen/standard_5"
+                android:queryHint="@string/search_anything"
+                app:iconifiedByDefault="false"
+                app:searchIcon="@drawable/ic_search" />
+
+            <androidx.recyclerview.widget.RecyclerView
+                android:id="@+id/searchRecyclerView"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:scrollbars="vertical" />
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:baselineAligned="false">
+
+                <include
+                    android:id="@+id/completedTasks"
+                    layout="@layout/layout_user_data"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_margin="@dimen/standard_10"
+                    android:layout_weight="1" />
+
+                <include
+                    android:id="@+id/totalScore"
+                    layout="@layout/layout_user_data"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_margin="@dimen/standard_10"
+                    android:layout_weight="1" />
+
+            </LinearLayout>
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content">
+
+                <include
+                    android:id="@+id/inProgress"
+                    layout="@layout/layout_user_data"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_margin="@dimen/standard_10"
+                    android:layout_weight="1" />
+
+                <androidx.cardview.widget.CardView
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_margin="@dimen/standard_10"
+                    android:layout_weight="1" />
+
+            </LinearLayout>
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_margin="@dimen/standard_10"
+                android:drawablePadding="@dimen/standard_10"
+                android:fontFamily="@font/roboto"
+                android:text="@string/your_recent_tasks"
+                android:textColor="@color/blue_dark"
+                android:textSize="21sp"
+                android:textStyle="bold"
+                app:drawableStartCompat="@drawable/ic_recent_task" />
+
+            <FrameLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content">
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="vertical">
+
+                    <androidx.cardview.widget.CardView
+                        android:id="@+id/firstTask"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_margin="@dimen/standard_10"
+                        android:visibility="gone"
+                        app:cardCornerRadius="@dimen/border_radius_16"
+                        app:cardElevation="@dimen/standard_5">
+
+                        <LinearLayout
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:gravity="center"
+                            android:paddingHorizontal="@dimen/standard_10"
+                            android:paddingVertical="@dimen/standard_20">
+
+                            <ImageView
+                                android:layout_width="40dp"
+                                android:layout_height="40dp"
+                                android:importantForAccessibility="no"
+                                android:src="@drawable/ic_still" />
+
+                            <LinearLayout
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:layout_marginStart="@dimen/standard_15"
+                                android:orientation="vertical">
+
+                                <TextView
+                                    android:id="@+id/title1"
+                                    android:layout_width="wrap_content"
+                                    android:layout_height="wrap_content"
+                                    android:layout_weight="1"
+                                    android:fontFamily="@font/poppins_medium"
+                                    android:textStyle="bold"
+                                    tools:text="Task 1" />
+
+                                <TextView
+                                    android:id="@+id/date1"
+                                    android:layout_width="wrap_content"
+                                    android:layout_height="wrap_content"
+                                    android:layout_weight="1"
+                                    android:drawablePadding="@dimen/standard_5"
+                                    android:fontFamily="@font/poppins_medium"
+                                    android:textColor="@color/sky_4"
+                                    app:drawableStartCompat="@drawable/ic_clock"
+                                    tools:text="3.00 pm" />
+
+                            </LinearLayout>
+
+                            <LinearLayout
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:layout_marginStart="@dimen/standard_15"
+                                android:orientation="vertical">
+
+                                <TextView
+                                    android:id="@+id/progressText1"
+                                    android:layout_width="wrap_content"
+                                    android:layout_height="wrap_content"
+                                    android:layout_weight="1"
+                                    android:fontFamily="@font/poppins_medium"
+                                    android:textColor="@color/blue_dark"
+                                    android:textStyle="bold"
+                                    tools:text="60% completed" />
+
+                                <ProgressBar
+                                    android:id="@+id/progressBar1"
+                                    style="?android:attr/progressBarStyleHorizontal"
+                                    android:layout_width="match_parent"
+                                    android:layout_height="wrap_content"
+                                    android:layout_weight="1"
+                                    android:indeterminate="true"
+                                    android:indeterminateTint="@color/secondary"
+                                    android:max="100" />
+
+                            </LinearLayout>
+
+                            <ImageView
+                                android:id="@+id/priority1"
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:layout_marginStart="@dimen/standard_15"
+                                android:importantForAccessibility="no"
+                                tools:src="@drawable/ic_flag_red" />
+
+                            <TextView
+                                android:id="@+id/points1"
+                                android:layout_width="match_parent"
+                                android:layout_height="wrap_content"
+                                android:layout_gravity="bottom"
+                                android:fontFamily="@font/poppins_medium"
+                                android:gravity="end"
+                                android:textColor="@color/sky_4"
+                                tools:text="60 / 100" />
+
+                        </LinearLayout>
+
+                    </androidx.cardview.widget.CardView>
+
+                    <androidx.cardview.widget.CardView
+                        android:id="@+id/secondTask"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_margin="@dimen/standard_10"
+                        android:visibility="gone"
+                        app:cardCornerRadius="@dimen/border_radius_16"
+                        app:cardElevation="@dimen/standard_5">
+
+                        <LinearLayout
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:gravity="center"
+                            android:paddingHorizontal="@dimen/standard_10"
+                            android:paddingVertical="@dimen/standard_20">
+
+                            <ImageView
+                                android:layout_width="40dp"
+                                android:layout_height="40dp"
+                                android:importantForAccessibility="no"
+                                android:src="@drawable/ic_still" />
+
+                            <LinearLayout
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:layout_marginStart="@dimen/standard_15"
+                                android:orientation="vertical">
+
+                                <TextView
+                                    android:id="@+id/title2"
+                                    android:layout_width="wrap_content"
+                                    android:layout_height="wrap_content"
+                                    android:layout_weight="1"
+                                    android:fontFamily="@font/poppins_medium"
+                                    android:textStyle="bold"
+                                    tools:text="Task 1" />
+
+                                <TextView
+                                    android:id="@+id/date2"
+                                    android:layout_width="wrap_content"
+                                    android:layout_height="wrap_content"
+                                    android:layout_weight="1"
+                                    android:drawablePadding="@dimen/standard_5"
+                                    android:fontFamily="@font/poppins_medium"
+                                    android:textColor="@color/sky_4"
+                                    app:drawableStartCompat="@drawable/ic_clock"
+                                    tools:text="3.00 pm" />
+
+                            </LinearLayout>
+
+                            <LinearLayout
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:layout_marginStart="@dimen/standard_15"
+                                android:orientation="vertical">
+
+                                <TextView
+                                    android:id="@+id/progressText2"
+                                    android:layout_width="wrap_content"
+                                    android:layout_height="wrap_content"
+                                    android:layout_weight="1"
+                                    android:fontFamily="@font/poppins_medium"
+                                    android:textColor="@color/blue_dark"
+                                    android:textStyle="bold"
+                                    tools:text="60% completed" />
+
+                                <ProgressBar
+                                    android:id="@+id/progressBar2"
+                                    style="?android:attr/progressBarStyleHorizontal"
+                                    android:layout_width="match_parent"
+                                    android:layout_height="wrap_content"
+                                    android:layout_weight="1"
+                                    android:indeterminate="true"
+                                    android:indeterminateTint="@color/secondary"
+                                    android:max="100" />
+
+                            </LinearLayout>
+
+                            <ImageView
+                                android:id="@+id/priority2"
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:layout_marginStart="@dimen/standard_15"
+                                android:importantForAccessibility="no"
+                                tools:src="@drawable/ic_flag_red" />
+
+                            <TextView
+                                android:id="@+id/points2"
+                                android:layout_width="match_parent"
+                                android:layout_height="wrap_content"
+                                android:layout_gravity="bottom"
+                                android:fontFamily="@font/poppins_medium"
+                                android:gravity="end"
+                                android:textColor="@color/sky_4"
+                                tools:text="60 / 100" />
+
+                        </LinearLayout>
+
+                    </androidx.cardview.widget.CardView>
+
+                </LinearLayout>
+
+                <LinearLayout
+                    android:id="@+id/noTasksLayout"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_margin="@dimen/standard_10"
+                    android:background="@color/white"
+                    android:gravity="center"
+                    android:minHeight="200dp"
+                    android:orientation="vertical"
+                    tools:ignore="UseCompoundDrawables">
+
+                    <ImageView
+                        android:layout_width="60dp"
+                        android:layout_height="60dp"
+                        android:importantForAccessibility="no"
+                        android:src="@drawable/ic_no_tasks" />
+
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginTop="10dp"
+                        android:fontFamily="@font/roboto"
+                        android:text="@string/no_tasks_found"
+                        android:textColor="@color/primary"
+                        android:textSize="16sp"
+                        android:textStyle="bold" />
+
+                </LinearLayout>
+
+            </FrameLayout>
+
+        </LinearLayout>
+
+    </ScrollView>
+
     <LinearLayout
+        android:id="@+id/blockingView"
         android:layout_width="match_parent"
         android:layout_height="0dp"
-        android:orientation="vertical">
+        android:background="@color/white"
+        android:clickable="true"
+        android:focusable="true"
+        android:gravity="center"
+        android:visibility="gone"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent">
 
-        <EditText
-            style="@style/InTime.SearchBar"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_margin="@dimen/standard_10"
-            android:drawableEnd="@drawable/ic_search"
-            android:hint="@string/search_anything"
-            android:importantForAutofill="no"
-            android:inputType="text" />
-
-        <LinearLayout
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:baselineAligned="false">
-
-            <include
-                android:id="@+id/completedTasks"
-                layout="@layout/layout_user_data"
-                android:layout_width="0dp"
-                android:layout_height="wrap_content"
-                android:layout_margin="@dimen/standard_10"
-                android:layout_weight="1" />
-
-            <include
-                android:id="@+id/totalScore"
-                layout="@layout/layout_user_data"
-                android:layout_width="0dp"
-                android:layout_height="wrap_content"
-                android:layout_margin="@dimen/standard_10"
-                android:layout_weight="1" />
-
-        </LinearLayout>
-
-        <LinearLayout
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content">
-
-            <include
-                android:id="@+id/inProgress"
-                layout="@layout/layout_user_data"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_margin="@dimen/standard_10"
-                android:layout_weight="1" />
-
-            <androidx.cardview.widget.CardView
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_margin="@dimen/standard_10"
-                android:layout_weight="1" />
-
-        </LinearLayout>
-
-        <TextView
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_margin="@dimen/standard_10"
-            android:drawablePadding="@dimen/standard_10"
-            android:fontFamily="@font/roboto"
-            android:text="@string/your_recent_tasks"
-            android:textColor="@color/blue_dark"
-            android:textSize="21sp"
-            android:textStyle="bold"
-            app:drawableStartCompat="@drawable/ic_recent_task" />
-
-        <include
-            android:id="@+id/firstTask"
-            layout="@layout/layout_recent_task"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_margin="@dimen/standard_10"
-            android:layout_marginHorizontal="@dimen/standard_10" />
-
-        <include
-            android:id="@+id/secondTask"
-            layout="@layout/layout_recent_task"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_margin="@dimen/standard_10" />
-
-        <TextView
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_margin="@dimen/standard_10"
-            android:drawablePadding="@dimen/standard_10"
-            android:fontFamily="@font/roboto"
-            android:text="@string/your_recent_projects"
-            android:textColor="@color/blue_dark"
-            android:textSize="21sp"
-            android:textStyle="bold"
-            app:drawableStartCompat="@drawable/ic_recent_project" />
+        <ProgressBar
+            android:id="@+id/progressCircular"
+            android:layout_width="50dp"
+            android:layout_height="50dp"
+            android:layout_gravity="center"
+            android:indeterminateTint="@color/primary" />
 
     </LinearLayout>
 
-</ScrollView>
+</androidx.constraintlayout.widget.ConstraintLayout>

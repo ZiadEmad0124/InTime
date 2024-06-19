@@ -28,7 +28,7 @@
             android:padding="@dimen/standard_20">
 
             <TextView
-                android:id="@+id/taskDate"
+                android:id="@+id/taskEndDate"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:drawableStart="@drawable/ic_box"
@@ -40,7 +40,7 @@
                 tools:text="11.30 Am - 12.30 Pm" />
 
             <TextView
-                android:id="@+id/taskTitle"
+                android:id="@+id/taskName"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginTop="@dimen/standard_15"
@@ -51,27 +51,27 @@
                 tools:text="Geometry" />
 
             <TextView
-                android:id="@+id/taskDescription"
+                android:id="@+id/taskTag"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginTop="@dimen/standard_15"
                 android:fontFamily="@font/roboto"
-                android:lines="2"
+                android:textColor="@color/grey_8"
+                android:textSize="14sp"
+                android:textStyle="bold"
+                tools:text="Geometry" />
+
+            <TextView
+                android:id="@+id/taskDescription"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="@dimen/standard_10"
+                android:fontFamily="@font/roboto"
                 android:textColor="@color/secondary"
                 android:textSize="16sp"
                 tools:text="Create a unique emotional story that describes better than words" />
 
         </LinearLayout>
-
-        <ImageView
-            android:id="@+id/taskOptions"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_gravity="center_vertical"
-            android:layout_marginEnd="@dimen/standard_10"
-            android:importantForAccessibility="no"
-            android:padding="@dimen/standard_10"
-            android:src="@drawable/ic_options" />
 
     </LinearLayout>
 

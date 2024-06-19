@@ -10,10 +10,9 @@ import com.google.android.material.tabs.TabLayoutMediator
 import com.ziad_emad_dev.in_time.R
 import com.ziad_emad_dev.in_time.databinding.FragmentTasksBinding
 import com.ziad_emad_dev.in_time.ui.MyViewPagerAdapter
-import com.ziad_emad_dev.in_time.ui.home.tasks.BacklogFragment
-import com.ziad_emad_dev.in_time.ui.home.tasks.CompletedFragment
-import com.ziad_emad_dev.in_time.ui.home.tasks.InProgressFragment
-import com.ziad_emad_dev.in_time.ui.home.tasks.ToDoTasksFragment
+import com.ziad_emad_dev.in_time.ui.tasks.BacklogFragment
+import com.ziad_emad_dev.in_time.ui.tasks.CompletedFragment
+import com.ziad_emad_dev.in_time.ui.tasks.InProgressFragment
 
 class TasksFragment : Fragment() {
 
@@ -39,7 +38,6 @@ class TasksFragment : Fragment() {
         val adapter = MyViewPagerAdapter(childFragmentManager, lifecycle)
 
         adapter.let {
-            it.addFragment(ToDoTasksFragment(), getString(R.string.to_do))
             it.addFragment(InProgressFragment(), getString(R.string.in_progress))
             it.addFragment(CompletedFragment(), getString(R.string.completed))
             it.addFragment(BacklogFragment(), getString(R.string.backlog))

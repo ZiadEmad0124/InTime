@@ -9,6 +9,7 @@ import com.ziad_emad_dev.in_time.network.auth.SessionManager
 import com.ziad_emad_dev.in_time.network.auth.refresh_token.RefreshTokenRequest
 import com.ziad_emad_dev.in_time.network.auth.sign_out.SignOutRequest
 import com.ziad_emad_dev.in_time.network.profile.ProfileManager
+import com.ziad_emad_dev.in_time.network.tasks.Task
 import kotlinx.coroutines.launch
 
 class HomeViewModel(context: Context) : ViewModel() {
@@ -22,8 +23,20 @@ class HomeViewModel(context: Context) : ViewModel() {
     private val _fetchProfileMessage = MutableLiveData<String>()
     val fetchProfileMessage get() = _fetchProfileMessage
 
+    private val _fetchProfileRankMessage = MutableLiveData<String>()
+    val fetchProfileRankMessage get() = _fetchProfileRankMessage
+
     private val _signOutMessage = MutableLiveData<String>()
     val signOutMessage get() = _signOutMessage
+
+    private val _getTasksMessage = MutableLiveData<String>()
+    val getTasksMessage get() = _getTasksMessage
+
+    private val _getTasks = MutableLiveData<List<Task>>()
+    val getTasks get() = _getTasks
+
+    private val _getSearchTask = MutableLiveData<List<Task>>()
+    val getSearchTask get() = _getSearchTask
 
     fun refreshToken() {
 
@@ -59,19 +72,38 @@ class HomeViewModel(context: Context) : ViewModel() {
                         else -> response.body()?.record?.about.toString()
                     }
                     profileManager.saveProfile(
+                        response.body()?.record?.id.toString(),
                         response.body()?.record?.name.toString(),
                         title,
                         response.body()?.record?.email.toString(),
                         response.body()?.record?.phone.toString(),
                         "https://intime-9hga.onrender.com/api/v1/images/${response.body()?.record?.avatar.toString()}",
                         about,
-                        response.body()?.record?.points?.totalPoints ?: 0)
+                        response.body()?.record?.points?.totalPoints ?: 0,
+                        response.body()?.record?.tasks?.completedTasks ?: 0,
+                        response.body()?.record?.tasks?.onGoingTasks ?: 0)
                     _fetchProfileMessage.value = response.body()?.success.toString()
                 } else {
                     _fetchProfileMessage.value = "Fetch Profile Failed"
                 }
             } catch (e: Exception) {
                 _fetchProfileMessage.value = "Failed Connect, Try Again"
+            }
+        }
+    }
+
+    fun fetchProfileRank() {
+        viewModelScope.launch {
+            try {
+                val response = InTimeApi.retrofitService.fetchUserRank("Bearer ${sessionManager.fetchAuthToken()}")
+                if (response.isSuccessful) {
+                    _fetchProfileRankMessage.value = "Fetch Profile Rank Success"
+                    profileManager.saveProfileRank(response.body()?.myRank ?: 0)
+                }else{
+                    _fetchProfileRankMessage.value = "Fetch Profile Rank Failed"
+                }
+            } catch (e: Exception) {
+                _fetchProfileRankMessage.value = "Failed Connect, Try Again"
             }
         }
     }
@@ -91,6 +123,37 @@ class HomeViewModel(context: Context) : ViewModel() {
                 }
             } catch (e: Exception) {
                 _signOutMessage.value = "Failed Connect, Try Again"
+            }
+        }
+    }
+
+    fun getTasks() {
+        viewModelScope.launch {
+            try {
+                val response = InTimeApi.retrofitService.getTasks("Bearer ${sessionManager.fetchAuthToken().toString()}", 1)
+                if (response.isSuccessful) {
+                    _getTasksMessage.value = response.body()?.success.toString()
+                    _getTasks.value = response.body()?.record!!
+                } else {
+                    _getTasksMessage.value = "Get all Tasks failed"
+                }
+            } catch (e: Exception) {
+                _getTasksMessage.value = "Failed Connect, Try Again"
+            }
+        }
+    }
+
+    fun searchTask(taskName: String) {
+        viewModelScope.launch {
+            try {
+                val response = InTimeApi.retrofitService.searchTasks("Bearer ${sessionManager.fetchAuthToken().toString()}", taskName)
+                if (response.isSuccessful) {
+                    _getSearchTask.value = response.body()?.record!!
+                } else {
+//                    _getSearchTaskMessage.value = "Search Task failed"
+                }
+            } catch (e: Exception) {
+//                _getSearchTaskMessage.value = "Failed Connect, Try Again"
             }
         }
     }

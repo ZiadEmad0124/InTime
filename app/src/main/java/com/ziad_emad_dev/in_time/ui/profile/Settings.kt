@@ -26,7 +26,6 @@ import com.google.android.material.card.MaterialCardView
 import com.ziad_emad_dev.in_time.R
 import com.ziad_emad_dev.in_time.databinding.ActivitySettingsBinding
 import com.ziad_emad_dev.in_time.network.profile.ProfileManager
-import com.ziad_emad_dev.in_time.ui.home.HomePage
 import com.ziad_emad_dev.in_time.viewmodels.ProfileViewModel
 import java.io.File
 import java.io.IOException
@@ -40,7 +39,6 @@ class Settings : AppCompatActivity() {
 
     private var profileImage: Bitmap = Bitmap.createBitmap(1, 1, Bitmap.Config.ARGB_8888)
     private var profileImageFile: File? = null
-
     private var isProfileImageRemoved = false
 
     private val viewModel by lazy {
@@ -76,8 +74,6 @@ class Settings : AppCompatActivity() {
     private fun myToolbar() {
         binding.myToolbar.title.text = getString(R.string.settings)
         binding.myToolbar.back.setOnClickListener {
-            val intent = Intent(this, HomePage::class.java)
-            startActivity(intent)
             finish()
         }
     }
@@ -143,7 +139,7 @@ class Settings : AppCompatActivity() {
         val maxLength = 13
         phone.filters = arrayOf<InputFilter>(InputFilter.LengthFilter(maxLength))
 
-        phone.setText(getString(R.string.my_new_phone, profileManager.getProfilePhone()))
+        phone.setText(getString(R.string.my_phone, profileManager.getProfilePhone()))
 
         phone.addTextChangedListener(object : TextWatcher {
 
@@ -213,13 +209,7 @@ class Settings : AppCompatActivity() {
         val phone = binding.profilePhone.textInputEditText.text.toString().substring(2).trim()
         val about = binding.profileAbout.textInputEditText.text.toString()
 
-        if (profileImageFile == null) {
-            viewModel.editProfile(name, title, phone, about)
-        }else {
-            profileImageFile?.let {
-                viewModel.editProfile(name, title, phone, about, it)
-            }
-        }
+        viewModel.editProfile(name, title, phone, about, profileImageFile)
 
         if (isProfileImageRemoved){
             viewModel.removeAvatar()
@@ -380,17 +370,6 @@ class Settings : AppCompatActivity() {
             bitmap.compress(Bitmap.CompressFormat.JPEG, 100, it)
         }
         return file
-    }
-
-    @Deprecated("This method has been deprecated in favor of using the\n" +
-            "{@link OnBackPressedDispatcher} via {@link #getOnBackPressedDispatcher()}.\n" +
-            "The OnBackPressedDispatcher controls how back button events are dispatched\n" +
-            "to one or more {@link OnBackPressedCallback} objects.")
-    override fun onBackPressed() {
-        super.onBackPressed()
-        val intent = Intent(this, HomePage::class.java)
-        startActivity(intent)
-        finish()
     }
 
     private fun focusOnEditTextLayout() {

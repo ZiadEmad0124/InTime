@@ -197,7 +197,7 @@ class ChangePassword : AppCompatActivity() {
                 binding.passwordChanged.visibility = View.VISIBLE
                 Handler(Looper.getMainLooper()).postDelayed({
                     finish()
-                }, 500)
+                }, 700)
             }
 
             else -> {

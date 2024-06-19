@@ -6,8 +6,10 @@ class ProfileManager(context: Context) {
 
     private val sharedPreferences = context.getSharedPreferences("Profile", Context.MODE_PRIVATE)
 
-    fun saveProfile(name: String, title: String, email: String, phone: String, avatar: String, about: String, totalPoints: Int) {
+    fun saveProfile(id: String, name: String, title: String, email: String, phone: String, avatar: String, about: String,
+                    totalPoints: Int, completedTasks: Int, onGoingTasks: Int) {
         sharedPreferences.edit().apply {
+            putString("id", id)
             putString("name", name)
             putString("title", title)
             putString("email", email)
@@ -15,6 +17,15 @@ class ProfileManager(context: Context) {
             putString("avatar", avatar)
             putString("about", about)
             putInt("totalPoints", totalPoints)
+            putInt("completedTasks", completedTasks)
+            putInt("onGoingTasks", onGoingTasks)
+            apply()
+        }
+    }
+
+    fun saveProfileRank(rank: Int) {
+        sharedPreferences.edit().apply {
+            putInt("rank", rank)
             apply()
         }
     }
@@ -45,5 +56,21 @@ class ProfileManager(context: Context) {
 
     fun getTotalPoints(): Int {
         return sharedPreferences.getInt("totalPoints", 0)
+    }
+
+    fun getCompletedTasks(): Int {
+        return sharedPreferences.getInt("completedTasks", 0)
+    }
+
+    fun getOnGoingTasks(): Int {
+        return sharedPreferences.getInt("onGoingTasks", 0)
+    }
+
+    fun getRank(): Int {
+        return sharedPreferences.getInt("rank", 0)
+    }
+
+    fun clearProfile() {
+        sharedPreferences.edit().clear().apply()
     }
 }

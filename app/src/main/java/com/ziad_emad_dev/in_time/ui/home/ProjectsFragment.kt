@@ -10,9 +10,9 @@ import com.google.android.material.tabs.TabLayoutMediator
 import com.ziad_emad_dev.in_time.R
 import com.ziad_emad_dev.in_time.databinding.FragmentProjectsBinding
 import com.ziad_emad_dev.in_time.ui.MyViewPagerAdapter
-import com.ziad_emad_dev.in_time.ui.home.projects.AllProjectsFragment
-import com.ziad_emad_dev.in_time.ui.home.projects.AsAdminFragment
-import com.ziad_emad_dev.in_time.ui.home.projects.AsMemberFragment
+import com.ziad_emad_dev.in_time.ui.projects.AllProjectsFragment
+import com.ziad_emad_dev.in_time.ui.projects.AsAdminFragment
+import com.ziad_emad_dev.in_time.ui.projects.AsMemberFragment
 
 class ProjectsFragment : Fragment() {
 
@@ -24,10 +24,13 @@ class ProjectsFragment : Fragment() {
         savedInstanceState: Bundle?
     ): View {
         _binding = FragmentProjectsBinding.inflate(inflater, container, false)
+        return binding.root
+    }
+
+    override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
+        super.onViewCreated(view, savedInstanceState)
 
         myTabsBar()
-
-        return binding.root
     }
 
     @SuppressLint("NotifyDataSetChanged")

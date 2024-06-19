@@ -20,9 +20,15 @@ import com.ziad_emad_dev.in_time.network.profile.change_password.ChangePasswordR
 import com.ziad_emad_dev.in_time.network.profile.change_password.ChangePasswordResponse
 import com.ziad_emad_dev.in_time.network.profile.delete_account.DeleteAccountResponse
 import com.ziad_emad_dev.in_time.network.profile.edit_profile.EditProfileResponse
+import com.ziad_emad_dev.in_time.network.profile.rank.RankResponse
 import com.ziad_emad_dev.in_time.network.profile.remove_avatar.RemoveAvatarResponse
 import com.ziad_emad_dev.in_time.network.profile.user.UserResponse
-import com.ziad_emad_dev.in_time.network.tasks.create_task.TaskResponse
+import com.ziad_emad_dev.in_time.network.project.get_projects.GetProjectResponse
+import com.ziad_emad_dev.in_time.network.tasks.create_task.CreateTaskResponse
+import com.ziad_emad_dev.in_time.network.tasks.delete_task.DeleteTaskResponse
+import com.ziad_emad_dev.in_time.network.tasks.get_task.GetTaskResponse
+import com.ziad_emad_dev.in_time.network.tasks.get_tasks.GetTasksResponse
+import com.ziad_emad_dev.in_time.network.tasks.update_task.UpdateTaskResponse
 import okhttp3.MultipartBody
 import okhttp3.OkHttpClient
 import okhttp3.RequestBody
@@ -37,6 +43,7 @@ import retrofit2.http.Multipart
 import retrofit2.http.POST
 import retrofit2.http.Part
 import retrofit2.http.Path
+import retrofit2.http.Query
 import java.util.concurrent.TimeUnit
 
 private const val BASE_URL = "https://intime-9hga.onrender.com/api/v1/"
@@ -57,9 +64,21 @@ private const val DELETE_ACCOUNT_URL = "user/deleteUser"
 private const val EDIT_PROFILE_URL = "user/editProfile"
 private const val REMOVE_AVATAR_URL = "user/deleteProfilePhoto"
 private const val CHANGE_PASSWORD_URL = "user/changePassword"
+private const val USER_RANK_URL = "user/getUsersRank"
 
 //  Tasks Endpoints
 private const val CREATE_TASK_URL = "user/tasks/addUserTask"
+private const val GET_TASKS_URL = "user/tasks/"
+private const val GET_TASK_URL = "user/tasks/{taskId}"
+private const val DELETE_TASK_URL = "user/tasks/deleteById/{taskId}"
+private const val UPDATE_TASK_URL = "user/tasks/updateById/{taskId}"
+
+private const val SEARCH_TASK_URL = "user/tasks/searchTasks/{search}"
+
+//  Projects Endpoints
+private const val CREATE_PROJECT_URL = "user/projects/createProject"
+private const val GET_PROJECTS_URL = "user/projects/myProjects"
+
 
 private val okHttpClient = OkHttpClient.Builder()
     .readTimeout(300, TimeUnit.SECONDS)
@@ -116,17 +135,7 @@ interface InTimeApiServices {
         @Part("title") title: RequestBody,
         @Part("phone") phone: RequestBody,
         @Part("about") about: RequestBody,
-        @Part avatar: MultipartBody.Part
-    ): Response<EditProfileResponse>
-
-    @Multipart
-    @POST(EDIT_PROFILE_URL)
-    suspend fun editProfileWithoutAvatar(
-        @Header("Authorization") token: String,
-        @Part("name") name: RequestBody,
-        @Part("title") title: RequestBody,
-        @Part("phone") phone: RequestBody,
-        @Part("about") about: RequestBody,
+        @Part avatar: MultipartBody.Part?
     ): Response<EditProfileResponse>
 
     @DELETE(REMOVE_AVATAR_URL)
@@ -135,6 +144,9 @@ interface InTimeApiServices {
     @POST(CHANGE_PASSWORD_URL)
     suspend fun changePassword(@Header("Authorization") token: String, @Body request: ChangePasswordRequest): Response<ChangePasswordResponse>
 
+    @GET(USER_RANK_URL)
+    suspend fun fetchUserRank(@Header("Authorization") token: String): Response<RankResponse>
+
 //  Tasks
 
     @Multipart
@@ -142,27 +154,54 @@ interface InTimeApiServices {
     suspend fun createTask(
         @Header("Authorization") token: String,
         @Part("name") name: RequestBody,
-        @Part("disc") disc: RequestBody,
-        @Part("tag") tag: RequestBody,
+        @Part("disc") disc: RequestBody?,
         @Part("priority") priority: RequestBody,
-        @Part steps: List<MultipartBody.Part>,
-        @Part image: MultipartBody.Part,
         @Part("startAt") startAt: RequestBody,
         @Part("endAt") endAt: RequestBody,
-    ): Response<TaskResponse>
+        @Part image: MultipartBody.Part?,
+        @Part steps: List<MultipartBody.Part>?,
+        @Part("tag[name]") tagName: RequestBody,
+        @Part("tag[color]") tagColor: RequestBody
+    ): Response<CreateTaskResponse>
+
+    @GET(GET_TASKS_URL)
+    suspend fun getTasks(@Header("Authorization") token: String, @Query("sortingType") sortingType: Int): Response<GetTasksResponse>
+
+    @GET(GET_TASK_URL)
+    suspend fun getTask(@Header("Authorization") token: String, @Path("taskId") taskId: String): Response<GetTaskResponse>
+
+    @POST(DELETE_TASK_URL)
+    suspend fun deleteTask(@Header("Authorization") token: String, @Path("taskId") taskId: String): Response<DeleteTaskResponse>
+
+    @GET(SEARCH_TASK_URL)
+    suspend fun searchTasks(@Header("Authorization") token: String, @Path("search") search: String): Response<GetTasksResponse>
 
     @Multipart
-    @POST(CREATE_TASK_URL)
-    suspend fun createTaskWithoutImage(
+    @POST(UPDATE_TASK_URL)
+    suspend fun updateTask(
         @Header("Authorization") token: String,
-        @Part("name") name: RequestBody,
-        @Part("disc") disc: RequestBody,
-        @Part("tag") tag: RequestBody,
+        @Path("taskId") taskId: String,
+        @Part("name") name: RequestBody?,
+        @Part("disc") disc: RequestBody?,
         @Part("priority") priority: RequestBody,
-        @Part steps: List<MultipartBody.Part>,
         @Part("startAt") startAt: RequestBody,
         @Part("endAt") endAt: RequestBody,
-    ): Response<TaskResponse>
+        @Part image: MultipartBody.Part?,
+        @Part steps: List<MultipartBody.Part>?
+    ): Response<UpdateTaskResponse>
+
+//    Projects
+
+    @Multipart
+    @POST(CREATE_PROJECT_URL)
+    suspend fun createProject(
+        @Header("Authorization") token: String,
+        @Part("name") name: RequestBody,
+        @Part image: MultipartBody.Part?
+    ): Response<CreateTaskResponse>
+
+    @GET(GET_PROJECTS_URL)
+    suspend fun getProjects(@Header("Authorization") token: String): Response<GetProjectResponse>
 }
 
 object InTimeApi {

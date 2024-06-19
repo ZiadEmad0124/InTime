@@ -65,11 +65,7 @@ class HomePage : AppCompatActivity() {
     }
 
     private fun myToolbar() {
-        Glide.with(this)
-            .load(profileManager.getProfileAvatar())
-            .placeholder(R.drawable.ic_profile)
-            .error(R.drawable.ic_profile)
-            .into(binding.myToolbar.profile)
+        myToolbarAvatar()
 
         binding.myToolbar.notification.setOnClickListener {
             val intent = Intent(this, NotificationActivity::class.java)
@@ -142,15 +138,17 @@ class HomePage : AppCompatActivity() {
 
         val createTaskButton = view.findViewById<View>(R.id.createTaskButton)
         createTaskButton.setOnClickListener {
+            dialog.dismiss()
             val intent = Intent(this, CreateTask::class.java)
             startActivity(intent)
-            dialog.dismiss()
+            finish()
         }
         val createProjectButton = view.findViewById<View>(R.id.createProjectButton)
         createProjectButton.setOnClickListener {
+            dialog.dismiss()
             val intent = Intent(this, CreateProject::class.java)
             startActivity(intent)
-            dialog.dismiss()
+            finish()
         }
         dialog.show()
     }
@@ -168,7 +166,6 @@ class HomePage : AppCompatActivity() {
             binding.drawerLayout.closeDrawer(GravityCompat.START)
             val intent = Intent(this, Settings::class.java)
             startActivity(intent)
-            finish()
         }
     }
 
@@ -209,9 +206,18 @@ class HomePage : AppCompatActivity() {
 
         viewModel.fetchProfileMessage.observe(this) { message ->
             if (message == "true") {
+                viewModel.fetchProfileRank()
+            } else {
+                failedConnect()
+            }
+        }
+
+        viewModel.fetchProfileRankMessage.observe(this) { message ->
+            if (message == "Fetch Profile Rank Success") {
                 stopLoading()
                 navigationViewProfile()
                 myToolbarAvatar()
+                runSelectedFragment(HomeFragment())
             } else {
                 failedConnect()
             }
@@ -247,6 +253,7 @@ class HomePage : AppCompatActivity() {
             if (message != "true") {
                 sessionManager.clearAuthToken()
                 sessionManager.clearRefreshToken()
+                profileManager.clearProfile()
             }
             val intent = Intent(this, SignPage::class.java)
             intent.flags = Intent.FLAG_ACTIVITY_CLEAR_TASK or Intent.FLAG_ACTIVITY_NEW_TASK
@@ -266,6 +273,11 @@ class HomePage : AppCompatActivity() {
         binding.blockingView.visibility = View.GONE
         binding.blockingViewNoConnection.visibility = View.VISIBLE
         Toast.makeText(this, "Failed Connect, Try Again", Toast.LENGTH_SHORT).show()
+    }
+
+    override fun onResume() {
+        super.onResume()
+        refreshProfile()
     }
 
     @Deprecated("This function is Deprecated")
