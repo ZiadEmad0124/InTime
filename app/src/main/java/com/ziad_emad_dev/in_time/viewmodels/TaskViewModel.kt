@@ -29,6 +29,12 @@ class TaskViewModel(context: Context) : ViewModel() {
     private val _getTasksMessage = MutableLiveData<String>()
     val getTasksMessage get() = _getTasksMessage
 
+    private val _getTagsMessage = MutableLiveData<String>()
+    val getTagsMessage get() = _getTagsMessage
+
+    private val _getTags = MutableLiveData<List<Tag>>()
+    val getTags get() = _getTags
+
     private val _getTasks = MutableLiveData<List<Task>>()
     val getTasks get() = _getTasks
 
@@ -43,6 +49,12 @@ class TaskViewModel(context: Context) : ViewModel() {
 
     private val _updateTaskMessage = MutableLiveData<String>()
     val updateTaskMessage get() = _updateTaskMessage
+
+    private val _removeCoverMessage = MutableLiveData<String>()
+    val removeCoverMessage get() = _removeCoverMessage
+
+    private val _completeTaskMessage = MutableLiveData<String>()
+    val completeTaskMessage get() = _completeTaskMessage
 
     fun createTask(name: String, description: String?, priority: String, startAt: String, endAt: String, taskCoverFile: File?, steps: List<String>?, tag: Tag) {
 
@@ -84,6 +96,22 @@ class TaskViewModel(context: Context) : ViewModel() {
                 }
             } catch (e: Exception) {
                 _createTaskMessage.value = "Failed Connect, Try Again"
+            }
+        }
+    }
+
+    fun getAllTag() {
+        viewModelScope.launch {
+            try {
+                val response = InTimeApi.retrofitService.getAllTag("Bearer ${sessionManager.fetchAuthToken().toString()}")
+                if (response.isSuccessful) {
+                    _getTagsMessage.value = response.body()?.success.toString()
+                    _getTags.value = response.body()?.tags!!
+                } else {
+                    _getTagsMessage.value = "Get all Tags failed"
+                }
+            } catch (e: Exception) {
+                _getTagsMessage.value = "Failed Connect, Try Again"
             }
         }
     }
@@ -169,7 +197,7 @@ class TaskViewModel(context: Context) : ViewModel() {
             try {
                 val response = InTimeApi.retrofitService.updateTask(
                     "Bearer ${sessionManager.fetchAuthToken().toString()}", id,
-                    myName, myDescription, myPriority, myStartAt, myEndAt, myTaskCoverFile, stepParts)
+                    myName, myDescription, myPriority, myStartAt, myEndAt, myTaskCoverFile, stepParts, tagName, tagColor)
                 if (response.isSuccessful) {
                     _updateTaskMessage.value = response.body()?.success.toString()
                 } else {
@@ -179,6 +207,36 @@ class TaskViewModel(context: Context) : ViewModel() {
                 }
             } catch (e: Exception) {
                 _updateTaskMessage.value = "Failed Connect, Try Again"
+            }
+        }
+    }
+
+    fun removeCover(taskId: String) {
+        viewModelScope.launch {
+            try {
+                val response = InTimeApi.retrofitService.removeTaskCover("Bearer ${sessionManager.fetchAuthToken().toString()}", taskId)
+                if (response.isSuccessful) {
+                    _removeCoverMessage.value = response.body()?.success.toString()
+                } else {
+                    _removeCoverMessage.value = "Remove Cover failed"
+                }
+            } catch (e: Exception) {
+                _removeCoverMessage.value = "Failed Connect, Try Again"
+            }
+        }
+    }
+
+    fun completeTask(taskId: String) {
+        viewModelScope.launch {
+            try {
+                val response = InTimeApi.retrofitService.completeTask("Bearer ${sessionManager.fetchAuthToken().toString()}", taskId)
+                if (response.isSuccessful) {
+                    _completeTaskMessage.value = response.body()?.success.toString()
+                } else {
+                    _completeTaskMessage.value = "Complete Task failed"
+                }
+            } catch (e: Exception) {
+                _completeTaskMessage.value = "Failed Connect, Try Again"
             }
         }
     }

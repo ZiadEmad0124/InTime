@@ -23,8 +23,15 @@ import com.ziad_emad_dev.in_time.network.profile.edit_profile.EditProfileRespons
 import com.ziad_emad_dev.in_time.network.profile.rank.RankResponse
 import com.ziad_emad_dev.in_time.network.profile.remove_avatar.RemoveAvatarResponse
 import com.ziad_emad_dev.in_time.network.profile.user.UserResponse
-import com.ziad_emad_dev.in_time.network.project.get_projects.GetProjectResponse
+import com.ziad_emad_dev.in_time.network.project.delete_project.DeleteProjectResponse
+import com.ziad_emad_dev.in_time.network.project.delete_project_cover.DeleteProjectCoverResponse
+import com.ziad_emad_dev.in_time.network.project.get_project.GetProjectResponse
+import com.ziad_emad_dev.in_time.network.project.get_projects.GetProjectsResponse
+import com.ziad_emad_dev.in_time.network.project.project_members.GetProjectMembersResponse
+import com.ziad_emad_dev.in_time.network.project.share_project.ShareProjectResponse
+import com.ziad_emad_dev.in_time.network.tasks.complete_task.CompleteTaskResponse
 import com.ziad_emad_dev.in_time.network.tasks.create_task.CreateTaskResponse
+import com.ziad_emad_dev.in_time.network.tasks.delete_cover.DeleteTaskCover
 import com.ziad_emad_dev.in_time.network.tasks.delete_task.DeleteTaskResponse
 import com.ziad_emad_dev.in_time.network.tasks.get_task.GetTaskResponse
 import com.ziad_emad_dev.in_time.network.tasks.get_tasks.GetTasksResponse
@@ -69,16 +76,25 @@ private const val USER_RANK_URL = "user/getUsersRank"
 //  Tasks Endpoints
 private const val CREATE_TASK_URL = "user/tasks/addUserTask"
 private const val GET_TASKS_URL = "user/tasks/"
+private const val GET_ALL_TAG_URL = "user/tasks/?page=1&size=0&sortingType=1"
 private const val GET_TASK_URL = "user/tasks/{taskId}"
 private const val DELETE_TASK_URL = "user/tasks/deleteById/{taskId}"
 private const val UPDATE_TASK_URL = "user/tasks/updateById/{taskId}"
-
+private const val COMPLETE_TASK_URL = "user/tasks/completeTask/{taskId}"
 private const val SEARCH_TASK_URL = "user/tasks/searchTasks/{search}"
+private const val REMOVE_TASK_COVER_URL = "user/tasks/removeTaskImage/{taskId}"
 
 //  Projects Endpoints
 private const val CREATE_PROJECT_URL = "user/projects/createProject"
 private const val GET_PROJECTS_URL = "user/projects/myProjects"
-
+private const val GET_PROJECT_URL = "user/projects/{projectId}"
+private const val DELETE_PROJECT_URL = "user/projects/removeProject/{projectId}"
+private const val EDIT_PROJECT_URL = "user/projects/editProject/{projectId}"
+private const val REMOVE_PROJECT_COVER_URL = "user/projects/removeProjectImage/{projectId}"
+private const val GET_PROJECT_MEMBERS_URL = "user/projects/projectMembers/{projectId}"
+private const val JOIN_PROJECT_URL = "user/projects/joinProject/{link}"
+private const val REMOVE_PROJECT_MEMBER_URL = "user/projects/removeMember/{projectId}/{memberId}"
+private const val SHARE_PROJECT_URL = "user/projects/generateInviteLink/{projectId}"
 
 private val okHttpClient = OkHttpClient.Builder()
     .readTimeout(300, TimeUnit.SECONDS)
@@ -167,14 +183,23 @@ interface InTimeApiServices {
     @GET(GET_TASKS_URL)
     suspend fun getTasks(@Header("Authorization") token: String, @Query("sortingType") sortingType: Int): Response<GetTasksResponse>
 
+    @GET(GET_ALL_TAG_URL)
+    suspend fun getAllTag(@Header("Authorization") token: String): Response<GetTasksResponse>
+
     @GET(GET_TASK_URL)
     suspend fun getTask(@Header("Authorization") token: String, @Path("taskId") taskId: String): Response<GetTaskResponse>
 
     @POST(DELETE_TASK_URL)
     suspend fun deleteTask(@Header("Authorization") token: String, @Path("taskId") taskId: String): Response<DeleteTaskResponse>
 
+    @POST(COMPLETE_TASK_URL)
+    suspend fun completeTask(@Header("Authorization") token: String, @Path("taskId") search: String): Response<CompleteTaskResponse>
+
     @GET(SEARCH_TASK_URL)
     suspend fun searchTasks(@Header("Authorization") token: String, @Path("search") search: String): Response<GetTasksResponse>
+
+    @DELETE(REMOVE_TASK_COVER_URL)
+    suspend fun removeTaskCover(@Header("Authorization") token: String, @Path("taskId") taskId: String): Response<DeleteTaskCover>
 
     @Multipart
     @POST(UPDATE_TASK_URL)
@@ -187,7 +212,9 @@ interface InTimeApiServices {
         @Part("startAt") startAt: RequestBody,
         @Part("endAt") endAt: RequestBody,
         @Part image: MultipartBody.Part?,
-        @Part steps: List<MultipartBody.Part>?
+        @Part steps: List<MultipartBody.Part>?,
+        @Part("tag[name]") tagName: RequestBody,
+        @Part("tag[color]") tagColor: RequestBody
     ): Response<UpdateTaskResponse>
 
 //    Projects
@@ -201,7 +228,40 @@ interface InTimeApiServices {
     ): Response<CreateTaskResponse>
 
     @GET(GET_PROJECTS_URL)
-    suspend fun getProjects(@Header("Authorization") token: String): Response<GetProjectResponse>
+    suspend fun getProjects(@Header("Authorization") token: String, @Query("role") role: String?): Response<GetProjectsResponse>
+
+    @GET(GET_PROJECT_URL)
+    suspend fun getProject(@Header("Authorization") token: String, @Path("projectId") projectId: String): Response<GetProjectResponse>
+
+    @Multipart
+    @POST(EDIT_PROJECT_URL)
+    suspend fun editProject(
+        @Header("Authorization") token: String,
+        @Path("projectId") projectId: String,
+        @Part("name") name: RequestBody?,
+        @Part image: MultipartBody.Part?
+    ): Response<GetProjectResponse>
+
+    @GET(SHARE_PROJECT_URL)
+    suspend fun shareProject(@Header("Authorization") token: String, @Path("projectId") projectId: String): Response<ShareProjectResponse>
+
+    @GET(JOIN_PROJECT_URL)
+    suspend fun joinProject(@Header("Authorization") token: String, @Path("link") link: String): Response<GetProjectResponse>
+
+    @DELETE(REMOVE_PROJECT_COVER_URL)
+    suspend fun removeProjectCover(@Header("Authorization") token: String, @Path("projectId") projectId: String): Response<DeleteProjectCoverResponse>
+
+    @GET(GET_PROJECT_MEMBERS_URL)
+    suspend fun getProjectMembers(@Header("Authorization") token: String, @Path("projectId") projectId: String): Response<GetProjectMembersResponse>
+
+//    @DELETE(REMOVE_PROJECT_MEMBER_URL)
+//    suspend fun removeProjectMember(
+//        @Header("Authorization") token: String,
+//        @Path("projectId") projectId: String,
+//        @Path("memberId") memberId: String): Response<>
+
+    @DELETE(DELETE_PROJECT_URL)
+    suspend fun deleteProject(@Header("Authorization") token: String, @Path("projectId") projectId: String): Response<DeleteProjectResponse>
 }
 
 object InTimeApi {

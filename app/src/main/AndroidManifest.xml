@@ -15,6 +15,15 @@
         android:theme="@style/Theme.InTime"
         tools:targetApi="31">
         <activity
+            android:name=".ui.projects.members.MemberPage"
+            android:exported="false" />
+        <activity
+            android:name=".ui.projects.project.UpdateProject"
+            android:exported="false" />
+        <activity
+            android:name=".ui.projects.project.ProjectPage"
+            android:exported="false" />
+        <activity
             android:name=".ui.tasks.task.UpdateTask"
             android:exported="false" />
         <activity

@@ -26,6 +26,7 @@ import com.google.android.material.card.MaterialCardView
 import com.ziad_emad_dev.in_time.R
 import com.ziad_emad_dev.in_time.databinding.ActivitySettingsBinding
 import com.ziad_emad_dev.in_time.network.profile.ProfileManager
+import com.ziad_emad_dev.in_time.ui.home.HomePage
 import com.ziad_emad_dev.in_time.viewmodels.ProfileViewModel
 import java.io.File
 import java.io.IOException
@@ -74,6 +75,8 @@ class Settings : AppCompatActivity() {
     private fun myToolbar() {
         binding.myToolbar.title.text = getString(R.string.settings)
         binding.myToolbar.back.setOnClickListener {
+            val intent = Intent(this, HomePage::class.java)
+            startActivity(intent)
             finish()
         }
     }
@@ -454,5 +457,17 @@ class Settings : AppCompatActivity() {
         binding.profileTitle.textInputEditText.clearFocus()
         binding.profilePhone.textInputEditText.clearFocus()
         binding.profileAbout.textInputEditText.clearFocus()
+    }
+
+
+    @Deprecated("This method has been deprecated in favor of using the\n" +
+            "{@link OnBackPressedDispatcher} via {@link #getOnBackPressedDispatcher()}.\n" +
+            "The OnBackPressedDispatcher controls how back button events are dispatched\n" +
+            "to one or more {@link OnBackPressedCallback} objects.")
+    override fun onBackPressed() {
+        super.onBackPressed()
+        val intent = Intent(this, HomePage::class.java)
+        startActivity(intent)
+        finish()
     }
 }

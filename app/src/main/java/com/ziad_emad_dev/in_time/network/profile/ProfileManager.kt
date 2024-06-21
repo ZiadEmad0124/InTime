@@ -30,6 +30,10 @@ class ProfileManager(context: Context) {
         }
     }
 
+    fun getProfileId(): String {
+        return sharedPreferences.getString("id", "") ?: ""
+    }
+
     fun getProfileName(): String {
         return sharedPreferences.getString("name", "") ?: ""
     }

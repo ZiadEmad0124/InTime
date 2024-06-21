@@ -1,6 +1,7 @@
 package com.ziad_emad_dev.in_time.network.project.create_project
 
 import com.google.gson.annotations.SerializedName
+import com.ziad_emad_dev.in_time.network.project.Record
 
 data class CreateProjectResponse(
     @SerializedName("success")

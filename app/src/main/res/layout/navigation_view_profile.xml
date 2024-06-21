@@ -93,6 +93,20 @@
         android:textSize="26sp"
         app:drawableStartCompat="@drawable/ic_lock" />
 
+    <TextView
+        android:id="@+id/joinProject"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_below="@id/changePassword"
+        android:layout_marginVertical="@dimen/standard_10"
+        android:drawablePadding="@dimen/standard_15"
+        android:fontFamily="@font/roboto_medium"
+        android:padding="15dp"
+        android:text="@string/join_project"
+        android:textColor="@color/secondary"
+        android:textSize="26sp"
+        app:drawableStartCompat="@drawable/ic_join" />
+
     <Button
         android:id="@+id/logOut"
         style="@style/InTime.Button"

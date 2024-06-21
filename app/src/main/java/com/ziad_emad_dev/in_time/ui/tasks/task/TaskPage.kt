@@ -41,7 +41,8 @@ class TaskPage : AppCompatActivity() {
 
         getTask(task.id)
         deleteTask(task.id)
-        updateTask()
+        editTask()
+        completeTask(task.id)
     }
 
     private fun myToolbar(taskName: String) {
@@ -68,7 +69,7 @@ class TaskPage : AppCompatActivity() {
 
     private fun setTask(task: Task) {
         Glide.with(this)
-            .load("https://intime-9hga.onrender.com/api/v1/api/v1/images/${task.image}")
+            .load("https://intime-9hga.onrender.com/api/v1/images/${task.image}")
             .error(R.drawable.project_image)
             .into(binding.taskCover)
 
@@ -137,7 +138,17 @@ class TaskPage : AppCompatActivity() {
             textView.layoutParams = layoutParams
 
             textView.setOnLongClickListener {
-
+                textView.setOnClickListener {
+                    icon = R.drawable.ic_done
+                    color = R.color.green
+                    container = R.drawable.steps_complete_text_view
+                    textView.paintFlags = textView.paintFlags or Paint.STRIKE_THRU_TEXT_FLAG
+                    textView.background = ContextCompat.getDrawable(this, container)
+                    textView.setTextColor(ContextCompat.getColor(this, color))
+                    val drawableClicked = ContextCompat.getDrawable(this, icon)
+                    drawableClicked?.setBounds(0, 0, drawableClicked.intrinsicWidth, drawableClicked.intrinsicHeight)
+                    textView.setCompoundDrawables(null, null, drawableClicked, null)
+                }
                 true
             }
             binding.stepsLayout.addView(textView)
@@ -152,7 +163,22 @@ class TaskPage : AppCompatActivity() {
                 stopLoadingDeleting()
                 if (message == "true") {
                     Toast.makeText(this, "Task Deleted Successfully", Toast.LENGTH_SHORT).show()
+                    finish()
+                } else {
+                    Toast.makeText(this, message, Toast.LENGTH_SHORT).show()
+                }
+            }
+        }
+    }
 
+    private fun completeTask(id: String) {
+        binding.completeTaskButton.setOnClickListener {
+            startLoadingToComplete()
+            viewModel.completeTask(id)
+            viewModel.completeTaskMessage.observe(this) { message ->
+                stopLoadingCompleting()
+                if (message == "true") {
+                    Toast.makeText(this, "Task Completed Successfully", Toast.LENGTH_SHORT).show()
                     finish()
                 } else {
                     Toast.makeText(this, message, Toast.LENGTH_SHORT).show()
@@ -194,8 +220,24 @@ class TaskPage : AppCompatActivity() {
         binding.blockingView.visibility = View.GONE
     }
 
-    private fun updateTask() {
-        binding.UpdateTaskButton.setOnClickListener {
+    private fun startLoadingToComplete() {
+        binding.blockingView.visibility = View.VISIBLE
+        binding.blockingView.setBackgroundColor(getColor(R.color.transparent))
+        binding.noConnection.visibility = View.GONE
+        binding.progressCircular.visibility = View.GONE
+        binding.completeTaskButton.text = null
+        binding.completeProgressCircular.visibility = View.VISIBLE
+    }
+
+    private fun stopLoadingCompleting() {
+        binding.completeProgressCircular.visibility = View.GONE
+        binding.blockingView.setBackgroundColor(getColor(R.color.white))
+        binding.completeTaskButton.text = getString(R.string.complete)
+        binding.blockingView.visibility = View.GONE
+    }
+
+    private fun editTask() {
+        binding.editTaskButton.setOnClickListener {
             val task: Task = intent.getParcelableExtra("task")!!
             val intent = Intent(this, UpdateTask::class.java)
             intent.putExtra("task", task)

@@ -1,7 +1,10 @@
-package com.ziad_emad_dev.in_time.network.project.create_project
+package com.ziad_emad_dev.in_time.network.project
 
+import android.os.Parcelable
 import com.google.gson.annotations.SerializedName
+import kotlinx.parcelize.Parcelize
 
+@Parcelize
 data class Record(
     @SerializedName("name")
     val name: String,
@@ -17,4 +20,4 @@ data class Record(
 
     @SerializedName("__v")
     val v: Int
-)
+) : Parcelable

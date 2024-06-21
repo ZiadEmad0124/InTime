@@ -1,0 +1,110 @@
+<?xml version="1.0" encoding="utf-8"?>
+<com.google.android.material.card.MaterialCardView xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/memberCard"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:layout_marginBottom="@dimen/standard_10"
+    app:cardBackgroundColor="@color/white_2"
+    app:cardCornerRadius="@dimen/border_radius_8"
+    app:cardElevation="2dp">
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:gravity="start">
+
+        <de.hdodenhof.circleimageview.CircleImageView
+            android:id="@+id/memberImage"
+            android:layout_width="60dp"
+            android:layout_height="60dp"
+            android:layout_margin="20dp"
+            android:src="@drawable/ic_profile"
+            app:civ_border_color="@color/primary"
+            app:civ_border_width="1dp" />
+
+        <LinearLayout
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginVertical="@dimen/standard_20"
+            android:layout_marginEnd="@dimen/standard_20"
+            android:orientation="vertical">
+
+            <LinearLayout
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                tools:ignore="UseCompoundDrawables">
+
+                <TextView
+                    android:id="@+id/memberName"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:fontFamily="@font/roboto"
+                    android:textColor="@color/blue_dark"
+                    android:textSize="21sp"
+                    android:textStyle="bold"
+                    tools:text="Ziad Emad" />
+
+                <ImageView
+                    android:id="@+id/isAdmin"
+                    android:layout_width="24dp"
+                    android:layout_height="24dp"
+                    android:layout_gravity="center"
+                    android:layout_marginStart="@dimen/standard_5"
+                    android:importantForAccessibility="no"
+                    android:src="@drawable/ic_crown" />
+
+            </LinearLayout>
+
+            <TextView
+                android:id="@+id/memberTitle"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="@dimen/standard_5"
+                android:fontFamily="@font/lato"
+                android:textColor="@color/secondary"
+                android:textSize="16sp"
+                android:textStyle="bold"
+                tools:text="Android Developer" />
+
+        </LinearLayout>
+
+        <View
+            android:layout_width="0dp"
+            android:layout_height="0dp"
+            android:layout_gravity="center"
+            android:layout_weight="1" />
+
+        <LinearLayout
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="bottom"
+            android:layout_marginVertical="@dimen/standard_20"
+            android:layout_marginEnd="@dimen/standard_20"
+            tools:ignore="UseCompoundDrawables">
+
+            <ImageView
+                android:id="@+id/memberStatus"
+                android:layout_width="16dp"
+                android:layout_height="16dp"
+                android:layout_gravity="center"
+                android:layout_marginEnd="@dimen/standard_5"
+                android:importantForAccessibility="no"
+                android:src="@drawable/ic_green_circle" />
+
+            <TextView
+                android:id="@+id/isMemberActive"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:fontFamily="@font/lato"
+                android:textColor="@color/secondary"
+                android:textSize="16sp"
+                android:textStyle="bold"
+                tools:text="Active" />
+
+        </LinearLayout>
+
+    </LinearLayout>
+
+</com.google.android.material.card.MaterialCardView>

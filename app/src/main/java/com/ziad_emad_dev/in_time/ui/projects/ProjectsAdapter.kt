@@ -12,24 +12,21 @@ import androidx.recyclerview.widget.RecyclerView.ViewHolder
 import com.bumptech.glide.Glide
 import com.google.android.material.card.MaterialCardView
 import com.ziad_emad_dev.in_time.R
-import com.ziad_emad_dev.in_time.network.project.get_projects.Project
-import com.ziad_emad_dev.in_time.ui.my_project.MyProject
+import com.ziad_emad_dev.in_time.network.project.Project
+import com.ziad_emad_dev.in_time.ui.projects.project.ProjectPage
 
 class ProjectsAdapter(private val context: Context, private val projects: ArrayList<Project>) :
-    RecyclerView.Adapter<ProjectsAdapter.ProjectsAllViewHolder>() {
+    RecyclerView.Adapter<ProjectsAdapter.ProjectsViewHolder>() {
 
-    class ProjectsAllViewHolder(itemView: View) : ViewHolder(itemView) {
+    class ProjectsViewHolder(itemView: View) : ViewHolder(itemView) {
+        val projectCard: MaterialCardView = itemView.findViewById(R.id.projectCard)
         val projectName: TextView = itemView.findViewById(R.id.projectName)
-        val projectPhoto: ImageView = itemView.findViewById(R.id.projectPhoto)
-        val deleteProject: ImageView = itemView.findViewById(R.id.deleteProject)
-        val editProject: ImageView = itemView.findViewById(R.id.editProject)
-        val addNewTask: ImageView = itemView.findViewById(R.id.addNewTask)
-        val shareProject: ImageView = itemView.findViewById(R.id.shareProject)
+        val projectCover: ImageView = itemView.findViewById(R.id.projectCover)
         val viewTasks: MaterialCardView = itemView.findViewById(R.id.viewTasks)
     }
 
-    override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ProjectsAllViewHolder {
-        return ProjectsAllViewHolder(
+    override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ProjectsViewHolder {
+        return ProjectsViewHolder(
             LayoutInflater.from(parent.context).inflate(R.layout.layout_project, parent, false)
         )
     }
@@ -38,20 +35,24 @@ class ProjectsAdapter(private val context: Context, private val projects: ArrayL
         return projects.size
     }
 
-    override fun onBindViewHolder(holder: ProjectsAllViewHolder, position: Int) {
+    override fun onBindViewHolder(holder: ProjectsViewHolder, position: Int) {
         val project = projects[position]
 
         holder.projectName.text = project.name
         Glide.with(context)
-            .load("https://intime-9hga.onrender.com/api/v1/${project.photo}")
+            .load("https://intime-9hga.onrender.com/api/v1/images/${project.photo}")
             .placeholder(R.drawable.project_image)
             .error(R.drawable.project_image)
-            .into(holder.projectPhoto)
+            .into(holder.projectCover)
+
+        holder.projectCard.setOnClickListener {
+            val intent = Intent(context, ProjectPage::class.java)
+            intent.putExtra("project", project)
+            context.startActivity(intent)
+        }
 
         holder.viewTasks.setOnClickListener {
-            val intent = Intent(context, MyProject::class.java)
-            intent.putExtra("projectName", project.name)
-            context.startActivity(intent)
+
         }
     }
 }

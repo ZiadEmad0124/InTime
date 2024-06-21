@@ -28,5 +28,5 @@ data class Record(
     val about: String? = null,
 
     @SerializedName("tasks")
-    val tasks: Task
+    val tasks: Tasks
 )

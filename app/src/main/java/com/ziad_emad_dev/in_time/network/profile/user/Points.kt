@@ -7,11 +7,11 @@ data class Points(
     val totalPoints: Int,
 
     @SerializedName("daily")
-    val daily: List<Int>,
+    val daily: List<DailyPoint>,
 
     @SerializedName("monthly")
-    val monthly: List<Int>,
+    val monthly: List<MonthlyPoints>,
 
     @SerializedName("yearly")
-    val yearly: List<Int>
+    val yearly: List<YearlyPoints>
 )

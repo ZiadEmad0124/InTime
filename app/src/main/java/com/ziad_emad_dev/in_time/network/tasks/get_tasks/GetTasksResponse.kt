@@ -14,6 +14,12 @@ data class GetTasksResponse(
     @SerializedName("tags")
     val tags: List<Tag>? = null,
 
+    @SerializedName("previousPage")
+    val previousPage: Boolean? = null,
+
+    @SerializedName("nextPage")
+    val nextPage: Boolean? = null,
+
     @SerializedName("message")
     val message: String? = null,
 )

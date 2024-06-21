@@ -5,13 +5,11 @@ import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import android.widget.SearchView
 import androidx.fragment.app.Fragment
 import com.ziad_emad_dev.in_time.R
 import com.ziad_emad_dev.in_time.databinding.FragmentHomeBinding
 import com.ziad_emad_dev.in_time.network.profile.ProfileManager
 import com.ziad_emad_dev.in_time.network.tasks.Task
-import com.ziad_emad_dev.in_time.ui.TaskAdapter
 import com.ziad_emad_dev.in_time.ui.tasks.task.TaskPage
 import com.ziad_emad_dev.in_time.viewmodels.HomeViewModel
 import java.text.SimpleDateFormat
@@ -23,8 +21,6 @@ class HomeFragment : Fragment() {
     private val binding get() = _binding!!
 
     private lateinit var profileManager: ProfileManager
-
-    private lateinit var taskAdapter: TaskAdapter
 
     private val viewModel by lazy {
         HomeViewModel(requireContext())
@@ -43,19 +39,23 @@ class HomeFragment : Fragment() {
 
         profileManager = ProfileManager(requireContext())
 
-        searchBar()
-
-        taskAdapter = TaskAdapter()
-
-        binding.searchRecyclerView.adapter = taskAdapter
-
-        completedTasks()
-        totalScore()
-        inProgress()
-
         startLoading()
 
-        getFirstTwoTasks()
+        fetchHome()
+    }
+
+    private fun fetchHome() {
+        viewModel.fetchProfile()
+        viewModel.fetchProfileMessage.observe(viewLifecycleOwner) { message ->
+            if (message == "true") {
+                completedTasks()
+                totalScore()
+                inProgress()
+                getFirstTwoTasks()
+            } else {
+                stopLoading()
+            }
+        }
     }
 
     private fun completedTasks() {
@@ -101,9 +101,14 @@ class HomeFragment : Fragment() {
                         if (myTasks.size > 1) {
                             binding.secondTask.visibility = View.VISIBLE
                             mySecondTasks(myTasks[1])
+                            stopLoading()
                         }
+                    } else {
+                        stopLoading()
                     }
                 }
+            } else {
+                stopLoading()
             }
         }
     }
@@ -123,13 +128,30 @@ class HomeFragment : Fragment() {
         val endDate = inputFormat.parse(task.endAt)
         binding.date1.text = outputFormat.format(endDate!!)
 
-        binding.progressText1.text = getString(R.string.task_progress, "60%")
+        var completedSteps = 0
 
-        binding.progressBar1.progress = 60
+        for (step in task.steps) {
+            if (step.completed) {
+                completedSteps++
+            }
+        }
 
-        binding.priority2.setImageResource(setPriority(task.priority))
+        binding.progressText1.text = getString(R.string.task_progress, completedSteps.toString())
 
-        binding.points1.text = getString(R.string.task_points, "60", "100")
+        binding.progressBar1.progress = completedSteps
+
+        when (task.priority) {
+            0 -> binding.priority1.setImageResource(R.drawable.ic_flag_red)
+            1 -> binding.priority1.setImageResource(R.drawable.ic_flag_orange)
+            2 -> binding.priority1.setImageResource(R.drawable.ic_flag_yellow)
+            else -> binding.priority1.setImageResource(R.drawable.ic_flag_grey)
+        }
+
+        if (task.steps.isEmpty()) {
+          binding.points1.visibility = View.GONE
+        } else {
+            binding.points1.text = getString(R.string.task_points, completedSteps.toString(), task.steps.size.toString())
+        }
     }
 
     private fun mySecondTasks(task: Task) {
@@ -147,23 +169,30 @@ class HomeFragment : Fragment() {
         val endDate = inputFormat.parse(task.endAt)
         binding.date2.text = outputFormat.format(endDate!!)
 
-        binding.progressText2.text = getString(R.string.task_progress, "25%")
+        var completedSteps = 0
 
-        binding.progressBar2.progress = 25
-
-        binding.priority2.setImageResource(setPriority(task.priority))
-
-        binding.points2.text = getString(R.string.task_points, "25", "100")
-    }
-
-    private fun setPriority(num: Int) : Int {
-        val flag = when (num) {
-            1 -> R.drawable.ic_flag_red
-            2 -> R.drawable.ic_flag_orange
-            3 -> R.drawable.ic_flag_yellow
-            else -> R.drawable.circle_gray
+        for (step in task.steps) {
+            if (step.completed) {
+                completedSteps++
+            }
         }
-        return flag
+
+        binding.progressText2.text = getString(R.string.task_progress, completedSteps.toString())
+
+        binding.progressBar2.progress = completedSteps
+
+        when (task.priority) {
+            0 -> binding.priority2.setImageResource(R.drawable.ic_flag_red)
+            1 -> binding.priority2.setImageResource(R.drawable.ic_flag_orange)
+            2 -> binding.priority2.setImageResource(R.drawable.ic_flag_yellow)
+            else -> binding.priority2.setImageResource(R.drawable.ic_flag_grey)
+        }
+
+        if (task.steps.isEmpty()) {
+            binding.points2.visibility = View.GONE
+        } else {
+            binding.points2.text = getString(R.string.task_points, completedSteps.toString(), task.steps.size.toString())
+        }
     }
 
     private fun startLoading() {
@@ -174,38 +203,10 @@ class HomeFragment : Fragment() {
         binding.blockingView.visibility = View.GONE
     }
 
-    private fun searchBar() {
-        binding.searchBar.setOnQueryTextListener(object : SearchView.OnQueryTextListener {
-            override fun onQueryTextSubmit(query: String?): Boolean {
-                return false
-            }
-
-            override fun onQueryTextChange(newText: String?): Boolean {
-                newText?.let { taskName ->
-                    if (taskName.isNotEmpty()) {
-                        viewModel.searchTask(taskName)
-                    }
-                }
-                return false
-            }
-        })
-
-//        binding.searchBar.setOnSearchClickListener {
-//            binding.searchRecyclerView.visibility = View.VISIBLE
-//        }
-//
-//        binding.searchBar.setOnCloseListener {
-//            binding.searchRecyclerView.visibility = View.GONE
-//            false
-//        }
-
-        viewModel.getSearchTask.observe(viewLifecycleOwner) { tasks ->
-            updateTaskList(tasks)
-        }
-    }
-
-    private fun updateTaskList(tasks: List<Task>) {
-        taskAdapter.submitList(tasks)
+    override fun onResume() {
+        super.onResume()
+        startLoading()
+        fetchHome()
     }
 
     override fun onDestroy() {

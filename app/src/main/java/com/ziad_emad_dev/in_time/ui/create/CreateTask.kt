@@ -26,6 +26,7 @@ import com.google.android.material.card.MaterialCardView
 import com.ziad_emad_dev.in_time.R
 import com.ziad_emad_dev.in_time.databinding.ActivityCreateTaskBinding
 import com.ziad_emad_dev.in_time.network.tasks.Tag
+import com.ziad_emad_dev.in_time.network.tasks.Values
 import com.ziad_emad_dev.in_time.ui.home.HomePage
 import com.ziad_emad_dev.in_time.viewmodels.TaskViewModel
 import java.io.File
@@ -405,16 +406,27 @@ class CreateTask : AppCompatActivity() {
 
             val steps = getStepsList()
 
-            val tagName = binding.taskTag.text.toString().ifEmpty { "No Tag" }
-            val tag = Tag(tagName, "Red")
+            val tagName = binding.taskTag.text.toString()
 
             if (!nameEmptyError(name)) {
                 if (!startDateEmptyError(startDate)) {
                     if (!endDateEmptyError(endDate)) {
                         startLoading()
-                        val startAt = convertToISO8601(startDate)
-                        val endAt = convertToISO8601(endDate)
-                        viewModel.createTask(name, description, priority.toString(), startAt, endAt, taskCoverFile, steps, tag)
+                        viewModel.getAllTag()
+                        viewModel.getTagsMessage.observe(this) { message ->
+                            if (message == "true") {
+                                var allTags : List<Tag>
+                                viewModel.getTags.observe(this) { tags ->
+                                    allTags = tags
+                                    val tag = setTagColor(Values(tagName), allTags, colors)
+                                    val startAt = convertToISO8601(startDate)
+                                    val endAt = convertToISO8601(endDate)
+                                    viewModel.createTask(name, description, priority.toString(), startAt, endAt, taskCoverFile, steps, tag)
+                                }
+                            } else {
+                                Toast.makeText(this, message, Toast.LENGTH_SHORT).show()
+                            }
+                        }
                     }
                 }
             }
@@ -463,4 +475,81 @@ class CreateTask : AppCompatActivity() {
             }
         }
     }
+
+    private fun setTagColor(values: Values, allTags: List<Tag>, colors: List<String>): Tag {
+        if (values.tag.trim() == "") {
+            return Tag("", "")
+        } else {
+            val tag = Tag(values.tag, "")
+            val tagName = values.tag.lowercase()
+
+            val tagIndex = allTags.indexOfFirst { it.name.lowercase() == tagName }
+
+            if (tagIndex != -1) {
+                tag.color = allTags[tagIndex].color
+            } else {
+                if (allTags.isNotEmpty()) {
+                    val lastColor = allTags.last().color
+                    val lastColorIndex = colors.indexOf(lastColor)
+                    tag.color = colors[(lastColorIndex + 1) % 50]
+                } else {
+                    tag.color = colors[0]
+                }
+            }
+            return tag
+        }
+    }
+
+    private val colors = listOf(
+        "darkseagreen",
+        "crimson",
+        "chocolate",
+        "mediumseagreen",
+        "dark-turquoise",
+        "mediumorchid",
+        "slateblue",
+        "cyan",
+        "saddlebrown",
+        "firebrick",
+        "lime",
+        "salmon",
+        "mediumvioletred",
+        "teal",
+        "gold",
+        "orchid",
+        "darkred",
+        "darkgoldenrod",
+        "purple",
+        "darkolivegreen",
+        "navy",
+        "darkorange",
+        "mediumblue",
+        "seagreen",
+        "maroon",
+        "sienna",
+        "magenta",
+        "indianred",
+        "steelblue",
+        "sandybrown",
+        "yellow",
+        "blue",
+        "violet",
+        "coral",
+        "mediumslateblue",
+        "pink",
+        "dimgray",
+        "indigo",
+        "royalblue",
+        "red",
+        "turquoise",
+        "green",
+        "tomato",
+        "darkviolet",
+        "slategray",
+        "dodgerblue",
+        "mediumpurple",
+        "brown",
+        "orange",
+        "forestgreen"
+    )
 }

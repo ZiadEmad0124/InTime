@@ -12,6 +12,12 @@ data class Task(
     @SerializedName("repeat")
     val repeat: Repeat,
 
+    @SerializedName("projectTask")
+    val projectTask: Boolean,
+
+    @SerializedName("backlog")
+    val backlog: Boolean,
+
     @SerializedName("_id")
     val id: String,
 

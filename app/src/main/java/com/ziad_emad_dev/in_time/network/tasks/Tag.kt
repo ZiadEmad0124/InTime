@@ -10,5 +10,5 @@ data class Tag(
     val name: String,
 
     @SerializedName("color")
-    val color: String
+    var color: String
 ) : Parcelable

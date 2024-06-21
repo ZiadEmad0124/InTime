@@ -29,6 +29,9 @@ class HomeViewModel(context: Context) : ViewModel() {
     private val _signOutMessage = MutableLiveData<String>()
     val signOutMessage get() = _signOutMessage
 
+    private val _joinProjectMessage = MutableLiveData<String>()
+    val joinProjectMessage get() = _joinProjectMessage
+
     private val _getTasksMessage = MutableLiveData<String>()
     val getTasksMessage get() = _getTasksMessage
 
@@ -139,6 +142,21 @@ class HomeViewModel(context: Context) : ViewModel() {
                 }
             } catch (e: Exception) {
                 _getTasksMessage.value = "Failed Connect, Try Again"
+            }
+        }
+    }
+
+    fun joinProject(link: String) {
+        viewModelScope.launch {
+            try {
+                val response = InTimeApi.retrofitService.joinProject("Bearer ${sessionManager.fetchAuthToken().toString()}", link)
+                if (response.isSuccessful) {
+                    _joinProjectMessage.value = response.body()?.success.toString()
+                } else {
+                    _joinProjectMessage.value = "join project failed"
+                }
+            } catch (e: Exception) {
+                _joinProjectMessage.value = "Failed Connect, Try Again"
             }
         }
     }

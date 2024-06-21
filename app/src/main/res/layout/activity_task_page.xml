@@ -170,7 +170,7 @@
                     android:baselineAligned="false">
 
                     <Button
-                        android:id="@+id/UpdateTaskButton"
+                        android:id="@+id/updateTaskButton"
                         style="@style/InTime.Button.Date"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
@@ -182,7 +182,7 @@
                         android:textColor="@color/primary" />
 
                     <Button
-                        android:id="@+id/EditTaskButton"
+                        android:id="@+id/editTaskButton"
                         style="@style/InTime.Button"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
@@ -193,28 +193,60 @@
 
                 </LinearLayout>
 
-                <FrameLayout
+                <LinearLayout
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:layout_marginHorizontal="@dimen/standard_10">
+                    android:baselineAligned="false">
 
-                    <Button
-                        android:id="@+id/deleteTaskButton"
-                        style="@style/InTime.Button"
+                    <FrameLayout
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-                        android:backgroundTint="@color/red"
-                        android:text="@string/delete" />
+                        android:layout_marginHorizontal="@dimen/standard_10"
+                        android:layout_weight="1">
 
-                    <ProgressBar
-                        android:id="@+id/deleteProgressCircular"
-                        android:layout_width="wrap_content"
+                        <Button
+                            android:id="@+id/completeTaskButton"
+                            style="@style/InTime.Button"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:backgroundTint="@color/green_3"
+                            android:text="@string/complete" />
+
+                        <ProgressBar
+                            android:id="@+id/completeProgressCircular"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_gravity="center"
+                            android:indeterminateTint="@color/white"
+                            android:visibility="gone" />
+
+                    </FrameLayout>
+
+                    <FrameLayout
+                        android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-                        android:layout_gravity="center"
-                        android:indeterminateTint="@color/grey_5"
-                        android:visibility="gone" />
+                        android:layout_marginHorizontal="@dimen/standard_10"
+                        android:layout_weight="1">
 
-                </FrameLayout>
+                        <Button
+                            android:id="@+id/deleteTaskButton"
+                            style="@style/InTime.Button"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:backgroundTint="@color/red"
+                            android:text="@string/delete" />
+
+                        <ProgressBar
+                            android:id="@+id/deleteProgressCircular"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_gravity="center"
+                            android:indeterminateTint="@color/white"
+                            android:visibility="gone" />
+
+                    </FrameLayout>
+
+                </LinearLayout>
 
             </LinearLayout>
 
@@ -230,7 +262,7 @@
         android:clickable="true"
         android:focusable="true"
         android:gravity="center"
-        android:visibility="visible"
+        android:visibility="gone"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"

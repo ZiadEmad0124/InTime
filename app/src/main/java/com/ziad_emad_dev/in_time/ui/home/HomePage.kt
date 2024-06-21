@@ -16,6 +16,8 @@ import com.bumptech.glide.Glide
 import com.google.android.material.bottomnavigation.BottomNavigationItemView
 import com.google.android.material.bottomnavigation.BottomNavigationMenuView
 import com.google.android.material.bottomsheet.BottomSheetDialog
+import com.google.android.material.textfield.TextInputEditText
+import com.google.android.material.textfield.TextInputLayout
 import com.ziad_emad_dev.in_time.R
 import com.ziad_emad_dev.in_time.databinding.ActivityHomePageBinding
 import com.ziad_emad_dev.in_time.network.auth.SessionManager
@@ -49,7 +51,6 @@ class HomePage : AppCompatActivity() {
         sessionManager = SessionManager(this)
         profileManager = ProfileManager(this)
 
-        startLoading()
         refreshProfile()
 
         myToolbar()
@@ -60,6 +61,7 @@ class HomePage : AppCompatActivity() {
         goToProfile()
         goToSettings()
         goToChangePassword()
+        joinProject()
 
         signOut()
     }
@@ -166,6 +168,7 @@ class HomePage : AppCompatActivity() {
             binding.drawerLayout.closeDrawer(GravityCompat.START)
             val intent = Intent(this, Settings::class.java)
             startActivity(intent)
+            finish()
         }
     }
 
@@ -174,6 +177,47 @@ class HomePage : AppCompatActivity() {
             binding.drawerLayout.closeDrawer(GravityCompat.START)
             val intent = Intent(this, ChangePassword::class.java)
             startActivity(intent)
+        }
+    }
+
+    @SuppressLint("InflateParams")
+    private fun joinProject() {
+        binding.navigationView.joinProject.setOnClickListener {
+            binding.drawerLayout.closeDrawer(GravityCompat.START)
+            val dialog = BottomSheetDialog(this)
+            val view = layoutInflater.inflate(R.layout.layout_join_project, null)
+            dialog.setContentView(view)
+
+            val linkLayout = view.findViewById<TextInputLayout>(R.id.linkLayout)
+            val link = view.findViewById<TextInputEditText>(R.id.link)
+
+            link.setOnFocusChangeListener { _, hasFocus ->
+                if (hasFocus) {
+                    linkLayout.error = null
+                }
+            }
+
+            val joinProjectButton = view.findViewById<View>(R.id.joinProjectButton)
+            joinProjectButton.setOnClickListener {
+                link.clearFocus()
+                if (link.text.toString().trim().isEmpty()) {
+                    linkLayout.error = getString(R.string.empty_field)
+                } else {
+                    val original = link.text.toString()
+                    val result = original.replace("intime-9hga.onrender.com/api/v1/user/projects/joinProject/", "")
+                    viewModel.joinProject(result)
+                    viewModel.joinProjectMessage.observe(this) { message ->
+                        if (message == "true") {
+                            dialog.dismiss()
+                            Toast.makeText(this, "Join Project Success", Toast.LENGTH_SHORT).show()
+                            dialog.dismiss()
+                        } else {
+                            Toast.makeText(this, message, Toast.LENGTH_SHORT).show()
+                        }
+                    }
+                }
+            }
+            dialog.show()
         }
     }
 
@@ -195,6 +239,7 @@ class HomePage : AppCompatActivity() {
     }
 
     private fun refreshProfile() {
+        startLoading()
         viewModel.refreshToken()
         viewModel.refreshTokenMessage.observe(this) { message ->
             if (message == "true") {
@@ -273,11 +318,6 @@ class HomePage : AppCompatActivity() {
         binding.blockingView.visibility = View.GONE
         binding.blockingViewNoConnection.visibility = View.VISIBLE
         Toast.makeText(this, "Failed Connect, Try Again", Toast.LENGTH_SHORT).show()
-    }
-
-    override fun onResume() {
-        super.onResume()
-        refreshProfile()
     }
 
     @Deprecated("This function is Deprecated")

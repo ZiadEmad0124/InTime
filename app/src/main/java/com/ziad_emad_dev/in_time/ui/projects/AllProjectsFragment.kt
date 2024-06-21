@@ -33,7 +33,19 @@ class AllProjectsFragment : Fragment() {
 
         newProject()
 
-        viewModel.getProjects()
+        getProjects()
+    }
+
+    private fun newProject() {
+        binding.newProjectButton.setOnClickListener {
+            val intent = Intent(requireContext(), CreateProject::class.java)
+            startActivity(intent)
+            requireActivity().finish()
+        }
+    }
+
+    private fun getProjects() {
+        viewModel.getProjects(null)
         viewModel.getProjectsMessage.observe(viewLifecycleOwner) { message ->
             if (message == "Get all projects success") {
                 viewModel.getProjects.observe(viewLifecycleOwner) { projects ->
@@ -52,14 +64,6 @@ class AllProjectsFragment : Fragment() {
         }
     }
 
-    private fun newProject() {
-        binding.newProjectButton.setOnClickListener {
-            val intent = Intent(requireContext(), CreateProject::class.java)
-            startActivity(intent)
-            requireActivity().finish()
-        }
-    }
-
     private fun stopLoading() {
         binding.blockingView.visibility = View.GONE
         binding.blockingViewNoConnection.visibility = View.GONE
@@ -69,10 +73,16 @@ class AllProjectsFragment : Fragment() {
         binding.blockingView.visibility = View.GONE
         binding.blockingViewNoConnection.visibility = View.VISIBLE
         binding.noConnection.setOnClickListener {
-            viewModel.getProjects()
+            viewModel.getProjects(null)
             binding.blockingViewNoConnection.visibility = View.GONE
             binding.blockingView.visibility = View.VISIBLE
         }
+    }
+
+    override fun onResume() {
+        super.onResume()
+        binding.blockingView.visibility = View.VISIBLE
+        getProjects()
     }
 
     override fun onDestroy() {

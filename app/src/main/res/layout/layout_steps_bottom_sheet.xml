@@ -9,7 +9,9 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:baselineAligned="false"
-        android:padding="@dimen/standard_15">
+        android:paddingHorizontal="15dp"
+        android:paddingTop="@dimen/standard_15"
+        android:paddingBottom="@dimen/standard_25">
 
         <com.google.android.material.card.MaterialCardView
             android:id="@+id/cancelButton"
@@ -25,7 +27,7 @@
                 android:layout_height="wrap_content"
                 android:layout_gravity="center"
                 android:fontFamily="@font/lato"
-                android:padding="@dimen/standard_15"
+                android:padding="@dimen/standard_20"
                 android:text="@string/cancel"
                 android:textAlignment="center"
                 android:textColor="@color/brown"
@@ -48,7 +50,7 @@
                 android:layout_height="wrap_content"
                 android:layout_gravity="center"
                 android:fontFamily="@font/lato"
-                android:padding="@dimen/standard_15"
+                android:padding="@dimen/standard_20"
                 android:text="@string/delete"
                 android:textAlignment="center"
                 android:textColor="@color/red"

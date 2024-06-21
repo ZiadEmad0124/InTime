@@ -33,7 +33,11 @@ class AsMemberFragment : Fragment() {
 
         newProject()
 
-        viewModel.getProjects()
+        getProjects()
+    }
+
+    private fun getProjects() {
+        viewModel.getProjects("member")
         viewModel.getProjectsMessage.observe(viewLifecycleOwner) { message ->
             if (message == "Get all projects success") {
                 viewModel.getProjects.observe(viewLifecycleOwner) { projects ->
@@ -69,10 +73,16 @@ class AsMemberFragment : Fragment() {
         binding.blockingView.visibility = View.GONE
         binding.blockingViewNoConnection.visibility = View.VISIBLE
         binding.noConnection.setOnClickListener {
-            viewModel.getProjects()
+            viewModel.getProjects("member")
             binding.blockingViewNoConnection.visibility = View.GONE
             binding.blockingView.visibility = View.VISIBLE
         }
+    }
+
+    override fun onResume() {
+        super.onResume()
+        binding.blockingView.visibility = View.VISIBLE
+        getProjects()
     }
 
     override fun onDestroy() {

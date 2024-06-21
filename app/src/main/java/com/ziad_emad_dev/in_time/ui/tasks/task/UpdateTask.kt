@@ -28,6 +28,7 @@ import com.ziad_emad_dev.in_time.R
 import com.ziad_emad_dev.in_time.databinding.ActivityUpdateTaskBinding
 import com.ziad_emad_dev.in_time.network.tasks.Tag
 import com.ziad_emad_dev.in_time.network.tasks.Task
+import com.ziad_emad_dev.in_time.network.tasks.Values
 import com.ziad_emad_dev.in_time.viewmodels.TaskViewModel
 import java.io.File
 import java.io.IOException
@@ -49,6 +50,7 @@ class UpdateTask : AppCompatActivity() {
     private var taskCover: Bitmap = Bitmap.createBitmap(1, 1, Bitmap.Config.ARGB_8888)
     private var taskCoverFile: File? = null
     private var isTaskCoverEmpty = false
+    private var isDeleteTaskCover = false
 
     private val viewModel by lazy {
         TaskViewModel(this)
@@ -95,6 +97,11 @@ class UpdateTask : AppCompatActivity() {
         binding.taskDescription.setText(task.disc)
         if (task.tag?.name?.isEmpty() == false) {
             binding.taskTag.setText(task.tag.name)
+        }
+
+        if (!task.image.isNullOrEmpty()) {
+            binding.deleteCover.visibility = View.VISIBLE
+            isTaskCoverEmpty = false
         }
 
         val inputFormat = SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss.SSS'Z'", Locale.getDefault())
@@ -306,6 +313,7 @@ class UpdateTask : AppCompatActivity() {
         binding.deleteCover.setOnClickListener {
             taskCoverFile = null
             isTaskCoverEmpty = true
+            isDeleteTaskCover = true
             binding.uploadCoverButton.text = getString(R.string.upload_cover)
             binding.deleteCover.visibility = View.GONE
         }
@@ -392,6 +400,7 @@ class UpdateTask : AppCompatActivity() {
             binding.uploadCoverButton.text = getString(R.string.uploaded)
             binding.deleteCover.visibility = View.VISIBLE
             isTaskCoverEmpty = false
+            isDeleteTaskCover = false
         }
     }
 
@@ -489,15 +498,39 @@ class UpdateTask : AppCompatActivity() {
 
             val steps = getStepsList()
 
-            val tagName = binding.taskTag.text.toString().ifEmpty { "No Tag" }
-            val tag = Tag(tagName, "Red")
+            val tagName = binding.taskTag.text.toString()
 
             if (!startDateEmptyError(startDate)) {
                 if (!endDateEmptyError(endDate)) {
                     startLoading()
-                    val startAt = convertToISO8601(startDate)
-                    val endAt = convertToISO8601(endDate)
-                    viewModel.updateTask(id, name, description, priority.toString(), startAt, endAt, taskCoverFile, steps, tag)
+                    viewModel.getAllTag()
+                    viewModel.getTagsMessage.observe(this) { message ->
+                        if (message == "true") {
+                            var allTags : List<Tag>
+                            viewModel.getTags.observe(this) { tags ->
+                                allTags = tags
+                                val tag = setTagColor(Values(tagName), allTags, colors)
+                                val startAt = convertToISO8601(startDate)
+                                val endAt = convertToISO8601(endDate)
+
+                                if (isDeleteTaskCover) {
+                                    viewModel.removeCover(id)
+                                    viewModel.removeCoverMessage.observe(this) { message ->
+                                        if (message == "true") {
+                                            if (isTaskCoverEmpty) {
+                                                viewModel.updateTask(id, name, description, priority.toString(), startAt, endAt, taskCoverFile, steps, tag)
+                                            } else {
+                                                stopLoading()
+                                                Toast.makeText(this, "Remove Cover Failed", Toast.LENGTH_SHORT).show()
+                                            }
+                                        }
+                                    }
+                                } else {
+                                    viewModel.updateTask(id, name, description, priority.toString(), startAt, endAt, taskCoverFile, steps, tag)
+                                }
+                            }
+                        }
+                    }
                 }
             }
         }
@@ -541,4 +574,81 @@ class UpdateTask : AppCompatActivity() {
             }
         }
     }
+
+    private fun setTagColor(values: Values, allTags: List<Tag>, colors: List<String>): Tag {
+        if (values.tag.trim() == "") {
+            return Tag("", "")
+        } else {
+            val tag = Tag(values.tag, "")
+            val tagName = values.tag.lowercase()
+
+            val tagIndex = allTags.indexOfFirst { it.name.lowercase() == tagName }
+
+            if (tagIndex != -1) {
+                tag.color = allTags[tagIndex].color
+            } else {
+                if (allTags.isNotEmpty()) {
+                    val lastColor = allTags.last().color
+                    val lastColorIndex = colors.indexOf(lastColor)
+                    tag.color = colors[(lastColorIndex + 1) % 50]
+                } else {
+                    tag.color = colors[0]
+                }
+            }
+            return tag
+        }
+    }
+
+    private val colors = listOf(
+        "darkseagreen",
+        "crimson",
+        "chocolate",
+        "mediumseagreen",
+        "dark-turquoise",
+        "mediumorchid",
+        "slateblue",
+        "cyan",
+        "saddlebrown",
+        "firebrick",
+        "lime",
+        "salmon",
+        "mediumvioletred",
+        "teal",
+        "gold",
+        "orchid",
+        "darkred",
+        "darkgoldenrod",
+        "purple",
+        "darkolivegreen",
+        "navy",
+        "darkorange",
+        "mediumblue",
+        "seagreen",
+        "maroon",
+        "sienna",
+        "magenta",
+        "indianred",
+        "steelblue",
+        "sandybrown",
+        "yellow",
+        "blue",
+        "violet",
+        "coral",
+        "mediumslateblue",
+        "pink",
+        "dimgray",
+        "indigo",
+        "royalblue",
+        "red",
+        "turquoise",
+        "green",
+        "tomato",
+        "darkviolet",
+        "slategray",
+        "dodgerblue",
+        "mediumpurple",
+        "brown",
+        "orange",
+        "forestgreen"
+    )
 }

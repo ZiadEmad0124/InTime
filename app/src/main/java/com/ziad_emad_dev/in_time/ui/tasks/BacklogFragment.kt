@@ -48,7 +48,7 @@ class BacklogFragment : Fragment() {
         viewModel.getTasksMessage.observe(viewLifecycleOwner) { message ->
             if (message == "true") {
                 viewModel.getTasks.observe(viewLifecycleOwner) { tasks ->
-                    val backlogTasks = tasks.filter { it.name == "kill joy"}
+                    val backlogTasks = tasks.filter { it.backlog }
                     stopLoading()
                     if (backlogTasks.isEmpty()) {
                         binding.noProjects.visibility = View.VISIBLE

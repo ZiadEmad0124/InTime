@@ -142,4 +142,13 @@
     <string name="from_date">From: %1$s</string>
     <string name="to_date">To: %1$s</string>
     <string name="no_steps_found">No Steps Found</string>
+    <string name="complete">Complete</string>
+    <string name="add_task">Add Task</string>
+    <string name="share">Share</string>
+    <string name="update_project">Update Project</string>
+    <string name="share_link">Share Link</string>
+    <string name="_0">0%1$s</string>
+    <string name="link">Link</string>
+    <string name="join_project">Join Project</string>
+    <string name="join">Join</string>
 </resources>

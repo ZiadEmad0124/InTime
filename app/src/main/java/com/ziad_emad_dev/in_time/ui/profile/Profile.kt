@@ -55,7 +55,7 @@ class Profile : AppCompatActivity() {
         binding.profileAbout.text = profileManager.getProfileAbout()
         binding.rank.text = profileManager.getRank().toString()
         binding.level.text = if (profileManager.getTotalPoints() < 100) {
-            0.toString()
+            1.toString()
         } else {
             (profileManager.getTotalPoints() / 100).toString()
         }
