@@ -15,7 +15,9 @@ import com.ziad_emad_dev.in_time.R
 import com.ziad_emad_dev.in_time.network.project.project_members.MemberRecord
 import de.hdodenhof.circleimageview.CircleImageView
 
-class MembersAdapter(private val context: Context, private val members: ArrayList<MemberRecord>, private val isAdmin: Boolean, private val adminId: String) :
+class MembersAdapter(private val context: Context,
+                     private val members: ArrayList<MemberRecord>, private val projectId: String,
+                     private val isAdmin: Boolean, private val adminId: String) :
     RecyclerView.Adapter<MembersAdapter.MembersViewHolder>() {
 
     class MembersViewHolder(itemView: View) : ViewHolder(itemView) {
@@ -48,12 +50,10 @@ class MembersAdapter(private val context: Context, private val members: ArrayLis
             .into(holder.memberImage)
 
         holder.memberName.text = member.name
-        holder.memberTitle.text = member.title
+        holder.memberTitle.text = member.title?.ifEmpty { "No Title" }
 
         if (member.id  == adminId) {
             holder.isAdmin.visibility = View.VISIBLE
-        } else {
-            holder.isAdmin.visibility = View.GONE
         }
 
         if (member.isActive) {
@@ -68,6 +68,8 @@ class MembersAdapter(private val context: Context, private val members: ArrayLis
             val intent = Intent(context, MemberPage::class.java)
             intent.putExtra("member", member)
             intent.putExtra("isAdmin", isAdmin)
+            intent.putExtra("adminId", adminId)
+            intent.putExtra("projectId", projectId)
             context.startActivity(intent)
         }
     }

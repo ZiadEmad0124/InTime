@@ -161,13 +161,14 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginHorizontal="@dimen/standard_10"
-                android:layout_marginVertical="@dimen/standard_20"
+                android:layout_marginBottom="@dimen/standard_10"
                 android:orientation="vertical">
 
                 <LinearLayout
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:baselineAligned="false">
+                    android:baselineAligned="false"
+                    tools:ignore="UselessParent">
 
                     <Button
                         android:id="@+id/updateTaskButton"
@@ -175,28 +176,11 @@
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:layout_marginHorizontal="@dimen/standard_10"
-                        android:layout_marginBottom="@dimen/standard_15"
+                        android:layout_marginBottom="@dimen/standard_10"
                         android:layout_weight="1"
                         android:padding="17dp"
                         android:text="@string/update"
                         android:textColor="@color/primary" />
-
-                    <Button
-                        android:id="@+id/editTaskButton"
-                        style="@style/InTime.Button"
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:layout_marginHorizontal="@dimen/standard_10"
-                        android:layout_marginBottom="@dimen/standard_15"
-                        android:layout_weight="1"
-                        android:text="@string/edit" />
-
-                </LinearLayout>
-
-                <LinearLayout
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:baselineAligned="false">
 
                     <FrameLayout
                         android:layout_width="match_parent"
@@ -209,35 +193,10 @@
                             style="@style/InTime.Button"
                             android:layout_width="match_parent"
                             android:layout_height="wrap_content"
-                            android:backgroundTint="@color/green_3"
                             android:text="@string/complete" />
 
                         <ProgressBar
                             android:id="@+id/completeProgressCircular"
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-                            android:layout_gravity="center"
-                            android:indeterminateTint="@color/white"
-                            android:visibility="gone" />
-
-                    </FrameLayout>
-
-                    <FrameLayout
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:layout_marginHorizontal="@dimen/standard_10"
-                        android:layout_weight="1">
-
-                        <Button
-                            android:id="@+id/deleteTaskButton"
-                            style="@style/InTime.Button"
-                            android:layout_width="match_parent"
-                            android:layout_height="wrap_content"
-                            android:backgroundTint="@color/red"
-                            android:text="@string/delete" />
-
-                        <ProgressBar
-                            android:id="@+id/deleteProgressCircular"
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
                             android:layout_gravity="center"

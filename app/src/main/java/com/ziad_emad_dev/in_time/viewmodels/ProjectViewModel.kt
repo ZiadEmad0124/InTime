@@ -10,6 +10,7 @@ import com.ziad_emad_dev.in_time.network.auth.SessionManager
 import com.ziad_emad_dev.in_time.network.project.Project
 import com.ziad_emad_dev.in_time.network.project.create_project.CreateProjectResponse
 import com.ziad_emad_dev.in_time.network.project.project_members.MemberRecord
+import com.ziad_emad_dev.in_time.network.project.tasks.Record
 import kotlinx.coroutines.launch
 import okhttp3.MediaType.Companion.toMediaTypeOrNull
 import okhttp3.MultipartBody
@@ -54,8 +55,26 @@ class ProjectViewModel(context: Context) : ViewModel() {
     private val _getMembers = MutableLiveData<List<MemberRecord>>()
     val getMembers get() = _getMembers
 
+    private val _removeMembersMessage = MutableLiveData<String>()
+    val removeMembersMessage get() = _removeMembersMessage
+
     private val _deleteProjectMessage = MutableLiveData<String>()
     val deleteProjectMessage get() = _deleteProjectMessage
+
+    private val _createProjectTaskMessage = MutableLiveData<String>()
+    val createProjectTaskMessage get() = _createProjectTaskMessage
+
+    private val _getProjectTasksMessage = MutableLiveData<String>()
+    val getProjectTasksMessage get() = _getProjectTasksMessage
+
+    private val _getProjectTasks = MutableLiveData<List<Record>>()
+    val getProjectTasks get() = _getProjectTasks
+
+    private val _deleteProjectTaskMessage = MutableLiveData<String>()
+    val deleteProjectTaskMessage get() = _deleteProjectTaskMessage
+
+    private val _editProjectTaskAdminMessage = MutableLiveData<String>()
+    val editProjectTaskAdminMessage get() = _editProjectTaskAdminMessage
 
     fun createProject(name: String, projectCoverFile: File?) {
 
@@ -190,6 +209,22 @@ class ProjectViewModel(context: Context) : ViewModel() {
         }
     }
 
+    fun removeMember(projectId: String, memberId: String) {
+        viewModelScope.launch {
+            try {
+                val response = InTimeApi.retrofitService.removeProjectMember("Bearer ${sessionManager.fetchAuthToken().toString()}",
+                    projectId, memberId)
+                if (response.isSuccessful) {
+                    _removeMembersMessage.value = response.body()?.success.toString()
+                } else {
+                    _removeMembersMessage.value = "remove member failed"
+                }
+            } catch (e: Exception) {
+                _removeMembersMessage.value = "Failed Connect, Try Again"
+            }
+        }
+    }
+
     fun deleteProject(projectId: String) {
         viewModelScope.launch {
             try {
@@ -201,6 +236,86 @@ class ProjectViewModel(context: Context) : ViewModel() {
                 }
             } catch (e: Exception) {
                 _deleteProjectMessage.value = "Failed Connect, Try Again"
+            }
+        }
+    }
+
+    fun createProjectTask(projectId: String, memberId: String, name: String, disc: String?, startAt: String, endAt: String) {
+        viewModelScope.launch {
+            try {
+
+                val myName = name.toRequestBody("text/plain".toMediaTypeOrNull())
+                val myDescription = disc?.toRequestBody("text/plain".toMediaTypeOrNull())
+                val myStartAt = startAt.toRequestBody("text/plain".toMediaTypeOrNull())
+                val myEndAt = endAt.toRequestBody("text/plain".toMediaTypeOrNull())
+
+                val response = InTimeApi.retrofitService.createProjectTask("Bearer ${sessionManager.fetchAuthToken().toString()}", projectId, memberId,
+                    myName, myDescription, myStartAt, myEndAt)
+                if (response.isSuccessful) {
+                    _createProjectTaskMessage.value = response.body()?.success.toString()
+                } else {
+                    val errorResponse = response.errorBody()?.string()
+                    val errorResponseCreate = Gson().fromJson(errorResponse, CreateProjectResponse::class.java)
+                    _createProjectTaskMessage.value = errorResponseCreate.message.toString()
+                }
+            } catch (e: Exception) {
+                _createProjectTaskMessage.value = "Failed Connect, Try Again"
+            }
+        }
+    }
+
+    fun getProjectTasks(projectId: String) {
+        viewModelScope.launch {
+            try {
+                val response = InTimeApi.retrofitService.getProjectTasks("Bearer ${sessionManager.fetchAuthToken().toString()}", projectId)
+                if (response.isSuccessful) {
+                    _getProjectTasksMessage.value = response.body()?.success.toString()
+                    _getProjectTasks.value = response.body()?.record!!
+                } else {
+                    _getProjectTasksMessage.value = "Get project tasks failed"
+                }
+            } catch (e: Exception) {
+                _getProjectTasksMessage.value = "Failed Connect, Try Again"
+            }
+        }
+    }
+
+    fun editProjectTaskAdmin(projectId: String, taskId: String, name: String, disc: String?, startAt: String, endAt: String) {
+        viewModelScope.launch {
+            try {
+
+                val myName = name.toRequestBody("text/plain".toMediaTypeOrNull())
+                val myDescription = disc?.toRequestBody("text/plain".toMediaTypeOrNull())
+                val myStartAt = startAt.toRequestBody("text/plain".toMediaTypeOrNull())
+                val myEndAt = endAt.toRequestBody("text/plain".toMediaTypeOrNull())
+
+                val response = InTimeApi.retrofitService.editProjectTaskAdmin("Bearer ${sessionManager.fetchAuthToken().toString()}", projectId, taskId,
+                    myName, myDescription, myStartAt, myEndAt)
+                if (response.isSuccessful) {
+                    _editProjectTaskAdminMessage.value = response.body()?.success.toString()
+                } else {
+                    val errorResponse = response.errorBody()?.string()
+                    val errorResponseCreate = Gson().fromJson(errorResponse, CreateProjectResponse::class.java)
+                    _editProjectTaskAdminMessage.value = errorResponseCreate.message.toString()
+                }
+            } catch (e: Exception) {
+                _editProjectTaskAdminMessage.value = "Failed Connect, Try Again"
+            }
+        }
+    }
+
+    fun deleteProjectTask(projectId: String, taskId: String) {
+        viewModelScope.launch {
+            try {
+                val response = InTimeApi.retrofitService.deleteProjectTask("Bearer ${sessionManager.fetchAuthToken().toString()}",
+                    projectId, taskId)
+                if (response.isSuccessful) {
+                    _deleteProjectTaskMessage.value = response.body()?.success.toString()
+                } else {
+                    _deleteProjectTaskMessage.value = "delete project task failed"
+                }
+            } catch (e: Exception) {
+                _deleteProjectTaskMessage.value = "Failed Connect, Try Again"
             }
         }
     }

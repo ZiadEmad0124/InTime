@@ -9,6 +9,7 @@ import android.widget.Toast
 import androidx.fragment.app.Fragment
 import com.ziad_emad_dev.in_time.databinding.FragmentTaskInProgressBinding
 import com.ziad_emad_dev.in_time.ui.create.CreateTask
+import com.ziad_emad_dev.in_time.ui.tasks.task.TasksAdapter
 import com.ziad_emad_dev.in_time.viewmodels.TaskViewModel
 
 class InProgressFragment : Fragment() {
@@ -48,6 +49,7 @@ class InProgressFragment : Fragment() {
         viewModel.getTasksMessage.observe(viewLifecycleOwner) { message ->
             if (message == "true") {
                 viewModel.getTasks.observe(viewLifecycleOwner) { tasks ->
+
                     val inProgressTasks = tasks.filter { !it.completed }
                     stopLoading()
                     if (inProgressTasks.isEmpty()) {

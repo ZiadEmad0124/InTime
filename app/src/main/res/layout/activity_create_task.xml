@@ -169,7 +169,7 @@
                         app:iconGravity="start"
                         app:iconTint="@color/primary" />
 
-                    <Button
+                    <com.google.android.material.button.MaterialButton
                         android:id="@+id/endDateButton"
                         style="@style/InTime.Button.Date"
                         android:layout_width="match_parent"

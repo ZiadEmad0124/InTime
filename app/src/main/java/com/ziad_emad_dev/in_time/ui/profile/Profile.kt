@@ -54,10 +54,10 @@ class Profile : AppCompatActivity() {
         binding.profileTitle.text = profileManager.getProfileTitle()
         binding.profileAbout.text = profileManager.getProfileAbout()
         binding.rank.text = profileManager.getRank().toString()
-        binding.level.text = if (profileManager.getTotalPoints() < 100) {
+        binding.level.text = if (profileManager.getTotalPoints() <= 100) {
             1.toString()
         } else {
-            (profileManager.getTotalPoints() / 100).toString()
+            ((profileManager.getTotalPoints() / 100)+1).toString()
         }
         binding.totalPoints.text = profileManager.getTotalPoints().toString()
     }

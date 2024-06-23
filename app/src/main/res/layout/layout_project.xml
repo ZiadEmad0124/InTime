@@ -13,7 +13,7 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:orientation="vertical"
-        android:padding="@dimen/standard_10">
+        android:padding="@dimen/standard_15">
 
         <TextView
             android:id="@+id/projectName"
@@ -39,32 +39,6 @@
                 android:src="@drawable/project_image" />
 
         </com.google.android.material.card.MaterialCardView>
-
-        <LinearLayout
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_marginTop="@dimen/standard_10"
-            android:gravity="end">
-
-            <com.google.android.material.card.MaterialCardView
-                android:id="@+id/viewTasks"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_marginHorizontal="@dimen/standard_5"
-                app:cardBackgroundColor="@color/white"
-                app:cardCornerRadius="@dimen/border_radius_8"
-                app:strokeColor="@color/primary">
-
-                <TextView
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:padding="@dimen/standard_5"
-                    android:text="@string/view_tasks"
-                    android:textColor="@color/primary" />
-
-            </com.google.android.material.card.MaterialCardView>
-
-        </LinearLayout>
 
     </LinearLayout>
 

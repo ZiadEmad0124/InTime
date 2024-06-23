@@ -4,11 +4,13 @@ import android.content.Context
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import com.google.gson.Gson
 import com.ziad_emad_dev.in_time.network.InTimeApi
 import com.ziad_emad_dev.in_time.network.auth.SessionManager
 import com.ziad_emad_dev.in_time.network.auth.refresh_token.RefreshTokenRequest
 import com.ziad_emad_dev.in_time.network.auth.sign_out.SignOutRequest
 import com.ziad_emad_dev.in_time.network.profile.ProfileManager
+import com.ziad_emad_dev.in_time.network.project.get_project.GetProjectResponse
 import com.ziad_emad_dev.in_time.network.tasks.Task
 import kotlinx.coroutines.launch
 
@@ -40,6 +42,9 @@ class HomeViewModel(context: Context) : ViewModel() {
 
     private val _getSearchTask = MutableLiveData<List<Task>>()
     val getSearchTask get() = _getSearchTask
+
+    private val _getSearchTaskMessage = MutableLiveData<String>()
+    val getSearchTaskMessage get() = _getSearchTaskMessage
 
     fun refreshToken() {
 
@@ -133,7 +138,7 @@ class HomeViewModel(context: Context) : ViewModel() {
     fun getTasks() {
         viewModelScope.launch {
             try {
-                val response = InTimeApi.retrofitService.getTasks("Bearer ${sessionManager.fetchAuthToken().toString()}", 1)
+                val response = InTimeApi.retrofitService.getTasks("Bearer ${sessionManager.fetchAuthToken().toString()}", -1, false)
                 if (response.isSuccessful) {
                     _getTasksMessage.value = response.body()?.success.toString()
                     _getTasks.value = response.body()?.record!!
@@ -153,10 +158,12 @@ class HomeViewModel(context: Context) : ViewModel() {
                 if (response.isSuccessful) {
                     _joinProjectMessage.value = response.body()?.success.toString()
                 } else {
-                    _joinProjectMessage.value = "join project failed"
+                    val errorResponse = response.errorBody()?.string()
+                    val errorSignInResponse = Gson().fromJson(errorResponse, GetProjectResponse::class.java)
+                    _joinProjectMessage.value = errorSignInResponse?.message.toString()
                 }
             } catch (e: Exception) {
-                _joinProjectMessage.value = "Failed Connect, Try Again"
+                _joinProjectMessage.value = e.message
             }
         }
     }
@@ -168,10 +175,10 @@ class HomeViewModel(context: Context) : ViewModel() {
                 if (response.isSuccessful) {
                     _getSearchTask.value = response.body()?.record!!
                 } else {
-//                    _getSearchTaskMessage.value = "Search Task failed"
+                    _getSearchTaskMessage.value = "Search Task failed"
                 }
             } catch (e: Exception) {
-//                _getSearchTaskMessage.value = "Failed Connect, Try Again"
+                _getSearchTaskMessage.value = "Failed Connect, Try Again"
             }
         }
     }

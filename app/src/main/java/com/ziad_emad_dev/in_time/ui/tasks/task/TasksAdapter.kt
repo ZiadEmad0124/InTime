@@ -1,4 +1,4 @@
-package com.ziad_emad_dev.in_time.ui.tasks
+package com.ziad_emad_dev.in_time.ui.tasks.task
 
 import android.content.Context
 import android.content.Intent
@@ -11,7 +11,6 @@ import androidx.recyclerview.widget.RecyclerView.ViewHolder
 import com.google.android.material.card.MaterialCardView
 import com.ziad_emad_dev.in_time.R
 import com.ziad_emad_dev.in_time.network.tasks.Task
-import com.ziad_emad_dev.in_time.ui.tasks.task.TaskPage
 import java.text.SimpleDateFormat
 import java.util.Locale
 

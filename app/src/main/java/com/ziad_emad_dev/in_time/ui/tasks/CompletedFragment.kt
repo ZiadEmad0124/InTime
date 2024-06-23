@@ -9,6 +9,7 @@ import android.widget.Toast
 import androidx.fragment.app.Fragment
 import com.ziad_emad_dev.in_time.databinding.FragmentTaskCompletedBinding
 import com.ziad_emad_dev.in_time.ui.create.CreateTask
+import com.ziad_emad_dev.in_time.ui.tasks.task.TasksAdapter
 import com.ziad_emad_dev.in_time.viewmodels.TaskViewModel
 
 class CompletedFragment : Fragment() {

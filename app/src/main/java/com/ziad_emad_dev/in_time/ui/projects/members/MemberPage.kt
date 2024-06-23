@@ -1,47 +1,55 @@
 package com.ziad_emad_dev.in_time.ui.projects.members
 
+import android.content.Intent
 import android.os.Bundle
+import android.view.View
+import android.widget.PopupMenu
+import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
 import com.bumptech.glide.Glide
 import com.ziad_emad_dev.in_time.R
 import com.ziad_emad_dev.in_time.databinding.ActivityMemberPageBinding
-import com.ziad_emad_dev.in_time.network.profile.ProfileManager
 import com.ziad_emad_dev.in_time.network.project.project_members.MemberRecord
+import com.ziad_emad_dev.in_time.ui.my_project.project_task.CreateTaskProject
+import com.ziad_emad_dev.in_time.viewmodels.ProjectViewModel
 
 @Suppress("DEPRECATION")
 class MemberPage : AppCompatActivity() {
 
     private lateinit var binding: ActivityMemberPageBinding
 
-    private lateinit var profileManager: ProfileManager
+    private val viewModel by lazy {
+        ProjectViewModel(this)
+    }
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         binding = ActivityMemberPageBinding.inflate(layoutInflater)
         setContentView(binding.root)
 
-        profileManager = ProfileManager(this)
-
-        val member: MemberRecord? = intent.getParcelableExtra("member")
+        val member: MemberRecord = intent.getParcelableExtra("member")!!
         val isAdmin = intent.getBooleanExtra("isAdmin", false)
+        val adminId = intent.getStringExtra("adminId")!!
+        val projectId = intent.getStringExtra("projectId")!!
 
-        if (member != null) {
-            if (isAdmin) {
-                if (member.id != profileManager.getProfileId()) {
-                    binding.removeButton.visibility = android.view.View.VISIBLE
-                }
+        myToolbar(member.name)
+
+        if (isAdmin) {
+            if (member.id != adminId) {
+                binding.addTaskButtonContainer.visibility = View.VISIBLE
+                binding.myToolbar.menu.visibility = View.VISIBLE
             }
-            myToolbar(member.name)
-            memberPoints(member.points.totalPoints)
-            memberAvatar(member.avatar)
-            memberName(member.name)
-            memberTitle(member.title!!)
-            memberEmail(member.email)
-            memberPhone(member.phone.toString())
-            memberAbout(member.about!!)
-        } else {
-            // Handle the case where member is null
         }
+
+        memberPoints(member.points.totalPoints)
+        memberAvatar(member.avatar)
+        memberName(member.name)
+        memberTitle(member.title)
+        memberEmail(member.email)
+        memberPhone(member.phone.toString())
+        memberAbout(member.about)
+
+        createTask(projectId, member.id)
     }
 
     private fun myToolbar(memberName: String) {
@@ -49,6 +57,28 @@ class MemberPage : AppCompatActivity() {
         binding.myToolbar.back.setOnClickListener {
             finish()
         }
+        binding.myToolbar.menu.setImageResource(R.drawable.ic_options)
+        binding.myToolbar.menu.setOnClickListener {
+            showPopupMenu(it)
+        }
+        binding.myToolbar.menu.visibility = View.GONE
+    }
+
+    private fun showPopupMenu(view: View) {
+        val popupMenu = PopupMenu(this, view, 0, 0, R.style.PopupMenuStyle)
+        popupMenu.menuInflater.inflate(R.menu.member_menu, popupMenu.menu)
+        popupMenu.setOnMenuItemClickListener { menuItem ->
+            when (menuItem.itemId) {
+                R.id.removeMember -> {
+                    val member: MemberRecord = intent.getParcelableExtra("member")!!
+                    val projectId = intent.getStringExtra("projectId")!!
+                    removeMember(projectId, member.id)
+                    true
+                }
+                else -> false
+            }
+        }
+        popupMenu.show()
     }
 
     private fun memberAvatar(memberAvatar: String) {
@@ -63,7 +93,7 @@ class MemberPage : AppCompatActivity() {
         binding.level.text = if (memberPoints <= 100) {
             1.toString()
         } else {
-            (memberPoints / 100).toString()
+            ((memberPoints / 100)+1).toString()
         }
         binding.totalPoints.text = memberPoints.toString()
     }
@@ -76,11 +106,11 @@ class MemberPage : AppCompatActivity() {
         }
     }
 
-    private fun memberTitle(memberTitle: String) {
+    private fun memberTitle(memberTitle: String?) {
         binding.profileTitle.let { title ->
             title.icon.setImageResource(R.drawable.ic_title)
             title.title.text = getString(R.string.title)
-            title.details.text = memberTitle
+            title.details.text = if (memberTitle.isNullOrEmpty()) "No Title" else memberTitle
         }
     }
 
@@ -100,11 +130,42 @@ class MemberPage : AppCompatActivity() {
         }
     }
 
-    private fun memberAbout(memberAbout: String) {
+    private fun memberAbout(memberAbout: String?) {
         binding.profileAbout.let { about ->
             about.icon.setImageResource(R.drawable.ic_about)
             about.title.text = getString(R.string.about)
-            about.details.text = memberAbout
+            about.details.text = if (memberAbout.isNullOrEmpty()) "No About" else memberAbout
         }
+    }
+
+    private fun removeMember(projectId: String, memberId: String) {
+        startLoading()
+        viewModel.removeMember(projectId, memberId)
+        viewModel.removeMembersMessage.observe(this) { message ->
+            if (message == "true") {
+                finish()
+            } else {
+                failedConnect(message)
+            }
+        }
+    }
+
+    private fun createTask(projectId: String, memberId: String) {
+        binding.addTaskButton.setOnClickListener {
+            val intent = Intent(this, CreateTaskProject::class.java)
+            intent.putExtra("projectId", projectId)
+            intent.putExtra("memberId", memberId)
+            startActivity(intent)
+        }
+    }
+
+    private fun startLoading() {
+        binding.blockingView.visibility = View.VISIBLE
+        binding.progressCircular.visibility = View.VISIBLE
+    }
+
+    private fun failedConnect(message: String) {
+        binding.blockingView.visibility = View.GONE
+        Toast.makeText(this, message, Toast.LENGTH_SHORT).show()
     }
 }

@@ -17,25 +17,28 @@
             android:layout_height="0dp"
             android:orientation="vertical">
 
-            <SearchView
+            <EditText
                 android:id="@+id/searchBar"
                 style="@style/InTime.SearchBar"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_margin="@dimen/standard_10"
-                android:padding="@dimen/standard_5"
-                android:queryHint="@string/search_anything"
-                app:iconifiedByDefault="false"
-                app:searchIcon="@drawable/ic_search" />
+                android:layout_margin="@dimen/standard_15"
+                android:drawableEnd="@drawable/ic_search"
+                android:hint="@string/search_task"
+                android:importantForAutofill="no"
+                android:inputType="text"
+                android:padding="@dimen/standard_15" />
 
-            <ListView
-                android:id="@+id/searchView"
+            <androidx.recyclerview.widget.RecyclerView
+                android:id="@+id/recyclerView"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
                 android:visibility="gone"
-                tools:ignore="NestedScrolling" />
+                app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"
+                tools:listitem="@layout/layout_task" />
 
             <LinearLayout
+                android:id="@+id/homeLayout1"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:baselineAligned="false">
@@ -59,6 +62,7 @@
             </LinearLayout>
 
             <LinearLayout
+                android:id="@+id/homeLayout2"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content">
 
@@ -79,6 +83,7 @@
             </LinearLayout>
 
             <TextView
+                android:id="@+id/recentTasks"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_margin="@dimen/standard_10"
@@ -91,6 +96,7 @@
                 app:drawableStartCompat="@drawable/ic_recent_task" />
 
             <FrameLayout
+                android:id="@+id/recentTasksLayout"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content">
 

@@ -39,7 +39,6 @@ class SignUp : Fragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
-        signUpWith()
         focusOnEditTextLayout()
         passwordToggle(binding.passwordLayout, binding.password)
         passwordToggle(binding.confirmPasswordLayout, binding.confirmPassword)
@@ -48,10 +47,6 @@ class SignUp : Fragment() {
 
         phoneNumber()
         binding.password.transformationMethod = AsteriskPasswordTransformation()
-    }
-
-    private fun signUpWith() {
-        binding.signWithSocialMedia.signTextView.text = getString(R.string.signup_with)
     }
 
     private fun focusOnEditTextLayout() {

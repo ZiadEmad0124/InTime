@@ -4,12 +4,12 @@
     android:viewportWidth="5"
     android:viewportHeight="20">
     <path
-        android:fillColor="@color/sky_3"
+        android:fillColor="@color/secondary"
         android:pathData="M2.5,2.5m-2.5,0a2.5,2.5 0,1 1,5 0a2.5,2.5 0,1 1,-5 0" />
     <path
-        android:fillColor="@color/sky_3"
+        android:fillColor="@color/secondary"
         android:pathData="M2.5,10.5m-2.5,0a2.5,2.5 0,1 1,5 0a2.5,2.5 0,1 1,-5 0" />
     <path
-        android:fillColor="@color/sky_3"
+        android:fillColor="@color/secondary"
         android:pathData="M2.5,17.5m-2.5,0a2.5,2.5 0,1 1,5 0a2.5,2.5 0,1 1,-5 0" />
 </vector>

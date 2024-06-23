@@ -53,7 +53,8 @@
                     android:layout_gravity="center"
                     android:layout_marginStart="@dimen/standard_5"
                     android:importantForAccessibility="no"
-                    android:src="@drawable/ic_crown" />
+                    android:src="@drawable/ic_crown"
+                    android:visibility="gone" />
 
             </LinearLayout>
 

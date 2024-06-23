@@ -107,13 +107,18 @@
         android:textSize="26sp"
         app:drawableStartCompat="@drawable/ic_join" />
 
-    <Button
+    <TextView
         android:id="@+id/logOut"
-        style="@style/InTime.Button"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_alignParentBottom="true"
-        android:layout_margin="@dimen/standard_15"
-        android:text="@string/log_out" />
+        android:layout_below="@id/joinProject"
+        android:layout_marginVertical="@dimen/standard_10"
+        android:drawablePadding="@dimen/standard_15"
+        android:fontFamily="@font/roboto_medium"
+        android:padding="15dp"
+        android:text="@string/log_out"
+        android:textColor="@color/secondary"
+        android:textSize="26sp"
+        app:drawableStartCompat="@drawable/ic_log_out" />
 
 </RelativeLayout>

@@ -6,6 +6,7 @@ import android.os.Bundle
 import android.text.Editable
 import android.view.View
 import android.widget.LinearLayout
+import android.widget.PopupMenu
 import android.widget.TextView
 import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
@@ -28,6 +29,13 @@ class TaskPage : AppCompatActivity() {
         TaskViewModel(this)
     }
 
+    data class StepItem(
+        val stepName: String,
+        var completed: Boolean
+    )
+
+    private var stepsList = mutableListOf<StepItem>()
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         binding = ActivityTaskPageBinding.inflate(layoutInflater)
@@ -40,9 +48,9 @@ class TaskPage : AppCompatActivity() {
         myToolbar(task.name)
 
         getTask(task.id)
-        deleteTask(task.id)
-        editTask()
         completeTask(task.id)
+
+        completeSteps()
     }
 
     private fun myToolbar(taskName: String) {
@@ -51,6 +59,30 @@ class TaskPage : AppCompatActivity() {
         binding.myToolbar.back.setOnClickListener {
             finish()
         }
+        binding.myToolbar.menu.setImageResource(R.drawable.ic_options)
+        binding.myToolbar.menu.setOnClickListener {
+            showPopupMenu(it)
+        }
+    }
+
+    private fun showPopupMenu(view: View) {
+        val popupMenu = PopupMenu(this, view, 0, 0, R.style.PopupMenuStyle)
+        popupMenu.menuInflater.inflate(R.menu.task_menu, popupMenu.menu)
+        popupMenu.setOnMenuItemClickListener { menuItem ->
+            when (menuItem.itemId) {
+                R.id.editTask -> {
+                    editTask()
+                    true
+                }
+                R.id.deleteTask -> {
+                    val task: Task = intent.getParcelableExtra("task")!!
+                    deleteTask(task.id)
+                    true
+                }
+                else -> false
+            }
+        }
+        popupMenu.show()
     }
 
     private fun getTask(id: String) {
@@ -101,7 +133,9 @@ class TaskPage : AppCompatActivity() {
 
     private fun showSteps(steps: List<Step>) {
         binding.stepsLayout.removeAllViews()
+        stepsList.clear()
         for (step in steps) {
+            stepsList.add(StepItem(step.stepDisc, step.completed))
             val textView = TextView(this)
             textView.text = Editable.Factory.getInstance().newEditable(step.stepDisc)
             textView.setPadding(resources.getDimensionPixelSize(R.dimen.standard_20), resources.getDimensionPixelSize(R.dimen.standard_20), resources.getDimensionPixelSize(R.dimen.standard_20), resources.getDimensionPixelSize(R.dimen.standard_20))
@@ -138,17 +172,22 @@ class TaskPage : AppCompatActivity() {
             textView.layoutParams = layoutParams
 
             textView.setOnLongClickListener {
-                textView.setOnClickListener {
-                    icon = R.drawable.ic_done
-                    color = R.color.green
-                    container = R.drawable.steps_complete_text_view
+
+                val index = stepsList.indexOfFirst { it.stepName == step.stepDisc }
+                if (index != -1) {
+                    stepsList[index].completed = true
                     textView.paintFlags = textView.paintFlags or Paint.STRIKE_THRU_TEXT_FLAG
-                    textView.background = ContextCompat.getDrawable(this, container)
-                    textView.setTextColor(ContextCompat.getColor(this, color))
-                    val drawableClicked = ContextCompat.getDrawable(this, icon)
-                    drawableClicked?.setBounds(0, 0, drawableClicked.intrinsicWidth, drawableClicked.intrinsicHeight)
-                    textView.setCompoundDrawables(null, null, drawableClicked, null)
                 }
+
+                icon = R.drawable.ic_done
+                color = R.color.green
+                container = R.drawable.steps_complete_text_view
+                textView.paintFlags = textView.paintFlags or Paint.STRIKE_THRU_TEXT_FLAG
+                textView.background = ContextCompat.getDrawable(this, container)
+                textView.setTextColor(ContextCompat.getColor(this, color))
+                val drawableClicked = ContextCompat.getDrawable(this, icon)
+                drawableClicked?.setBounds(0, 0, drawableClicked.intrinsicWidth, drawableClicked.intrinsicHeight)
+                textView.setCompoundDrawables(null, null, drawableClicked, null)
                 true
             }
             binding.stepsLayout.addView(textView)
@@ -156,17 +195,15 @@ class TaskPage : AppCompatActivity() {
     }
 
     private fun deleteTask(id: String) {
-        binding.deleteTaskButton.setOnClickListener {
-            startLoadingToDelete()
-            viewModel.deleteTask(id)
-            viewModel.deleteTaskMessage.observe(this) { message ->
-                stopLoadingDeleting()
-                if (message == "true") {
-                    Toast.makeText(this, "Task Deleted Successfully", Toast.LENGTH_SHORT).show()
-                    finish()
-                } else {
-                    Toast.makeText(this, message, Toast.LENGTH_SHORT).show()
-                }
+        startLoadingToDelete()
+        viewModel.deleteTask(id)
+        viewModel.deleteTaskMessage.observe(this) { message ->
+            stopLoadingDeleting()
+            if (message == "true") {
+                Toast.makeText(this, "Task Deleted Successfully", Toast.LENGTH_SHORT).show()
+                finish()
+            } else {
+                Toast.makeText(this, message, Toast.LENGTH_SHORT).show()
             }
         }
     }
@@ -208,15 +245,12 @@ class TaskPage : AppCompatActivity() {
         binding.blockingView.visibility = View.VISIBLE
         binding.blockingView.setBackgroundColor(getColor(R.color.transparent))
         binding.noConnection.visibility = View.GONE
-        binding.progressCircular.visibility = View.GONE
-        binding.deleteTaskButton.text = null
-        binding.deleteProgressCircular.visibility = View.VISIBLE
+        binding.progressCircular.visibility = View.VISIBLE
     }
 
     private fun stopLoadingDeleting() {
-        binding.deleteProgressCircular.visibility = View.GONE
         binding.blockingView.setBackgroundColor(getColor(R.color.white))
-        binding.deleteTaskButton.text = getString(R.string.delete)
+        binding.progressCircular.visibility = View.GONE
         binding.blockingView.visibility = View.GONE
     }
 
@@ -237,11 +271,26 @@ class TaskPage : AppCompatActivity() {
     }
 
     private fun editTask() {
-        binding.editTaskButton.setOnClickListener {
+        val task: Task = intent.getParcelableExtra("task")!!
+        val intent = Intent(this, UpdateTask::class.java)
+        intent.putExtra("task", task)
+        startActivity(intent)
+    }
+
+    private fun completeSteps() {
+        binding.updateTaskButton.setOnClickListener {
+            val stepsName = stepsList.map { it.stepName }
+            val stepsCompleted = stepsList.map { it.completed }
             val task: Task = intent.getParcelableExtra("task")!!
-            val intent = Intent(this, UpdateTask::class.java)
-            intent.putExtra("task", task)
-            startActivity(intent)
+            viewModel.completeStep(task.id, stepsName, stepsCompleted)
+            viewModel.completeStepsMessage.observe(this) { message ->
+                if (message == "true") {
+                    Toast.makeText(this, "Steps Completed Successfully", Toast.LENGTH_SHORT).show()
+                    finish()
+                } else {
+                    Toast.makeText(this, message, Toast.LENGTH_SHORT).show()
+                }
+            }
         }
     }
 

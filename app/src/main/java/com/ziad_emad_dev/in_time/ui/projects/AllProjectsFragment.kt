@@ -9,6 +9,7 @@ import android.widget.Toast
 import androidx.fragment.app.Fragment
 import com.ziad_emad_dev.in_time.databinding.FragmentProjectsAllBinding
 import com.ziad_emad_dev.in_time.ui.create.CreateProject
+import com.ziad_emad_dev.in_time.ui.projects.project.ProjectsAdapter
 import com.ziad_emad_dev.in_time.viewmodels.ProjectViewModel
 
 class AllProjectsFragment : Fragment() {

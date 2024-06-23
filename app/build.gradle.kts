@@ -54,6 +54,7 @@ dependencies {
     implementation("androidx.activity:activity-ktx:1.9.0")
     implementation("androidx.activity:activity-ktx:1.9.0")
     implementation("androidx.activity:activity-ktx:1.9.0")
+    implementation("androidx.activity:activity-ktx:1.9.0")
     implementation("androidx.activity:activity:1.9.0")
     testImplementation("junit:junit:4.13.2")
     androidTestImplementation("androidx.test.ext:junit:1.1.5")
@@ -75,7 +76,7 @@ dependencies {
 //    Moshi
     implementation("com.squareup.moshi:moshi-kotlin:1.14.0")
 //    Converters
-    implementation("com.squareup.retrofit2:converter-gson:2.4.0")
+    implementation("com.squareup.retrofit2:converter-gson:2.9.0")
     implementation("com.squareup.retrofit2:converter-scalars:2.9.0")
     implementation("com.squareup.retrofit2:converter-moshi:2.9.0")
 //    OkHttp
@@ -85,4 +86,12 @@ dependencies {
     implementation("io.coil-kt:coil:2.4.0")
 //    Glide
     implementation("com.github.bumptech.glide:glide:4.12.0")
+//    Socket
+    implementation("com.squareup.okhttp3:okhttp:4.11.0")
+    implementation("com.squareup.retrofit2:retrofit:2.9.0")
+    implementation("com.squareup.retrofit2:converter-gson:2.9.0")
+    implementation("com.squareup.okhttp3:logging-interceptor:4.9.1")
+    implementation("io.socket:socket.io-client:2.0.0")
+    implementation("org.jetbrains.kotlinx:kotlinx-coroutines-core:1.7.3")
+
 }

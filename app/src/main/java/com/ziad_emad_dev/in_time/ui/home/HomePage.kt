@@ -4,6 +4,7 @@ import android.annotation.SuppressLint
 import android.app.AlertDialog
 import android.content.Intent
 import android.os.Bundle
+import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.widget.Button
@@ -203,8 +204,10 @@ class HomePage : AppCompatActivity() {
                 if (link.text.toString().trim().isEmpty()) {
                     linkLayout.error = getString(R.string.empty_field)
                 } else {
-                    val original = link.text.toString()
-                    val result = original.replace("intime-9hga.onrender.com/api/v1/user/projects/joinProject/", "")
+                    val fullLink = link.text.toString().trim()
+                    val result = fullLink.substringAfterLast("joinProject/")
+                    Log.d("link", fullLink)
+                    Log.d("link", result)
                     viewModel.joinProject(result)
                     viewModel.joinProjectMessage.observe(this) { message ->
                         if (message == "true") {

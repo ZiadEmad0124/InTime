@@ -7,6 +7,7 @@ import android.content.Context
 import android.content.Intent
 import android.os.Bundle
 import android.view.View
+import android.widget.PopupMenu
 import android.widget.TextView
 import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
@@ -18,6 +19,8 @@ import com.ziad_emad_dev.in_time.databinding.ActivityProjectPageBinding
 import com.ziad_emad_dev.in_time.network.profile.ProfileManager
 import com.ziad_emad_dev.in_time.network.project.Project
 import com.ziad_emad_dev.in_time.network.tasks.Task
+import com.ziad_emad_dev.in_time.ui.chat.ChatPage
+import com.ziad_emad_dev.in_time.ui.my_project.MyProject
 import com.ziad_emad_dev.in_time.ui.projects.members.MembersAdapter
 import com.ziad_emad_dev.in_time.viewmodels.ProjectViewModel
 
@@ -27,6 +30,10 @@ class ProjectPage : AppCompatActivity() {
     private lateinit var binding: ActivityProjectPageBinding
 
     private lateinit var profileManager: ProfileManager
+
+    private var membersNames = ArrayList<String>()
+    private var membersAvatars = ArrayList<String>()
+    private var membersIds = ArrayList<String>()
 
     private var admin = false
     private var adminId = ""
@@ -48,23 +55,29 @@ class ProjectPage : AppCompatActivity() {
 
         myToolbar(project.name)
 
-        project.members.forEach {  member ->
+        for (member in project.members) {
             if (member.memberId == profileManager.getProfileId() && member.role == "admin") {
                 admin = true
                 adminId = member.memberId
-                binding.shareProjectButton.visibility = View.VISIBLE
-                binding.editProjectButton.visibility = View.VISIBLE
-                binding.addTaskButtonContainer.visibility = View.VISIBLE
-                binding.deleteProjectButtonContainer.visibility = View.VISIBLE
+                binding.myToolbar.menu.visibility = View.VISIBLE
             }
         }
 
         setMembers(project.id)
+        viewTasks()
+        goToChat()
+    }
 
-        deleteProject(project.id)
-        editProject()
-        shareLink()
-//        addTasks()
+    private fun goToChat() {
+        binding.chatButton.setOnClickListener {
+            val project: Project = intent.getParcelableExtra("project")!!
+            val intent = Intent(this, ChatPage::class.java)
+            intent.putExtra("project", project)
+            intent.putExtra("membersNames", membersNames)
+            intent.putExtra("membersAvatars", membersAvatars)
+            intent.putExtra("membersIds", membersIds)
+            startActivity(intent)
+        }
     }
 
     private fun myToolbar(projectName: String) {
@@ -73,6 +86,35 @@ class ProjectPage : AppCompatActivity() {
         binding.myToolbar.back.setOnClickListener {
             finish()
         }
+        binding.myToolbar.menu.setImageResource(R.drawable.ic_options)
+        binding.myToolbar.menu.setOnClickListener {
+            showPopupMenu(it)
+        }
+        binding.myToolbar.menu.visibility = View.GONE
+    }
+
+    private fun showPopupMenu(view: View) {
+        val popupMenu = PopupMenu(this, view, 0, 0, R.style.PopupMenuStyle)
+        popupMenu.menuInflater.inflate(R.menu.project_menu, popupMenu.menu)
+        popupMenu.setOnMenuItemClickListener { menuItem ->
+            when (menuItem.itemId) {
+                R.id.editProject -> {
+                    editProject()
+                    true
+                }
+                R.id.deleteProject -> {
+                    val task: Task = intent.getParcelableExtra("task")!!
+                    deleteProject(task.id)
+                    true
+                }
+                R.id.shareProject -> {
+                    shareLink()
+                    true
+                }
+                else -> false
+            }
+        }
+        popupMenu.show()
     }
 
     private fun getProject(id: String) {
@@ -97,17 +139,15 @@ class ProjectPage : AppCompatActivity() {
     }
 
     private fun deleteProject(id: String) {
-        binding.deleteProjectButton.setOnClickListener {
-            startLoadingToDelete()
-            viewModel.deleteProject(id)
-            viewModel.deleteProjectMessage.observe(this) { message ->
-                stopLoadingDeleting()
-                if (message == "true") {
-                    Toast.makeText(this, "Project Deleted Successfully", Toast.LENGTH_SHORT).show()
-                    finish()
-                } else {
-                    Toast.makeText(this, message, Toast.LENGTH_SHORT).show()
-                }
+        startLoadingToDelete()
+        viewModel.deleteProject(id)
+        viewModel.deleteProjectMessage.observe(this) { message ->
+            stopLoadingDeleting()
+            if (message == "true") {
+                Toast.makeText(this, "Project Deleted Successfully", Toast.LENGTH_SHORT).show()
+                finish()
+            } else {
+                Toast.makeText(this, message, Toast.LENGTH_SHORT).show()
             }
         }
     }
@@ -117,9 +157,14 @@ class ProjectPage : AppCompatActivity() {
         viewModel.getMembersMessage.observe(this) { message ->
             if (message == "true") {
                 viewModel.getMembers.observe(this) { members ->
-                    binding.memberRecyclerView.adapter = MembersAdapter(this, members as ArrayList, admin, adminId)
+                    binding.memberRecyclerView.adapter = MembersAdapter(this, members as ArrayList, id, admin, adminId)
                     binding.memberRecyclerView.setHasFixedSize(true)
                     getProject(id)
+                    for (member in members) {
+                        membersNames.add(member.name)
+                        membersAvatars.add(member.avatar)
+                        membersIds.add(member.id)
+                    }
                 }
             } else {
                 Toast.makeText(this, message, Toast.LENGTH_SHORT).show()
@@ -148,40 +193,32 @@ class ProjectPage : AppCompatActivity() {
         binding.blockingView.visibility = View.VISIBLE
         binding.blockingView.setBackgroundColor(getColor(R.color.transparent))
         binding.noConnection.visibility = View.GONE
-        binding.progressCircular.visibility = View.GONE
-        binding.deleteProjectButton.text = null
-        binding.deleteProgressCircular.visibility = View.VISIBLE
+        binding.progressCircular.visibility = View.VISIBLE
     }
 
     private fun stopLoadingDeleting() {
-        binding.deleteProgressCircular.visibility = View.GONE
         binding.blockingView.setBackgroundColor(getColor(R.color.white))
-        binding.deleteProjectButton.text = getString(R.string.delete)
         binding.blockingView.visibility = View.GONE
+        binding.progressCircular.visibility = View.GONE
     }
 
-
     private fun editProject() {
-        binding.editProjectButton.setOnClickListener {
-            val project: Project = intent.getParcelableExtra("project")!!
-            val intent = Intent(this, UpdateProject::class.java)
-            intent.putExtra("project", project)
-            startActivity(intent)
-        }
+        val project: Project = intent.getParcelableExtra("project")!!
+        val intent = Intent(this, UpdateProject::class.java)
+        intent.putExtra("project", project)
+        startActivity(intent)
     }
 
     private fun shareLink() {
-        binding.shareProjectButton.setOnClickListener {
-            val project: Project = intent.getParcelableExtra("project")!!
-            viewModel.shareProject(project.id)
-            viewModel.shareProjectMessage.observe(this) { message ->
-                if (message == "true") {
-                    viewModel.shareProjectLink.observe(this) { link ->
-                        showBottomSheet(link)
-                    }
-                } else {
-                    Toast.makeText(this, message, Toast.LENGTH_SHORT).show()
+        val project: Project = intent.getParcelableExtra("project")!!
+        viewModel.shareProject(project.id)
+        viewModel.shareProjectMessage.observe(this) { message ->
+            if (message == "true") {
+                viewModel.shareProjectLink.observe(this) { link ->
+                    showBottomSheet(link)
                 }
+            } else {
+                Toast.makeText(this, message, Toast.LENGTH_SHORT).show()
             }
         }
     }
@@ -214,11 +251,23 @@ class ProjectPage : AppCompatActivity() {
         project.members.forEach {  member ->
             if (member.memberId == profileManager.getProfileId() && member.role == "admin") {
                 admin = true
-                binding.shareProjectButton.visibility = View.VISIBLE
-                binding.editProjectButton.visibility = View.VISIBLE
-                binding.addTaskButtonContainer.visibility = View.VISIBLE
-                binding.deleteProjectButtonContainer.visibility = View.VISIBLE
+                binding.myToolbar.menu.visibility = View.VISIBLE
             }
+        }
+    }
+
+    private fun viewTasks() {
+        binding.viewTasks.setOnClickListener {
+            val project: Project = intent.getParcelableExtra("project")!!
+            val intent = Intent(this, MyProject::class.java)
+            intent.putExtra("projectId", project.id)
+            intent.putExtra("admin", admin)
+            intent.putExtra("adminId", adminId)
+            intent.putExtra("project", project)
+            intent.putExtra("membersNames", membersNames)
+            intent.putExtra("membersAvatars", membersAvatars)
+            intent.putExtra("membersIds", membersIds)
+            startActivity(intent)
         }
     }
 

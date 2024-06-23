@@ -2,6 +2,8 @@ package com.ziad_emad_dev.in_time.ui.home
 
 import android.content.Intent
 import android.os.Bundle
+import android.text.Editable
+import android.text.TextWatcher
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -21,6 +23,8 @@ class HomeFragment : Fragment() {
     private val binding get() = _binding!!
 
     private lateinit var profileManager: ProfileManager
+
+    private lateinit var adapter: SearchAdapter
 
     private val viewModel by lazy {
         HomeViewModel(requireContext())
@@ -42,7 +46,45 @@ class HomeFragment : Fragment() {
         startLoading()
 
         fetchHome()
+
+        runSearch()
     }
+
+    private fun runSearch() {
+        adapter = SearchAdapter(requireContext(), ArrayList())
+        binding.recyclerView.adapter = adapter
+
+        binding.searchBar.addTextChangedListener(object : TextWatcher {
+            override fun beforeTextChanged(s: CharSequence?, start: Int, count: Int, after: Int) {}
+
+            override fun onTextChanged(s: CharSequence?, start: Int, before: Int, count: Int) {
+                if (!s.isNullOrEmpty()) {
+                    binding.recyclerView.visibility = View.VISIBLE
+                    binding.homeLayout1.visibility = View.GONE
+                    binding.homeLayout2.visibility = View.GONE
+                    binding.recentTasks.visibility = View.GONE
+                    binding.recentTasksLayout.visibility = View.GONE
+                    performSearch(s.toString())
+                } else {
+                    binding.recyclerView.visibility = View.GONE
+                    binding.homeLayout1.visibility = View.VISIBLE
+                    binding.homeLayout2.visibility = View.VISIBLE
+                    binding.recentTasks.visibility = View.VISIBLE
+                    binding.recentTasksLayout.visibility = View.VISIBLE
+                }
+            }
+
+            override fun afterTextChanged(s: Editable?) {}
+        })
+    }
+
+    private fun performSearch(query: String) {
+        val searchResults = viewModel.getTasks.value?.filter {
+            it.name.contains(query, ignoreCase = true)
+        } ?: emptyList()
+        adapter.updateData(searchResults)
+    }
+
 
     private fun fetchHome() {
         viewModel.fetchProfile()

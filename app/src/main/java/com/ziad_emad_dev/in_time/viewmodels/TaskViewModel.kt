@@ -56,6 +56,9 @@ class TaskViewModel(context: Context) : ViewModel() {
     private val _completeTaskMessage = MutableLiveData<String>()
     val completeTaskMessage get() = _completeTaskMessage
 
+    private val _completeStepsMessage = MutableLiveData<String>()
+    val completeStepsMessage get() = _completeStepsMessage
+
     fun createTask(name: String, description: String?, priority: String, startAt: String, endAt: String, taskCoverFile: File?, steps: List<String>?, tag: Tag) {
 
         val myName = name.toRequestBody("text/plain".toMediaTypeOrNull())
@@ -119,7 +122,7 @@ class TaskViewModel(context: Context) : ViewModel() {
     fun getTasks() {
         viewModelScope.launch {
             try {
-                val response = InTimeApi.retrofitService.getTasks("Bearer ${sessionManager.fetchAuthToken().toString()}", 1)
+                val response = InTimeApi.retrofitService.getTasks("Bearer ${sessionManager.fetchAuthToken().toString()}", 1, false)
                 if (response.isSuccessful) {
                     _getTasksMessage.value = response.body()?.success.toString()
                     _getTasks.value = response.body()?.record!!
@@ -237,6 +240,32 @@ class TaskViewModel(context: Context) : ViewModel() {
                 }
             } catch (e: Exception) {
                 _completeTaskMessage.value = "Failed Connect, Try Again"
+            }
+        }
+    }
+
+    fun completeStep(taskId: String, stepsName: List<String>, stepsCompleted: List<Boolean>) {
+
+        val stepNameParts = stepsName.mapIndexed { index, step ->
+                MultipartBody.Part.createFormData("steps[$index][stepDisc]", step)
+            }
+
+
+        val stepCompletedParts = stepsCompleted.mapIndexed { index, step ->
+                MultipartBody.Part.createFormData("steps[$index][completed]", step.toString())
+            }
+
+        viewModelScope.launch {
+            try {
+                val response = InTimeApi.retrofitService.updateSteps("Bearer ${sessionManager.fetchAuthToken().toString()}"
+                    , taskId, stepNameParts, stepCompletedParts)
+                if (response.isSuccessful) {
+                    _completeStepsMessage.value = response.body()?.success.toString()
+                } else {
+                    _completeStepsMessage.value = "Complete Step failed"
+                }
+            } catch (e: Exception) {
+                _completeStepsMessage.value = e.message
             }
         }
     }

@@ -35,17 +35,12 @@ class SignIn : Fragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
-        signInWith()
         focusOnEditTextLayout()
         passwordToggle()
         clickOnButtons()
         responseComing()
 
         binding.password.transformationMethod = AsteriskPasswordTransformation()
-    }
-
-    private fun signInWith() {
-        binding.signWithSocialMedia.signTextView.text = getString(R.string.signin_with)
     }
 
     private fun focusOnEditTextLayout() {

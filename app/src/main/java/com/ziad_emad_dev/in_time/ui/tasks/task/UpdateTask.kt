@@ -117,12 +117,12 @@ class UpdateTask : AppCompatActivity() {
 
         val startDateCalendar = Calendar.getInstance(TimeZone.getTimeZone("UTC")).apply {
             time = startDateView!!
-            add(Calendar.HOUR_OF_DAY, 3)
+//            add(Calendar.HOUR_OF_DAY, 6)
         }
 
         val endDateCalendar = Calendar.getInstance(TimeZone.getTimeZone("UTC")).apply {
             time = endDateView!!
-            add(Calendar.HOUR_OF_DAY, 3)
+//            add(Calendar.HOUR_OF_DAY, 6)
         }
 
         startDate = outputFormat.format(startDateCalendar.time)

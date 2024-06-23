@@ -6,8 +6,10 @@ import androidx.appcompat.app.AppCompatActivity
 import com.google.android.material.tabs.TabLayoutMediator
 import com.ziad_emad_dev.in_time.R
 import com.ziad_emad_dev.in_time.databinding.ActivityMyProjectBinding
+import com.ziad_emad_dev.in_time.network.project.Project
 import com.ziad_emad_dev.in_time.ui.MyViewPagerAdapter
 
+@Suppress("DEPRECATION")
 class MyProject : AppCompatActivity() {
 
     private lateinit var binding: ActivityMyProjectBinding
@@ -36,11 +38,45 @@ class MyProject : AppCompatActivity() {
 
         val adapter = MyViewPagerAdapter(supportFragmentManager, lifecycle)
 
+        val admin = intent.getBooleanExtra("admin", false)
+        val adminId = intent.getStringExtra("adminId")
+        val projectId = intent.getStringExtra("projectId")
+        val membersName = intent.getStringArrayListExtra("membersNames")!!
+        val membersImage = intent.getStringArrayListExtra("membersAvatars")!!
+        val membersIds = intent.getStringArrayListExtra("membersIds")!!
+
+        val bundle = Bundle().apply {
+            val project: Project = intent.getParcelableExtra("project")!!
+            putString("projectId", projectId)
+            putBoolean("admin", admin)
+            putString("adminId", adminId)
+            putParcelable("project", project)
+            putStringArrayList("membersNames", membersName)
+            putStringArrayList("membersAvatars", membersImage)
+            putStringArrayList("membersIds", membersIds)
+        }
+
+        val projectAllTasksFragment = ProjectAllTasks().apply {
+            arguments = bundle
+        }
+
+        val projectFinishedTasks = ProjectFinishedTasks().apply {
+            arguments = bundle
+        }
+
+        val projectInProgressTasks = ProjectInProgressTasks().apply {
+            arguments = bundle
+        }
+
+        val projectWaitToStartTasks = ProjectWaitToStartTasks().apply {
+            arguments = bundle
+        }
+
         adapter.let {
-            it.addFragment(ProjectAllTasks(), getString(R.string.all))
-            it.addFragment(ProjectFinishedTasks(), getString(R.string.finished))
-            it.addFragment(ProjectInProgressTasks(), getString(R.string.in_progress))
-            it.addFragment(ProjectWaitToStartTasks(), getString(R.string.wait_to_start))
+            it.addFragment(projectAllTasksFragment, getString(R.string.all))
+            it.addFragment(projectFinishedTasks, getString(R.string.finished))
+            it.addFragment(projectInProgressTasks, getString(R.string.in_progress))
+            it.addFragment(projectWaitToStartTasks, getString(R.string.wait_to_start))
             it.notifyDataSetChanged()
         }
 

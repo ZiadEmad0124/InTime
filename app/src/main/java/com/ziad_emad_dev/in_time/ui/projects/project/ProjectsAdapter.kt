@@ -1,4 +1,4 @@
-package com.ziad_emad_dev.in_time.ui.projects
+package com.ziad_emad_dev.in_time.ui.projects.project
 
 import android.content.Context
 import android.content.Intent
@@ -13,7 +13,6 @@ import com.bumptech.glide.Glide
 import com.google.android.material.card.MaterialCardView
 import com.ziad_emad_dev.in_time.R
 import com.ziad_emad_dev.in_time.network.project.Project
-import com.ziad_emad_dev.in_time.ui.projects.project.ProjectPage
 
 class ProjectsAdapter(private val context: Context, private val projects: ArrayList<Project>) :
     RecyclerView.Adapter<ProjectsAdapter.ProjectsViewHolder>() {
@@ -22,7 +21,6 @@ class ProjectsAdapter(private val context: Context, private val projects: ArrayL
         val projectCard: MaterialCardView = itemView.findViewById(R.id.projectCard)
         val projectName: TextView = itemView.findViewById(R.id.projectName)
         val projectCover: ImageView = itemView.findViewById(R.id.projectCover)
-        val viewTasks: MaterialCardView = itemView.findViewById(R.id.viewTasks)
     }
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ProjectsViewHolder {
@@ -49,10 +47,6 @@ class ProjectsAdapter(private val context: Context, private val projects: ArrayL
             val intent = Intent(context, ProjectPage::class.java)
             intent.putExtra("project", project)
             context.startActivity(intent)
-        }
-
-        holder.viewTasks.setOnClickListener {
-
         }
     }
 }

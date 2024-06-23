@@ -84,8 +84,7 @@
         <item name="strokeWidth">@dimen/stroke_width</item>
     </style>
 
-    <style name="InTime.SearchBar" parent="Widget.AppCompat.SearchView">
-        <item name="android:queryBackground">@android:color/transparent</item>
+    <style name="InTime.SearchBar" parent="Widget.AppCompat.EditText">
         <item name="android:lines">1</item>
         <item name="android:background">@drawable/search_bar_background</item>
         <item name="drawableTint">@color/secondary</item>
@@ -202,6 +201,10 @@
 
     <style name="InTime.PickerDialogTheme" parent="Theme.AppCompat.Light.Dialog">
         <item name="colorAccent">@color/primary</item>
+    </style>
+
+    <style name="PopupMenuStyle" parent="Widget.AppCompat.PopupMenu">
+        <item name="android:popupBackground">@color/white</item>
     </style>
 
 </resources>

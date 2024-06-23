@@ -151,4 +151,8 @@
     <string name="link">Link</string>
     <string name="join_project">Join Project</string>
     <string name="join">Join</string>
+    <string name="completed1">Completed1</string>
+    <string name="search_task">Search Task</string>
+    <string name="type_your_message">Type your message...</string>
+    <string name="add_a_comment">Add a comment...</string>
 </resources>

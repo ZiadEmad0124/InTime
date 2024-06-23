@@ -19,21 +19,30 @@
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
+            android:gravity="center"
             android:orientation="vertical"
             android:padding="@dimen/standard_25">
 
-            <include
-                android:id="@+id/signWithSocialMedia"
-                layout="@layout/layout_sign_with_social_media"
-                android:layout_width="match_parent"
-                android:layout_height="0dp"
-                android:layout_weight="1" />
+            <com.google.android.material.card.MaterialCardView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_margin="@dimen/standard_25"
+                app:cardElevation="10dp">
+
+                <ImageView
+                    android:layout_width="120dp"
+                    android:layout_height="120dp"
+                    android:importantForAccessibility="no"
+                    android:src="@drawable/logo" />
+
+            </com.google.android.material.card.MaterialCardView>
 
             <com.google.android.material.textfield.TextInputLayout
                 android:id="@+id/nameLayout"
                 style="@style/InTime.TextInputLayout"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
+                android:layout_marginTop="@dimen/standard_20"
                 android:autofillHints="name"
                 android:hint="@string/name"
                 android:inputType="text">
@@ -51,7 +60,7 @@
                 style="@style/InTime.TextInputLayout"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_marginTop="@dimen/standard_25"
+                android:layout_marginTop="@dimen/standard_40"
                 android:autofillHints="emailAddress"
                 android:hint="@string/email"
                 android:inputType="textEmailAddress">
@@ -69,7 +78,7 @@
                 style="@style/InTime.TextInputLayout"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_marginTop="@dimen/standard_25"
+                android:layout_marginTop="@dimen/standard_40"
                 android:autofillHints="phone"
                 android:hint="@string/phone"
                 android:inputType="phone">
@@ -87,7 +96,7 @@
                 style="@style/InTime.TextInputLayout"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_marginTop="@dimen/standard_25"
+                android:layout_marginTop="@dimen/standard_40"
                 android:autofillHints="password"
                 android:hint="@string/password"
                 android:inputType="textEmailAddress"
@@ -107,7 +116,7 @@
                 style="@style/InTime.TextInputLayout"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_marginTop="@dimen/standard_25"
+                android:layout_marginTop="@dimen/standard_40"
                 android:autofillHints="password"
                 android:hint="@string/confirm_password"
                 android:inputType="textEmailAddress"

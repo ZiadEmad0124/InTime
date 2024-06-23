@@ -10,7 +10,7 @@ data class Step(
     val stepDisc: String,
 
     @SerializedName("completed")
-    val completed: Boolean,
+    var completed: Boolean,
 
     @SerializedName("_id")
     val id: String

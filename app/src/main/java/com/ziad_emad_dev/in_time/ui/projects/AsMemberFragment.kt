@@ -9,6 +9,7 @@ import android.widget.Toast
 import androidx.fragment.app.Fragment
 import com.ziad_emad_dev.in_time.databinding.FragmentProjectsAsMemberBinding
 import com.ziad_emad_dev.in_time.ui.create.CreateProject
+import com.ziad_emad_dev.in_time.ui.projects.project.ProjectsAdapter
 import com.ziad_emad_dev.in_time.viewmodels.ProjectViewModel
 
 class AsMemberFragment : Fragment() {
@@ -37,7 +38,7 @@ class AsMemberFragment : Fragment() {
     }
 
     private fun getProjects() {
-        viewModel.getProjects("member")
+        viewModel.getProjects("user")
         viewModel.getProjectsMessage.observe(viewLifecycleOwner) { message ->
             if (message == "Get all projects success") {
                 viewModel.getProjects.observe(viewLifecycleOwner) { projects ->
