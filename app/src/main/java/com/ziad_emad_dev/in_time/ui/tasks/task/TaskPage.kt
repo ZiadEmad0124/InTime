@@ -45,6 +45,18 @@ class TaskPage : AppCompatActivity() {
 
         val task: Task = intent.getParcelableExtra("task")!!
 
+        if (task.completed) {
+          binding.updateTaskButton.visibility = View.GONE
+            binding.completeTaskButton.visibility = View.GONE
+        } else {
+            for (step in task.steps) {
+                if (!step.completed) {
+                    binding.updateTaskButton.visibility = View.VISIBLE
+                }
+                break
+            }
+        }
+
         myToolbar(task.name)
 
         getTask(task.id)

@@ -58,8 +58,12 @@ class ProjectsTasksAdapter(private val context: Context, private val projectTask
 
         val projectTask = projectTasks[position]
 
-        holder.taskTagColor.setCardBackgroundColor(ContextCompat.getColor(context, R.color.primary))
-        holder.taskTagName.text = "code"
+        if (projectTask.tag?.name.isNullOrEmpty()) {
+            holder.taskTagColor.visibility = View.GONE
+        } else {
+            holder.taskTagColor.setCardBackgroundColor(ContextCompat.getColor(context, R.color.primary))
+            holder.taskTagName.text = projectTask.tag?.name
+        }
 
         var index = -1
 

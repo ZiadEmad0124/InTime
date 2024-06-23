@@ -214,6 +214,47 @@ class TaskViewModel(context: Context) : ViewModel() {
         }
     }
 
+    fun updateTask(id: String, description: String?, priority: String,
+                   taskCoverFile: File?, steps: List<String>?, tag: Tag) {
+
+        val myDescription = description?.toRequestBody("text/plain".toMediaTypeOrNull())
+        val myPriority = priority.toRequestBody("text/plain".toMediaTypeOrNull())
+
+        val myTaskCoverFile = if (taskCoverFile == null) {
+            null
+        } else {
+            val requestFile = taskCoverFile.asRequestBody("image/jpeg".toMediaTypeOrNull())
+            MultipartBody.Part.createFormData("image", taskCoverFile.name, requestFile)
+        }
+
+        val stepParts = if (steps.isNullOrEmpty()) {
+            null
+        } else {
+            steps.mapIndexed { index, step ->
+                MultipartBody.Part.createFormData("steps[$index][stepDisc]", step)
+            }
+        }
+
+        val tagName = tag.name.toRequestBody("text/plain".toMediaTypeOrNull())
+        val tagColor = tag.color.toRequestBody("text/plain".toMediaTypeOrNull())
+
+        viewModelScope.launch {
+            try {
+                val response = InTimeApi.retrofitService.updateTask("Bearer ${sessionManager.fetchAuthToken().toString()}", id,
+                    myDescription, myPriority, myTaskCoverFile, stepParts, tagName, tagColor)
+                if (response.isSuccessful) {
+                    _updateTaskMessage.value = response.body()?.success.toString()
+                } else {
+                    val errorResponse = response.errorBody()?.string()
+                    val errorCreateTaskResponse = Gson().fromJson(errorResponse, UpdateTaskResponse::class.java)
+                    _updateTaskMessage.value = errorCreateTaskResponse.message.toString()
+                }
+            } catch (e: Exception) {
+                _updateTaskMessage.value = "Failed Connect, Try Again"
+            }
+        }
+    }
+
     fun removeCover(taskId: String) {
         viewModelScope.launch {
             try {

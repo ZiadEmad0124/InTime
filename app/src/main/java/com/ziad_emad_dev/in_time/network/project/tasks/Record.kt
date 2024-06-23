@@ -3,10 +3,15 @@ package com.ziad_emad_dev.in_time.network.project.tasks
 import android.os.Parcelable
 import com.google.gson.annotations.SerializedName
 import com.ziad_emad_dev.in_time.network.tasks.Step
+import com.ziad_emad_dev.in_time.network.tasks.Tag
 import kotlinx.parcelize.Parcelize
 
 @Parcelize
 data class Record(
+
+    @SerializedName("tag")
+    val tag: Tag? = null,
+
     @SerializedName("name")
     val name: String,
 
@@ -50,5 +55,8 @@ data class Record(
     val steps: List<Step>,
 
     @SerializedName("__v")
-    val v: Int
+    val v: Int,
+
+    @SerializedName("image")
+    val image: String? = null,
 ) : Parcelable

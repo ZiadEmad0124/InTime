@@ -56,8 +56,10 @@ class ProjectPage : AppCompatActivity() {
         myToolbar(project.name)
 
         for (member in project.members) {
-            if (member.memberId == profileManager.getProfileId() && member.role == "admin") {
-                admin = true
+            if (member.role == "admin") {
+                if (member.memberId == profileManager.getProfileId()) {
+                    admin = true
+                }
                 adminId = member.memberId
                 binding.myToolbar.menu.visibility = View.VISIBLE
             }

@@ -20,8 +20,8 @@ class AdminEditProjectTask : AppCompatActivity() {
 
     private lateinit var binding: ActivityAdminEditProjectTaskBinding
 
-    private var startDate: String = ""
-    private var endDate: String = ""
+    private lateinit var startDate: String
+    private lateinit var endDate: String
 
     private val viewModel by lazy {
         ProjectViewModel(this)
@@ -35,8 +35,6 @@ class AdminEditProjectTask : AppCompatActivity() {
 
         val projectId = intent.getStringExtra("projectId")!!
         val taskId = intent.getStringExtra("taskId")!!
-//        val taskEndAt = intent.getStringExtra("taskEndAt")!!
-//        val taskStartAt = intent.getStringExtra("taskStartAt")!!
 
 
         myToolbar()
@@ -82,38 +80,36 @@ class AdminEditProjectTask : AppCompatActivity() {
 
     private fun fillForm(){
 
-//        val taskName = intent.getStringExtra("taskName")!!
-//        val taskDescription = intent.getStringExtra("taskDescription")!!
-//
-//        binding.taskName.setText(taskName)
-//        binding.taskDescription.setText(taskDescription)
+        val taskName = intent.getStringExtra("taskName")!!
+        binding.taskName.setText(taskName)
 
-//        val inputFormat = SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss.SSSXXX'", Locale.getDefault())
-//        inputFormat.timeZone = TimeZone.getTimeZone("UTC")
-//        val outputFormat = SimpleDateFormat("dd/MM/yyyy HH:mm", Locale.getDefault())
-//        outputFormat.timeZone = TimeZone.getTimeZone("UTC")
-//
-//        val startDateView = inputFormat.parse(taskStartAt)
-//        val endDateView = inputFormat.parse(taskEndAt)
-//
-//        val startDateView1 = inputFormat.parse(taskStartAt)
-//        val endDateView1 = inputFormat.parse(taskEndAt)
-//
-//        val startDateCalendar = Calendar.getInstance(TimeZone.getTimeZone("UTC")).apply {
-//            time = startDateView!!
-////            add(Calendar.HOUR_OF_DAY, 3)
-//        }
-//
-//        val endDateCalendar = Calendar.getInstance(TimeZone.getTimeZone("UTC")).apply {
-//            time = endDateView!!
-////            add(Calendar.HOUR_OF_DAY, 3)
-//        }
-//
-//        startDate = outputFormat.format(startDateCalendar.time)
-//        endDate = outputFormat.format(endDateCalendar.time)
-//
-//        binding.startDateButton.text = outputFormat.format(startDateView1!!)
-//        binding.endDateButton.text = outputFormat.format(endDateView1!!)
+        val taskDescription = intent.getStringExtra("taskDescription")!!
+        binding.taskDescription.setText(taskDescription)
+
+        val inputFormat = SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss.SSS'Z'", Locale.getDefault())
+        val outputFormat = SimpleDateFormat("dd/MM/yyyy HH:mm", Locale.getDefault())
+
+        val taskStartAt = intent.getStringExtra("taskStartAt")!!
+        val taskEndAt = intent.getStringExtra("taskEndAt")!!
+
+        val startDateView = inputFormat.parse(taskStartAt)
+        val endDateView = inputFormat.parse(taskEndAt)
+
+        val startDateCalendar = Calendar.getInstance().apply {
+            time = startDateView!!
+            add(Calendar.HOUR_OF_DAY, 3)
+        }
+
+        val endDateCalendar = Calendar.getInstance().apply {
+            time = endDateView!!
+            add(Calendar.HOUR_OF_DAY, 3)
+        }
+
+        startDate = outputFormat.format(startDateCalendar.time)
+        endDate = outputFormat.format(endDateCalendar.time)
+
+        binding.startDateButton.text = outputFormat.format(startDateCalendar.time)
+        binding.endDateButton.text = outputFormat.format(endDateCalendar.time)
      }
 
     private fun getStartDate() {
@@ -137,19 +133,15 @@ class AdminEditProjectTask : AppCompatActivity() {
                 }, calendar.get(Calendar.HOUR_OF_DAY), calendar.get(Calendar.MINUTE), true)
 
                 timePickerDialog.setOnShowListener {
-                    timePickerDialog.getButton(TimePickerDialog.BUTTON_POSITIVE).setTextColor(
-                        ContextCompat.getColor(this, R.color.primary))
-                    timePickerDialog.getButton(TimePickerDialog.BUTTON_NEGATIVE).setTextColor(
-                        ContextCompat.getColor(this, R.color.primary))
+                    timePickerDialog.getButton(TimePickerDialog.BUTTON_POSITIVE).setTextColor(ContextCompat.getColor(this, R.color.primary))
+                    timePickerDialog.getButton(TimePickerDialog.BUTTON_NEGATIVE).setTextColor(ContextCompat.getColor(this, R.color.primary))
                 }
                 timePickerDialog.show()
             }, year, month, day)
 
             datePickerDialog.setOnShowListener {
-                datePickerDialog.getButton(DatePickerDialog.BUTTON_POSITIVE).setTextColor(
-                    ContextCompat.getColor(this, R.color.primary))
-                datePickerDialog.getButton(DatePickerDialog.BUTTON_NEGATIVE).setTextColor(
-                    ContextCompat.getColor(this, R.color.primary))
+                datePickerDialog.getButton(DatePickerDialog.BUTTON_POSITIVE).setTextColor(ContextCompat.getColor(this, R.color.primary))
+                datePickerDialog.getButton(DatePickerDialog.BUTTON_NEGATIVE).setTextColor(ContextCompat.getColor(this, R.color.primary))
             }
             datePickerDialog.show()
         }
@@ -182,19 +174,15 @@ class AdminEditProjectTask : AppCompatActivity() {
                 }, calendar.get(Calendar.HOUR_OF_DAY), calendar.get(Calendar.MINUTE), true)
 
                 timePickerDialog.setOnShowListener {
-                    timePickerDialog.getButton(TimePickerDialog.BUTTON_POSITIVE).setTextColor(
-                        ContextCompat.getColor(this, R.color.primary))
-                    timePickerDialog.getButton(TimePickerDialog.BUTTON_NEGATIVE).setTextColor(
-                        ContextCompat.getColor(this, R.color.primary))
+                    timePickerDialog.getButton(TimePickerDialog.BUTTON_POSITIVE).setTextColor(ContextCompat.getColor(this, R.color.primary))
+                    timePickerDialog.getButton(TimePickerDialog.BUTTON_NEGATIVE).setTextColor(ContextCompat.getColor(this, R.color.primary))
                 }
                 timePickerDialog.show()
             }, year, month, day)
 
             datePickerDialog.setOnShowListener {
-                datePickerDialog.getButton(DatePickerDialog.BUTTON_POSITIVE).setTextColor(
-                    ContextCompat.getColor(this, R.color.primary))
-                datePickerDialog.getButton(DatePickerDialog.BUTTON_NEGATIVE).setTextColor(
-                    ContextCompat.getColor(this, R.color.primary))
+                datePickerDialog.getButton(DatePickerDialog.BUTTON_POSITIVE).setTextColor(ContextCompat.getColor(this, R.color.primary))
+                datePickerDialog.getButton(DatePickerDialog.BUTTON_NEGATIVE).setTextColor(ContextCompat.getColor(this, R.color.primary))
             }
             datePickerDialog.show()
         }
@@ -206,13 +194,6 @@ class AdminEditProjectTask : AppCompatActivity() {
         targetFormat.timeZone = TimeZone.getTimeZone("UTC")
         val dateObj = originalFormat.parse(date)
         return targetFormat.format(dateObj!!)
-    }
-
-    private fun nameEmptyError(name: String): Boolean {
-        if (name.isEmpty()) {
-            binding.taskName.error = getString(R.string.empty_field)
-        }
-        return name.isEmpty()
     }
 
     private fun startDateEmptyError(start: String): Boolean {
@@ -231,17 +212,16 @@ class AdminEditProjectTask : AppCompatActivity() {
 
     private fun editTask(projectId: String, memberId: String) {
         binding.editButton.setOnClickListener {
-            val name = binding.taskName.text.toString()
-            val disc = binding.taskDescription.text.toString()
+            val taskName = intent.getStringExtra("taskName")!!
+            val name = if (binding.taskName.text.toString() == taskName) null else  binding.taskName.text.toString()
+            val description = binding.taskDescription.text.toString()
 
-            if (!nameEmptyError(name)) {
-                if (!startDateEmptyError(startDate)) {
-                    if (!endDateEmptyError(endDate)) {
-                        startLoading()
-                        val startAt = convertToISO8601(startDate)
-                        val endAt = convertToISO8601(endDate)
-                        viewModel.editProjectTaskAdmin(projectId, memberId, name, disc, startAt, endAt)
-                    }
+            if (!startDateEmptyError(startDate)) {
+                if (!endDateEmptyError(endDate)) {
+                    startLoading()
+                    val startAt = convertToISO8601(startDate)
+                    val endAt = convertToISO8601(endDate)
+                    viewModel.editProjectTaskAdmin(projectId, memberId, name, description, startAt, endAt)
                 }
             }
         }

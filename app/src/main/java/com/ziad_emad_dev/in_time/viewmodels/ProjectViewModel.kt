@@ -280,11 +280,11 @@ class ProjectViewModel(context: Context) : ViewModel() {
         }
     }
 
-    fun editProjectTaskAdmin(projectId: String, taskId: String, name: String, disc: String?, startAt: String, endAt: String) {
+    fun editProjectTaskAdmin(projectId: String, taskId: String, name: String?, disc: String?, startAt: String, endAt: String) {
         viewModelScope.launch {
             try {
 
-                val myName = name.toRequestBody("text/plain".toMediaTypeOrNull())
+                val myName = name?.toRequestBody("text/plain".toMediaTypeOrNull())
                 val myDescription = disc?.toRequestBody("text/plain".toMediaTypeOrNull())
                 val myStartAt = startAt.toRequestBody("text/plain".toMediaTypeOrNull())
                 val myEndAt = endAt.toRequestBody("text/plain".toMediaTypeOrNull())

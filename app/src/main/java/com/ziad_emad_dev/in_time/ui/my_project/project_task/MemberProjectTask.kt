@@ -4,7 +4,6 @@ import android.content.Intent
 import android.graphics.Paint
 import android.os.Bundle
 import android.text.Editable
-import android.util.Log
 import android.view.View
 import android.widget.LinearLayout
 import android.widget.PopupMenu
@@ -18,9 +17,9 @@ import com.ziad_emad_dev.in_time.databinding.ActivityMemberProjectTaskBinding
 import com.ziad_emad_dev.in_time.network.project.tasks.Record
 import com.ziad_emad_dev.in_time.network.tasks.Step
 import com.ziad_emad_dev.in_time.network.tasks.Task
-import com.ziad_emad_dev.in_time.ui.tasks.task.UpdateTask
 import com.ziad_emad_dev.in_time.viewmodels.TaskViewModel
 import java.text.SimpleDateFormat
+import java.util.Calendar
 import java.util.Locale
 
 @Suppress("DEPRECATION")
@@ -47,9 +46,28 @@ class MemberProjectTask : AppCompatActivity() {
 
         val task: Record = intent.getParcelableExtra("projectTask")!!
 
-        Log.e("projectTask", task.toString())
+        if (task.completed) {
+            binding.updateTaskButton.visibility = View.GONE
+            binding.completeTaskButton.visibility = View.GONE
+        } else {
+            for (step in task.steps) {
+                if (!step.completed) {
+                    binding.updateTaskButton.visibility = View.VISIBLE
+                }
+                break
+            }
+        }
 
         window.statusBarColor = ContextCompat.getColor(this, R.color.white_2)
+
+        if (task.completed) {
+            binding.updateTaskButton.visibility = View.GONE
+            binding.completeTaskButton.visibility = View.GONE
+        } else {
+            if (task.steps.isEmpty()) {
+                binding.updateTaskButton.visibility = View.GONE
+            }
+        }
 
         myToolbar(task.name)
 
@@ -77,7 +95,7 @@ class MemberProjectTask : AppCompatActivity() {
         popupMenu.setOnMenuItemClickListener { menuItem ->
             when (menuItem.itemId) {
                 R.id.editTask -> {
-//                    editTask()
+                    editTask()
                     true
                 }
                 else -> false
@@ -102,7 +120,7 @@ class MemberProjectTask : AppCompatActivity() {
 
     private fun setTask(task: Task) {
         Glide.with(this)
-            .load("https://intime-9hga.onrender.com/api/v1/images/")
+            .load("https://intime-9hga.onrender.com/api/v1/images/${task.image}")
             .error(R.drawable.project_image)
             .into(binding.taskCover)
 
@@ -113,8 +131,18 @@ class MemberProjectTask : AppCompatActivity() {
         val startDate = inputFormat.parse(task.startAt)
         val endDate = inputFormat.parse(task.endAt)
 
-        binding.taskStartDate.text = getString(R.string.from_date, outputFormat.format(startDate!!))
-        binding.taskEndDate.text = getString(R.string.to_date, outputFormat.format(endDate!!))
+        val calendarStart = Calendar.getInstance()
+        calendarStart.time = startDate!!
+        calendarStart.add(Calendar.HOUR_OF_DAY, 3)
+        val newStartDate = calendarStart.time
+
+        val calendarEnd = Calendar.getInstance()
+        calendarEnd.time = endDate!!
+        calendarEnd.add(Calendar.HOUR_OF_DAY, 3)
+        val newEndDate = calendarEnd.time
+
+        binding.taskStartDate.text = getString(R.string.from_date, outputFormat.format(newStartDate))
+        binding.taskEndDate.text = getString(R.string.to_date, outputFormat.format(newEndDate))
 
         val priority = when (task.priority) {
             0 -> R.drawable.circle_red
@@ -246,8 +274,8 @@ class MemberProjectTask : AppCompatActivity() {
 
     private fun editTask() {
         val task: Record = intent.getParcelableExtra("projectTask")!!
-        val intent = Intent(this, UpdateTask::class.java)
-        intent.putExtra("task", task)
+        val intent = Intent(this, MemberEditProjectTask::class.java)
+        intent.putExtra("projectTask", task)
         startActivity(intent)
     }
 

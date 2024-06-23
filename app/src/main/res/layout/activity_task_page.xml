@@ -180,7 +180,8 @@
                         android:layout_weight="1"
                         android:padding="17dp"
                         android:text="@string/update"
-                        android:textColor="@color/primary" />
+                        android:textColor="@color/primary"
+                        android:visibility="gone" />
 
                     <FrameLayout
                         android:layout_width="match_parent"

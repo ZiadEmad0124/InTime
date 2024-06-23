@@ -9,6 +9,7 @@ import com.ziad_emad_dev.in_time.network.InTimeApi
 import com.ziad_emad_dev.in_time.network.auth.SessionManager
 import com.ziad_emad_dev.in_time.network.auth.refresh_token.RefreshTokenRequest
 import com.ziad_emad_dev.in_time.network.auth.sign_out.SignOutRequest
+import com.ziad_emad_dev.in_time.network.notification.Record
 import com.ziad_emad_dev.in_time.network.profile.ProfileManager
 import com.ziad_emad_dev.in_time.network.project.get_project.GetProjectResponse
 import com.ziad_emad_dev.in_time.network.tasks.Task
@@ -45,6 +46,12 @@ class HomeViewModel(context: Context) : ViewModel() {
 
     private val _getSearchTaskMessage = MutableLiveData<String>()
     val getSearchTaskMessage get() = _getSearchTaskMessage
+
+    private val _getNotifications = MutableLiveData<Record>()
+    val getNotifications get() = _getNotifications
+
+    private val _getNotificationsMessage = MutableLiveData<String>()
+    val getNotificationsMessage get() = _getNotificationsMessage
 
     fun refreshToken() {
 
@@ -138,7 +145,9 @@ class HomeViewModel(context: Context) : ViewModel() {
     fun getTasks() {
         viewModelScope.launch {
             try {
-                val response = InTimeApi.retrofitService.getTasks("Bearer ${sessionManager.fetchAuthToken().toString()}", -1, false)
+                val response = InTimeApi.retrofitService.getTwoTasks("Bearer ${sessionManager.fetchAuthToken().toString()}",
+                    -1, false, completed = false, sortBy = "createdAt"
+                )
                 if (response.isSuccessful) {
                     _getTasksMessage.value = response.body()?.success.toString()
                     _getTasks.value = response.body()?.record!!
@@ -179,6 +188,22 @@ class HomeViewModel(context: Context) : ViewModel() {
                 }
             } catch (e: Exception) {
                 _getSearchTaskMessage.value = "Failed Connect, Try Again"
+            }
+        }
+    }
+
+    fun getNotification() {
+        viewModelScope.launch {
+            try {
+                val response = InTimeApi.retrofitService.getNotifications("Bearer ${sessionManager.fetchAuthToken().toString()}")
+                if (response.isSuccessful) {
+                    _getNotificationsMessage.value = response.body()?.success.toString()
+                    _getNotifications.value = response.body()?.record!!
+                } else {
+                    _getNotificationsMessage.value = "Get Notification failed"
+                }
+            } catch (e: Exception) {
+                _getNotificationsMessage.value = "Failed Connect, Try Again"
             }
         }
     }

@@ -16,6 +16,7 @@ import com.ziad_emad_dev.in_time.network.auth.sign_out.SignOutRequest
 import com.ziad_emad_dev.in_time.network.auth.sign_out.SignOutResponse
 import com.ziad_emad_dev.in_time.network.auth.sign_up.SignUpRequest
 import com.ziad_emad_dev.in_time.network.auth.sign_up.SignUpResponse
+import com.ziad_emad_dev.in_time.network.notification.NotificationResponse
 import com.ziad_emad_dev.in_time.network.profile.change_password.ChangePasswordRequest
 import com.ziad_emad_dev.in_time.network.profile.change_password.ChangePasswordResponse
 import com.ziad_emad_dev.in_time.network.profile.delete_account.DeleteAccountResponse
@@ -68,6 +69,9 @@ private const val CHECK_EMAIL_URL = "auth/forgetpassword"
 private const val FORGET_PASSWORD_URL = "auth/forgetpassword/changepassword/{code}"
 private const val REFRESH_TOKEN_URL = "auth/refreshToken"
 private const val SIGNOUT_URL = "auth/signOut"
+
+// Notification Endpoint
+private const val GET_NOTIFICATION_URL = "user/getNotifications"
 
 //  User Endpoints
 private const val USER_URL = "user/"
@@ -145,6 +149,11 @@ interface InTimeApiServices {
     @POST(SIGNOUT_URL)
     suspend fun signOut(@Body request: SignOutRequest): Response<SignOutResponse>
 
+//    Notification
+
+    @GET(GET_NOTIFICATION_URL)
+    suspend fun getNotifications(@Header("Authorization") token: String): Response<NotificationResponse>
+
 //  User
 
     @GET(USER_URL)
@@ -197,6 +206,16 @@ interface InTimeApiServices {
         @Query("projectTask") projectTask: Boolean,
         ): Response<GetTasksResponse>
 
+    @GET(GET_TASKS_URL)
+    suspend fun getTwoTasks(
+        @Header("Authorization") token: String,
+        @Query("sortingType") sortingType: Int,
+        @Query("projectTask") projectTask: Boolean,
+        @Query("completed") completed: Boolean,
+        @Query("sortBy") sortBy: String,
+
+        ): Response<GetTasksResponse>
+
     @GET(GET_ALL_TAG_URL)
     suspend fun getAllTag(@Header("Authorization") token: String): Response<GetTasksResponse>
 
@@ -225,6 +244,19 @@ interface InTimeApiServices {
         @Part("priority") priority: RequestBody,
         @Part("startAt") startAt: RequestBody,
         @Part("endAt") endAt: RequestBody,
+        @Part image: MultipartBody.Part?,
+        @Part steps: List<MultipartBody.Part>?,
+        @Part("tag[name]") tagName: RequestBody,
+        @Part("tag[color]") tagColor: RequestBody
+    ): Response<UpdateTaskResponse>
+
+    @Multipart
+    @POST(UPDATE_TASK_URL)
+    suspend fun updateTask(
+        @Header("Authorization") token: String,
+        @Path("taskId") taskId: String,
+        @Part("disc") disc: RequestBody?,
+        @Part("priority") priority: RequestBody,
         @Part image: MultipartBody.Part?,
         @Part steps: List<MultipartBody.Part>?,
         @Part("tag[name]") tagName: RequestBody,
@@ -310,7 +342,7 @@ interface InTimeApiServices {
         @Header("Authorization") token: String,
         @Path("projectId") projectId: String,
         @Path("taskId") taskId: String,
-        @Part("name") name: RequestBody,
+        @Part("name") name: RequestBody?,
         @Part("disc") disc: RequestBody?,
         @Part("startAt") startAt: RequestBody,
         @Part("endAt") endAt: RequestBody

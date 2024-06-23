@@ -98,30 +98,9 @@
             tools:ignore="UselessParent">
 
             <com.google.android.material.card.MaterialCardView
-                android:id="@+id/isTaskMine"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                app:cardBackgroundColor="@color/white"
-                app:cardCornerRadius="@dimen/border_radius_8"
-                app:strokeColor="@color/primary">
-
-                <TextView
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:fontFamily="@font/poppins_medium"
-                    android:paddingHorizontal="15dp"
-                    android:paddingVertical="@dimen/standard_5"
-                    android:text="@string/your_task"
-                    android:textColor="@color/primary"
-                    android:textSize="12sp" />
-
-            </com.google.android.material.card.MaterialCardView>
-
-            <com.google.android.material.card.MaterialCardView
                 android:id="@+id/taskStatusCard"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_marginStart="@dimen/standard_20"
                 app:cardBackgroundColor="@color/green"
                 app:cardCornerRadius="@dimen/border_radius_8"
                 app:strokeColor="@color/transparent">
@@ -136,6 +115,27 @@
                     android:textColor="@color/white"
                     android:textSize="12sp"
                     tools:text="Finished" />
+
+            </com.google.android.material.card.MaterialCardView>
+
+            <com.google.android.material.card.MaterialCardView
+                android:id="@+id/isTaskMine"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="@dimen/standard_20"
+                app:cardBackgroundColor="@color/white"
+                app:cardCornerRadius="@dimen/border_radius_8"
+                app:strokeColor="@color/primary">
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:fontFamily="@font/poppins_medium"
+                    android:paddingHorizontal="15dp"
+                    android:paddingVertical="@dimen/standard_5"
+                    android:text="@string/your_task"
+                    android:textColor="@color/primary"
+                    android:textSize="12sp" />
 
             </com.google.android.material.card.MaterialCardView>
 

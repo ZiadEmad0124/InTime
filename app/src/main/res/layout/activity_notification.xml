@@ -25,4 +25,35 @@
         app:layout_constraintTop_toBottomOf="@id/myToolbar"
         tools:listitem="@layout/layout_notification" />
 
+    <LinearLayout
+        android:id="@+id/noNotificationLayout"
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:gravity="center"
+        android:orientation="vertical"
+        android:visibility="gone"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/myToolbar"
+        tools:ignore="UseCompoundDrawables">
+
+        <ImageView
+            android:layout_width="100dp"
+            android:layout_height="100dp"
+            android:importantForAccessibility="no"
+            android:src="@drawable/ic_no_notification" />
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="25dp"
+            android:fontFamily="@font/roboto_medium"
+            android:text="@string/no_notification_found"
+            android:textColor="@color/black"
+            android:textSize="21sp" />
+
+
+    </LinearLayout>
+
 </androidx.constraintlayout.widget.ConstraintLayout>
