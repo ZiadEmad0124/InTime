@@ -36,7 +36,6 @@ class AdminEditProjectTask : AppCompatActivity() {
         val projectId = intent.getStringExtra("projectId")!!
         val taskId = intent.getStringExtra("taskId")!!
 
-
         myToolbar()
 
         fillForm()
@@ -47,6 +46,17 @@ class AdminEditProjectTask : AppCompatActivity() {
         editTask(projectId, taskId)
 
         responseComing()
+
+        val isCompleted = intent.getBooleanExtra("taskCompleted", false)
+
+        if (isCompleted) {
+            binding.completedTaskContainer.visibility = View.VISIBLE
+            binding.myToolbar.menu.visibility = View.GONE
+            binding.myToolbar.root.background = ContextCompat.getDrawable(this, R.color.white)
+            binding.deleteButton.setOnClickListener {
+                deleteTask(projectId, taskId)
+            }
+        }
     }
 
     private fun myToolbar() {

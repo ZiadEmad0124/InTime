@@ -101,7 +101,7 @@ private const val DELETE_PROJECT_URL = "user/projects/removeProject/{projectId}"
 private const val EDIT_PROJECT_URL = "user/projects/editProject/{projectId}"
 private const val REMOVE_PROJECT_COVER_URL = "user/projects/removeProjectImage/{projectId}"
 private const val GET_PROJECT_MEMBERS_URL = "user/projects/projectMembers/{projectId}"
-private const val JOIN_PROJECT_URL = "user/projects/joinProject/{link}"
+private const val JOIN_PROJECT_URL = "user/projects/joinProject/{projectId}/{otp}"
 private const val REMOVE_PROJECT_MEMBER_URL = "user/projects/removeMember/{projectId}/{memberId}"
 private const val SHARE_PROJECT_URL = "user/projects/generateInviteLink/{projectId}"
 private const val CREATE_PROJECT_TASK_URL = "user/projects/assignTask/{projectId}/{memberId}"
@@ -303,8 +303,9 @@ interface InTimeApiServices {
     @GET(JOIN_PROJECT_URL)
     suspend fun joinProject(
         @Header("Authorization") token: String,
-        @Path("link") link: String,
-    ): Response<GetProjectResponse>
+        @Path("projectId") projectId: String,
+        @Path("otp") otp: String,
+        ): Response<GetProjectResponse>
 
     @DELETE(REMOVE_PROJECT_COVER_URL)
     suspend fun removeProjectCover(@Header("Authorization") token: String, @Path("projectId") projectId: String): Response<DeleteProjectCoverResponse>

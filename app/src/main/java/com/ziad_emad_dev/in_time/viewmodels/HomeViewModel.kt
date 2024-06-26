@@ -160,10 +160,10 @@ class HomeViewModel(context: Context) : ViewModel() {
         }
     }
 
-    fun joinProject(link: String) {
+    fun joinProject(projectId: String, otp: String) {
         viewModelScope.launch {
             try {
-                val response = InTimeApi.retrofitService.joinProject("Bearer ${sessionManager.fetchAuthToken().toString()}", link)
+                val response = InTimeApi.retrofitService.joinProject("Bearer ${sessionManager.fetchAuthToken().toString()}", projectId, otp)
                 if (response.isSuccessful) {
                     _joinProjectMessage.value = response.body()?.success.toString()
                 } else {

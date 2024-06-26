@@ -23,21 +23,21 @@
             android:paddingTop="@dimen/standard_15"
             android:paddingBottom="@dimen/standard_5">
 
-            <com.google.android.material.card.MaterialCardView
-                android:id="@+id/sortTasksButton"
-                style="@style/InTime.CardView.Task"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                app:contentPadding="@dimen/standard_10"
-                app:strokeColor="@color/sky_2">
+<!--            <com.google.android.material.card.MaterialCardView-->
+<!--                android:id="@+id/sortTasksButton"-->
+<!--                style="@style/InTime.CardView.Task"-->
+<!--                android:layout_width="wrap_content"-->
+<!--                android:layout_height="wrap_content"-->
+<!--                app:contentPadding="@dimen/standard_10"-->
+<!--                app:strokeColor="@color/sky_2">-->
 
-                <ImageView
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:importantForAccessibility="no"
-                    android:src="@drawable/ic_sort" />
+<!--                <ImageView-->
+<!--                    android:layout_width="wrap_content"-->
+<!--                    android:layout_height="wrap_content"-->
+<!--                    android:importantForAccessibility="no"-->
+<!--                    android:src="@drawable/ic_sort" />-->
 
-            </com.google.android.material.card.MaterialCardView>
+<!--            </com.google.android.material.card.MaterialCardView>-->
 
             <View
                 android:layout_width="0dp"

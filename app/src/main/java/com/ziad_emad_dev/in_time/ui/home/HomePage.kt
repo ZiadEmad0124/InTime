@@ -205,10 +205,10 @@ class HomePage : AppCompatActivity() {
                     linkLayout.error = getString(R.string.empty_field)
                 } else {
                     val fullLink = link.text.toString().trim()
-                    val result = fullLink.substringAfterLast("joinProject/")
-                    Log.d("link", fullLink)
-                    Log.d("link", result)
-                    viewModel.joinProject(result)
+                    val projectId = fullLink.substring(66, 90)
+                    val otp = fullLink.substring(91, 95)
+                    Log.d("link", "projectId: $projectId, otp: $otp")
+                    viewModel.joinProject(projectId, otp)
                     viewModel.joinProjectMessage.observe(this) { message ->
                         if (message == "true") {
                             dialog.dismiss()

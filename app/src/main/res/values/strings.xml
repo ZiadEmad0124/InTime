@@ -156,4 +156,14 @@
     <string name="type_your_message">Type your message...</string>
     <string name="add_a_comment">Add a comment...</string>
     <string name="no_notification_found">No Notification Found</string>
+    <string name="filter_priority">Filter by Priority</string>
+    <string name="filter_tag">Filter by Tag</string>
+    <string name="sort_by">Sort By</string>
+    <string name="filter_by">Filter By</string>
+    <string name="submit">Submit</string>
+    <string-array name="sort_options">
+        <item>Sort by Name</item>
+        <item>Sort by Start Date</item>
+        <item>Sort by End Date</item>
+    </string-array>
 </resources>

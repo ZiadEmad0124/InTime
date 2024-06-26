@@ -63,6 +63,7 @@ class MemberProjectTask : AppCompatActivity() {
         if (task.completed) {
             binding.updateTaskButton.visibility = View.GONE
             binding.completeTaskButton.visibility = View.GONE
+            binding.myToolbar.menu.visibility = View.GONE
         } else {
             if (task.steps.isEmpty()) {
                 binding.updateTaskButton.visibility = View.GONE

@@ -48,6 +48,7 @@ class TaskPage : AppCompatActivity() {
         if (task.completed) {
           binding.updateTaskButton.visibility = View.GONE
             binding.completeTaskButton.visibility = View.GONE
+
         } else {
             for (step in task.steps) {
                 if (!step.completed) {
@@ -80,6 +81,11 @@ class TaskPage : AppCompatActivity() {
     private fun showPopupMenu(view: View) {
         val popupMenu = PopupMenu(this, view, 0, 0, R.style.PopupMenuStyle)
         popupMenu.menuInflater.inflate(R.menu.task_menu, popupMenu.menu)
+        val task: Task = intent.getParcelableExtra("task")!!
+        if (task.completed) {
+            val editTaskMenuItem = popupMenu.menu.findItem(R.id.editTask)
+            editTaskMenuItem.isVisible = false
+        }
         popupMenu.setOnMenuItemClickListener { menuItem ->
             when (menuItem.itemId) {
                 R.id.editTask -> {
@@ -87,7 +93,6 @@ class TaskPage : AppCompatActivity() {
                     true
                 }
                 R.id.deleteTask -> {
-                    val task: Task = intent.getParcelableExtra("task")!!
                     deleteTask(task.id)
                     true
                 }

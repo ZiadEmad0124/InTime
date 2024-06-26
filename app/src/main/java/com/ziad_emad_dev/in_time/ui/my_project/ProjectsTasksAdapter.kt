@@ -2,6 +2,7 @@ package com.ziad_emad_dev.in_time.ui.my_project
 
 import android.content.Context
 import android.content.Intent
+import android.graphics.Color
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -61,7 +62,13 @@ class ProjectsTasksAdapter(private val context: Context, private val projectTask
         if (projectTask.tag?.name.isNullOrEmpty()) {
             holder.taskTagColor.visibility = View.GONE
         } else {
-            holder.taskTagColor.setCardBackgroundColor(ContextCompat.getColor(context, R.color.primary))
+            val colorName = projectTask.tag?.color
+            for ((key, value) in colorMap) {
+                if (colorName == key) {
+                    holder.taskTagColor.setCardBackgroundColor(Color.parseColor(value))
+                    break
+                }
+            }
             holder.taskTagName.text = projectTask.tag?.name
         }
 
@@ -105,6 +112,7 @@ class ProjectsTasksAdapter(private val context: Context, private val projectTask
                 intent.putExtra("projectId", projectId)
                 intent.putExtra("taskId", projectTask.id)
                 intent.putExtra("taskName", projectTask.name)
+                intent.putExtra("taskCompleted", projectTask.completed)
                 intent.putExtra("taskDescription", projectTask.disc)
                 intent.putExtra("taskEndAt", projectTask.endAt)
                 intent.putExtra("taskStartAt", projectTask.startAt)
@@ -119,4 +127,57 @@ class ProjectsTasksAdapter(private val context: Context, private val projectTask
             }
         }
     }
+
+    private val colorMap = mapOf(
+        "darkseagreen" to "#8FBC8F",
+        "crimson" to "#DC143C",
+        "chocolate" to "#D2691E",
+        "mediumseagreen" to "#3CB371",
+        "dark-turquoise" to "#00CED1",
+        "mediumorchid" to "#BA55D3",
+        "slateblue" to "#6A5ACD",
+        "cyan" to "#00FFFF",
+        "saddlebrown" to "#8B4513",
+        "firebrick" to "#B22222",
+        "lime" to "#00FF00",
+        "salmon" to "#FA8072",
+        "mediumvioletred" to "#C71585",
+        "teal" to "#008080",
+        "gold" to "#FFD700",
+        "orchid" to "#DA70D6",
+        "darkred" to "#8B0000",
+        "darkgoldenrod" to "#B8860B",
+        "purple" to "#800080",
+        "darkolivegreen" to "#556B2F",
+        "navy" to "#000080",
+        "darkorange" to "#FF8C00",
+        "mediumblue" to "#0000CD",
+        "seagreen" to "#2E8B57",
+        "maroon" to "#800000",
+        "sienna" to "#A0522D",
+        "magenta" to "#FF00FF",
+        "indianred" to "#CD5C5C",
+        "steelblue" to "#4682B4",
+        "sandybrown" to "#F4A460",
+        "yellow" to "#FFFF00",
+        "blue" to "#0000FF",
+        "violet" to "#EE82EE",
+        "coral" to "#FF7F50",
+        "mediumslateblue" to "#7B68EE",
+        "pink" to "#FFC0CB",
+        "dimgray" to "#696969",
+        "indigo" to "#4B0082",
+        "royalblue" to "#4169E1",
+        "red" to "#FF0000",
+        "turquoise" to "#40E0D0",
+        "green" to "#008000",
+        "tomato" to "#FF6347",
+        "darkviolet" to "#9400D3",
+        "slategray" to "#708090",
+        "dodgerblue" to "#1E90FF",
+        "mediumpurple" to "#9370DB",
+        "brown" to "#A52A2A",
+        "orange" to "#FFA500",
+        "forestgreen" to "#228B22"
+    )
 }

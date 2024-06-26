@@ -1,24 +1,33 @@
 package com.ziad_emad_dev.in_time.ui.home
 
+import android.annotation.SuppressLint
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.Toast
 import androidx.fragment.app.Fragment
+import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.LinearSnapHelper
 import androidx.recyclerview.widget.SnapHelper
 import com.ziad_emad_dev.in_time.databinding.FragmentCalenderBinding
 import com.ziad_emad_dev.in_time.ui.calender.CalendarAdapter
 import com.ziad_emad_dev.in_time.ui.calender.CalendarDateModel
+import com.ziad_emad_dev.in_time.ui.calender.OngoingTasksAdapter
+import com.ziad_emad_dev.in_time.viewmodels.TaskViewModel
 import java.text.SimpleDateFormat
 import java.util.Calendar
 import java.util.Date
 import java.util.Locale
 
-class CalenderFragment : Fragment() {
+class CalenderFragment : Fragment(), CalendarAdapter.OnDateClickListener {
 
     private var _binding: FragmentCalenderBinding? = null
     private val binding get() = _binding!!
+
+    private val viewModel by lazy {
+        TaskViewModel(requireContext())
+    }
 
     private var calendarCurrentMonth: Calendar = Calendar.getInstance(Locale.ENGLISH)
     private var calendarNextMonth: Calendar = Calendar.getInstance(Locale.ENGLISH)
@@ -48,14 +57,15 @@ class CalenderFragment : Fragment() {
         setUpCalendar()
 
         binding.recyclerView.layoutManager?.scrollToPosition(todayDate - 2)
+
+        onDateClick(Date())
     }
 
     private fun setUpAdapter() {
-
         val snapHelper: SnapHelper = LinearSnapHelper()
         snapHelper.attachToRecyclerView(binding.recyclerView)
 
-        adapter = CalendarAdapter()
+        adapter = CalendarAdapter(this)
         binding.recyclerView.layoutManager?.scrollToPosition(todayDate - 2)
         adapter.setData(calendarList)
         binding.recyclerView.adapter = adapter
@@ -78,7 +88,6 @@ class CalenderFragment : Fragment() {
     }
 
     private fun setUpCalendar() {
-
         binding.monthTextView.text = SimpleDateFormat("MMMM", Locale.getDefault()).format(calendarCurrentMonth.time)
         binding.nextMonth.text = SimpleDateFormat("MMM", Locale.getDefault()).format(calendarNextMonth.time)
         binding.lastMonth.text = SimpleDateFormat("MMM", Locale.getDefault()).format(calendarLastMonth.time)
@@ -103,7 +112,39 @@ class CalenderFragment : Fragment() {
 
     override fun onDestroyView() {
         super.onDestroyView()
-
         _binding = null
+    }
+
+    @SuppressLint("NotifyDataSetChanged")
+    override fun onDateClick(date: Date) {
+
+        val selectedDateFormat = SimpleDateFormat("yyyy-MM-dd", Locale.getDefault())
+        val selectedDate = selectedDateFormat.format(date)
+
+        viewModel.getTasks()
+
+        viewModel.getTasksMessage.observe(viewLifecycleOwner) { message ->
+            if (message == "true") {
+                viewModel.getTasks.observe(viewLifecycleOwner) { tasks ->
+                    if (tasks.isNotEmpty()) {
+                        val filteredTasks = tasks.filter { task ->
+                            task.endAt.substring(0, 10) == selectedDate
+                        }
+                        if (filteredTasks.isNotEmpty()) {
+                            binding.ongoingTasks.layoutManager = LinearLayoutManager(context)
+                            val ongoingTasksAdapter = OngoingTasksAdapter(filteredTasks)
+                            binding.ongoingTasks.adapter = ongoingTasksAdapter
+                            ongoingTasksAdapter.notifyDataSetChanged()
+                        } else {
+                            binding.ongoingTasks.adapter = null
+                        }
+                    } else {
+                        Toast.makeText(context, "No tasks found", Toast.LENGTH_SHORT).show()
+                    }
+                }
+            } else {
+                Toast.makeText(context, "No tasks found", Toast.LENGTH_SHORT).show()
+            }
+        }
     }
 }

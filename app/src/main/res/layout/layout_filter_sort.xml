@@ -1,0 +1,137 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:gravity="center"
+    android:orientation="vertical">
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="@dimen/standard_25"
+        android:fontFamily="@font/poppins_medium"
+        android:text="@string/sort_by"
+        android:textColor="@color/primary"
+        android:textSize="31sp"
+        android:textStyle="bold" />
+
+    <RadioGroup
+        android:id="@+id/sortRadioGroup"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content">
+
+        <RadioButton
+            android:id="@+id/Name"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="@dimen/standard_15"
+            android:fontFamily="@font/roboto_medium"
+            android:text="@string/name"
+            android:textSize="18sp" />
+
+        <RadioButton
+            android:id="@+id/StartDate"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="15dp"
+            android:fontFamily="@font/roboto_medium"
+            android:text="@string/start_date"
+            android:textSize="18sp" />
+
+        <RadioButton
+            android:id="@+id/EndDate"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="15dp"
+            android:fontFamily="@font/roboto_medium"
+            android:text="@string/end_date"
+            android:textSize="18sp" />
+
+    </RadioGroup>
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="@dimen/standard_25"
+        android:fontFamily="@font/poppins_medium"
+        android:text="@string/filter_by"
+        android:textColor="@color/primary"
+        android:textSize="31sp"
+        android:textStyle="bold" />
+
+    <LinearLayout
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center"
+        android:layout_margin="@dimen/standard_15"
+        android:gravity="center">
+
+        <Button
+            android:id="@+id/redButton"
+            android:layout_width="40dp"
+            android:layout_height="40dp"
+            android:layout_marginHorizontal="@dimen/standard_10"
+            android:background="@drawable/circle_red"
+            app:backgroundTint="@null"
+            tools:ignore="ButtonStyle" />
+
+        <Button
+            android:id="@+id/orangeButton"
+            android:layout_width="40dp"
+            android:layout_height="40dp"
+            android:layout_marginHorizontal="@dimen/standard_10"
+            android:background="@drawable/circle_orange"
+            app:backgroundTint="@null"
+            tools:ignore="ButtonStyle" />
+
+        <Button
+            android:id="@+id/yellowButton"
+            android:layout_width="40dp"
+            android:layout_height="40dp"
+            android:layout_marginHorizontal="@dimen/standard_10"
+            android:background="@drawable/circle_yellow"
+            app:backgroundTint="@null"
+            tools:ignore="ButtonStyle" />
+
+        <Button
+            android:id="@+id/grayButton"
+            android:layout_width="40dp"
+            android:layout_height="40dp"
+            android:layout_marginHorizontal="@dimen/standard_10"
+            android:background="@drawable/circle_gray"
+            app:backgroundTint="@null"
+            tools:ignore="ButtonStyle" />
+
+    </LinearLayout>
+
+    <com.google.android.material.textfield.TextInputLayout
+        android:id="@+id/tagLayout"
+        style="@style/InTime.TextInputLayout"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_margin="@dimen/standard_15"
+        android:autofillHints="emailAddress"
+        android:hint="@string/tag"
+        android:inputType="text">
+
+        <com.google.android.material.textfield.TextInputEditText
+            android:id="@+id/tag"
+            style="@style/InTime.TextInputEditText"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content" />
+
+    </com.google.android.material.textfield.TextInputLayout>
+
+    <Button
+        android:id="@+id/submit"
+        style="@style/InTime.Button"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginHorizontal="@dimen/standard_15"
+        android:layout_marginTop="@dimen/standard_20"
+        android:layout_marginBottom="@dimen/standard_40"
+        android:text="@string/submit" />
+
+</LinearLayout>
