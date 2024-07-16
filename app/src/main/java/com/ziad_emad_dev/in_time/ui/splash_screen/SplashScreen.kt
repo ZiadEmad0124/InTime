@@ -16,6 +16,7 @@ import com.ziad_emad_dev.in_time.ui.signing.SignPage
 class SplashScreen : AppCompatActivity() {
 
     private lateinit var binding: ActivitySplashScreenBinding
+
     private lateinit var sessionManager: SessionManager
 
     override fun onCreate(savedInstanceState: Bundle?) {

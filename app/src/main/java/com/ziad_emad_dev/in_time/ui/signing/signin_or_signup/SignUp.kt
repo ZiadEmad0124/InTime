@@ -4,28 +4,34 @@ import android.os.Bundle
 import android.text.Editable
 import android.text.InputFilter
 import android.text.TextWatcher
-import android.text.method.PasswordTransformationMethod
 import android.view.KeyEvent
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import android.widget.EditText
 import android.widget.Toast
 import androidx.fragment.app.Fragment
 import androidx.navigation.fragment.findNavController
-import com.google.android.material.textfield.TextInputLayout
 import com.ziad_emad_dev.in_time.R
 import com.ziad_emad_dev.in_time.databinding.FragmentSignUpBinding
 import com.ziad_emad_dev.in_time.ui.signing.AsteriskPasswordTransformation
+import com.ziad_emad_dev.in_time.ui.signing.ValidationListener
+import com.ziad_emad_dev.in_time.ui.signing.Validator
 import com.ziad_emad_dev.in_time.viewmodels.AuthViewModel
 
-class SignUp : Fragment() {
+class SignUp : Fragment(), ValidationListener {
 
     private var _binding: FragmentSignUpBinding? = null
     private val binding get() = _binding!!
 
+    private lateinit var validator: Validator
+
     private val viewModel by lazy {
         AuthViewModel(requireContext())
+    }
+
+    override fun onCreate(savedInstanceState: Bundle?) {
+        super.onCreate(savedInstanceState)
+        validator = Validator(this)
     }
 
     override fun onCreateView(
@@ -39,76 +45,21 @@ class SignUp : Fragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
-        focusOnEditTextLayout()
-        passwordToggle(binding.passwordLayout, binding.password)
-        passwordToggle(binding.confirmPasswordLayout, binding.confirmPassword)
+        validator.passwordToggle(binding.passwordLayout)
+        validator.confirmPasswordToggle(binding.confirmPasswordLayout)
+
+        validator.nameFocusChangeListener(binding.nameLayout)
+        validator.emailFocusChangeListener(binding.emailLayout)
+        validator.phoneFocusChangeListener(binding.phoneLayout)
+        validator.passwordFocusChangeListener(binding.passwordLayout)
+        validator.confirmPasswordFocusChangeListener(binding.confirmPasswordLayout)
+
         clickOnButtons()
-        responseComing()
 
         phoneNumber()
+
         binding.password.transformationMethod = AsteriskPasswordTransformation()
-    }
-
-    private fun focusOnEditTextLayout() {
-        binding.name.setOnFocusChangeListener { _, hasFocus ->
-            if (hasFocus) {
-                binding.nameLayout.error = null
-            } else {
-                if (!nameEmptyError(binding.name.text.toString().trim())) {
-                    nameValidationError(binding.name.text.toString().trim())
-                }
-            }
-        }
-        binding.email.setOnFocusChangeListener { _, hasFocus ->
-            if (hasFocus) {
-                binding.emailLayout.error = null
-            } else {
-                if (!emailEmptyError(binding.email.text.toString().trim())) {
-                    emailValidationError(binding.email.text.toString().trim())
-                }
-            }
-        }
-        binding.phone.setOnFocusChangeListener { _, hasFocus ->
-            if (hasFocus) {
-                binding.phoneLayout.error = null
-            } else {
-                if (!phoneEmptyError(binding.phone.text.toString().trim())) {
-                    phoneValidationError(binding.phone.text.toString().trim())
-                }
-            }
-        }
-        binding.password.setOnFocusChangeListener { _, hasFocus ->
-            if (hasFocus) {
-                binding.passwordLayout.error = null
-            } else {
-                if (!passwordEmptyError(binding.password.text.toString().trim())) {
-                    passwordValidationError(binding.passwordLayout, binding.password.text.toString().trim())
-                }
-            }
-        }
-        binding.confirmPassword.setOnFocusChangeListener { _, hasFocus ->
-            if (hasFocus) {
-                binding.confirmPasswordLayout.error = null
-            } else {
-                if (!confirmPasswordEmptyError(binding.confirmPassword.text.toString().trim())) {
-                    passwordValidationError(binding.confirmPasswordLayout, binding.confirmPassword.text.toString().trim())
-                    passwordsMatchError(binding.password.text.toString().trim(), binding.confirmPassword.text.toString().trim())
-                }
-            }
-        }
-    }
-
-    private fun passwordToggle(passwordLayout: TextInputLayout, password: EditText) {
-        passwordLayout.setEndIconOnClickListener {
-            val selection = password.selectionEnd
-            val hasPasswordTransformation = password.transformationMethod is PasswordTransformationMethod
-            if (hasPasswordTransformation) {
-                password.transformationMethod = null
-            } else {
-                password.transformationMethod = AsteriskPasswordTransformation()
-            }
-            password.setSelection(selection)
-        }
+        binding.confirmPassword.transformationMethod = AsteriskPasswordTransformation()
     }
 
     private fun clickOnButtons() {
@@ -122,108 +73,112 @@ class SignUp : Fragment() {
             val phone = binding.phone.text.toString().substring(2).trim()
             val password = binding.password.text.toString().trim()
             val confirmPassword = binding.confirmPassword.text.toString().trim()
-            clearFocusEditTextLayout()
-            if (!(nameEmptyError(name) &&
-                        emailEmptyError(email) &&
-                        phoneEmptyError(phone) &&
-                        passwordEmptyError(password) &&
-                        passwordEmptyError(confirmPassword))) {
-                if (!(nameValidationError(name) ||
-                            emailValidationError(email) ||
-                            phoneValidationError(phone) ||
-                            passwordValidationError(binding.passwordLayout, password) ||
-                            passwordValidationError(binding.confirmPasswordLayout, confirmPassword))) {
-                    if (!passwordsMatchError(password, confirmPassword)) {
-                        startLoading()
+            validator.clearFocusEditTextLayout()
+            if (!(validator.nameEmptyError(name) &&
+                        validator.emailEmptyError(email) &&
+                        validator.phoneEmptyError(phone) &&
+                        validator.passwordEmptyError(password) &&
+                        validator.confirmPasswordEmptyError(confirmPassword)))
+            {
+                if (!(validator.nameValidationError(name) ||
+                            validator.emailValidationError(email) ||
+                            validator.phoneValidationError(phone) ||
+                            validator.passwordValidationError(password) ||
+                            validator.confirmPasswordValidationError(confirmPassword)))
+                {
+                    if (!validator.passwordsMatchError(password, confirmPassword)) {
+                        validator.startLoading()
                         viewModel.signUp(name, email, phone, password)
+                        waitingForResponse()
                     }
                 }
             }
         }
     }
 
-    private fun nameEmptyError(name: String): Boolean {
-        if (name.isEmpty()) {
-            binding.nameLayout.error = getString(R.string.empty_field)
+    private fun waitingForResponse() {
+        viewModel.message.observe(viewLifecycleOwner) { message ->
+            checkAccountAndNetwork(message)
         }
-        return name.isEmpty()
     }
 
-    private fun emailEmptyError(email: String): Boolean {
-        if (email.isEmpty()) {
-            binding.emailLayout.error = getString(R.string.empty_field)
+    private fun checkAccountAndNetwork(message: String) {
+        validator.stopLoading()
+        when (message) {
+            "this email already exists" -> {
+                binding.emailLayout.error = getString(R.string.this_email_already_exists)
+            }
+
+            "check your mail to activate your account" -> {
+                val email = binding.email.text.toString().trim()
+                val action = SignUpDirections.actionSignUpToActivationAccount(email = email)
+                findNavController().navigate(action)
+            }
+
+            else -> {
+                Toast.makeText(requireContext(), message, Toast.LENGTH_SHORT).show()
+            }
         }
-        return email.isEmpty()
     }
 
-    private fun phoneEmptyError(phone: String): Boolean {
-        if (phone.isEmpty()) {
-            binding.phoneLayout.error = getString(R.string.empty_field)
-        }
-        return phone.isEmpty()
+    override fun onNameEmptyError() {
+        binding.nameLayout.error = getString(R.string.name_is_empty)
     }
 
-    private fun passwordEmptyError(password: String): Boolean {
-        if (password.isEmpty()) {
-            binding.passwordLayout.error = getString(R.string.empty_field)
-        }
-        return password.isEmpty()
+    override fun onEmailEmptyError() {
+        binding.emailLayout.error = getString(R.string.email_is_empty)
     }
 
-    private fun confirmPasswordEmptyError(confirmPassword: String): Boolean {
-        if (confirmPassword.isEmpty()) {
-            binding.confirmPasswordLayout.error = getString(R.string.empty_field)
-        }
-        return confirmPassword.isEmpty()
+    override fun onPhoneEmptyError() {
+        binding.phoneLayout.error = getString(R.string.phone_is_empty)
     }
 
-    private fun nameValidationError(name: String): Boolean {
-        if (name.length < 3) {
-            binding.nameLayout.error = getString(R.string.name_error)
-        }
-        return name.length < 3
+    override fun onPasswordEmptyError() {
+        binding.passwordLayout.error = getString(R.string.password_is_empty)
     }
 
-    private fun emailValidationError(email: String): Boolean {
-        if (!android.util.Patterns.EMAIL_ADDRESS.matcher(email).matches()) {
-            binding.emailLayout.error = getString(R.string.invalid_email)
-        }
-        return !android.util.Patterns.EMAIL_ADDRESS.matcher(email).matches()
+    override fun onConfirmPasswordEmptyError() {
+        binding.confirmPasswordLayout.error = getString(R.string.password_is_empty)
     }
 
-    private fun phoneValidationError(phone: String): Boolean {
-        if (phone.length < 11) {
-            binding.phoneLayout.error = getString(R.string.phone_error)
-        }
-        return phone.length < 11
+    override fun onNameValidationError() {
+        binding.nameLayout.error = getString(R.string.name_error)
     }
 
-    private fun passwordValidationError(passwordLayout: TextInputLayout, password: String): Boolean {
-        if (password.length < 8) {
-            passwordLayout.error = getString(R.string.password_must_be_at_least_8_characters)
-            return true
-        } else if (!password.matches(Regex(".*[a-z].*"))) {
-            passwordLayout.error = getString(R.string.password_must_contain_at_least_one_lowercase_letter)
-            return true
-        } else if (!password.matches(Regex(".*[A-Z].*"))) {
-            passwordLayout.error = getString(R.string.password_must_contain_at_least_one_uppercase_letter)
-            return true
-        } else if (!password.matches(Regex(".*[0-9].*"))) {
-            passwordLayout.error = getString(R.string.password_must_contain_at_least_one_digit)
-            return true
-        } else if (!password.matches(Regex(".*[!@#\$_%^&*+(,)/\"\':?-].*"))) {
-            passwordLayout.error = getString(R.string.password_must_contain_at_least_one_special_character)
-            return true
+    override fun onEmailValidationError() {
+        binding.emailLayout.error = getString(R.string.email_is_invalid)
+    }
+
+    override fun onPhoneValidationError() {
+        binding.phoneLayout.error = getString(R.string.phone_error)
+    }
+
+    override fun onPasswordValidationError(passwordError: String) {
+        binding.passwordLayout.error = passwordError
+    }
+
+    override fun onConfirmPasswordValidationError(passwordError: String) {
+        binding.confirmPasswordLayout.error = passwordError
+    }
+
+    override fun onPasswordsMatchError() {
+        binding.confirmPasswordLayout.error = getString(R.string.password_not_match)
+    }
+
+    override fun onPasswordToggle(hasPasswordTransformation: Boolean) {
+        if (hasPasswordTransformation) {
+            binding.password.transformationMethod = null
         } else {
-            return false
+            binding.password.transformationMethod = AsteriskPasswordTransformation()
         }
     }
 
-    private fun passwordsMatchError(password: String, confirmPassword: String): Boolean {
-        if (password != confirmPassword) {
-            binding.confirmPasswordLayout.error = getString(R.string.password_not_match)
+    override fun onConfirmPasswordToggle(hasPasswordTransformation: Boolean) {
+        if (hasPasswordTransformation) {
+            binding.confirmPassword.transformationMethod = null
+        } else {
+            binding.confirmPassword.transformationMethod = AsteriskPasswordTransformation()
         }
-        return password != confirmPassword
     }
 
     private fun phoneNumber() {
@@ -254,54 +209,64 @@ class SignUp : Fragment() {
         }
     }
 
-    private fun emailAlreadyExists() {
-        binding.emailLayout.error = getString(R.string.this_email_already_exists)
+    override fun onNameFocusChange(hasFocus: Boolean, message: String?) {
+        if (!hasFocus) {
+            binding.nameLayout.error = message
+        } else {
+            binding.nameLayout.error = null
+        }
     }
 
-    private fun startLoading() {
-        binding.blockingView.visibility = View.VISIBLE
-        binding.signUpButton.setBackgroundResource(R.drawable.button_loading)
-        binding.signUpButton.text = null
-        binding.progressCircular.visibility = View.VISIBLE
+    override fun onEmailFocusChange(hasFocus: Boolean, message: String?) {
+        if (!hasFocus) {
+            binding.emailLayout.error = message
+        } else {
+            binding.emailLayout.error = null
+        }
     }
 
-    private fun stopLoading() {
-        binding.progressCircular.visibility = View.GONE
-        binding.signUpButton.setBackgroundResource(R.drawable.button_background)
-        binding.signUpButton.text = getString(R.string.sign_up)
-        binding.blockingView.visibility = View.GONE
+    override fun onPhoneFocusChange(hasFocus: Boolean, message: String?) {
+        if (!hasFocus) {
+            binding.phoneLayout.error = message
+        } else {
+            binding.phoneLayout.error = null
+        }
     }
 
-    private fun clearFocusEditTextLayout() {
+    override fun onPasswordFocusChange(hasFocus: Boolean, message: String?) {
+        if (!hasFocus) {
+            binding.passwordLayout.error = message
+        } else {
+            binding.passwordLayout.error = null
+        }
+    }
+
+    override fun onConfirmPasswordFocusChange(hasFocus: Boolean, message: String?) {
+        if (!hasFocus) {
+            binding.confirmPasswordLayout.error = message
+        } else {
+            binding.confirmPasswordLayout.error = null
+        }
+    }
+
+    override fun onClearFocusEditTextLayout() {
         binding.name.clearFocus()
         binding.email.clearFocus()
         binding.phone.clearFocus()
         binding.password.clearFocus()
+        binding.confirmPassword.clearFocus()
     }
 
-    private fun responseComing() {
-        viewModel.message.observe(viewLifecycleOwner) { message ->
-            checkAccountAndNetwork(message)
-        }
+    override fun onStartLoading() {
+        binding.blockingView.visibility = View.VISIBLE
+        binding.signUpButton.text = null
+        binding.progressCircular.visibility = View.VISIBLE
     }
 
-    private fun checkAccountAndNetwork(message: String) {
-        stopLoading()
-        when (message) {
-            "this email already exists" -> {
-                emailAlreadyExists()
-            }
-
-            "check your mail to activate your account" -> {
-                val email = binding.email.text.toString().trim()
-                val action = SignUpDirections.actionSignUpToActivationAccount(email = email)
-                findNavController().navigate(action)
-            }
-
-            else -> {
-                Toast.makeText(requireContext(), message, Toast.LENGTH_SHORT).show()
-            }
-        }
+    override fun onStopLoading() {
+        binding.progressCircular.visibility = View.GONE
+        binding.signUpButton.text = getString(R.string.sign_up)
+        binding.blockingView.visibility = View.GONE
     }
 
     override fun onDestroy() {

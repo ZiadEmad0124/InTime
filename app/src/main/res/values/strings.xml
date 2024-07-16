@@ -82,7 +82,7 @@
     <string name="phone">Phone</string>
     <string name="empty_field">Empty Field</string>
     <string name="wrong_password">Wrong Password</string>
-    <string name="name_error">Name must be 3 letters at least</string>
+    <string name="name_error">Name must be at least 3 characters</string>
     <string name="phone_error">phone must be 10 number</string>
     <string name="password_error"><![CDATA[password must be more than 8 and contain digits, upper letter & lower letter and don\'t contain space]]></string>
     <string name="now">Now</string>
@@ -161,6 +161,11 @@
     <string name="sort_by">Sort By</string>
     <string name="filter_by">Filter By</string>
     <string name="submit">Submit</string>
+    <string name="email_is_empty">Email is empty</string>
+    <string name="password_is_empty">Password is empty</string>
+    <string name="email_is_invalid">Email is invalid</string>
+    <string name="phone_is_empty">Phone is empty</string>
+    <string name="name_is_empty">Name is empty</string>
     <string-array name="sort_options">
         <item>Sort by Name</item>
         <item>Sort by Start Date</item>

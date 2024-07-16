@@ -2,7 +2,6 @@ package com.ziad_emad_dev.in_time.ui.signing.signin_or_signup
 
 import android.content.Intent
 import android.os.Bundle
-import android.text.method.PasswordTransformationMethod
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -13,15 +12,24 @@ import com.ziad_emad_dev.in_time.R
 import com.ziad_emad_dev.in_time.databinding.FragmentSignInBinding
 import com.ziad_emad_dev.in_time.ui.home.HomePage
 import com.ziad_emad_dev.in_time.ui.signing.AsteriskPasswordTransformation
+import com.ziad_emad_dev.in_time.ui.signing.ValidationListener
+import com.ziad_emad_dev.in_time.ui.signing.Validator
 import com.ziad_emad_dev.in_time.viewmodels.AuthViewModel
 
-class SignIn : Fragment() {
+class SignIn : Fragment(), ValidationListener {
 
     private var _binding: FragmentSignInBinding? = null
     private val binding get() = _binding!!
 
+    private lateinit var validator: Validator
+
     private val viewModel by lazy {
         AuthViewModel(requireContext())
+    }
+
+    override fun onCreate(savedInstanceState: Bundle?) {
+        super.onCreate(savedInstanceState)
+        validator = Validator(this)
     }
 
     override fun onCreateView(
@@ -35,46 +43,14 @@ class SignIn : Fragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
-        focusOnEditTextLayout()
-        passwordToggle()
+        validator.passwordToggle(binding.passwordLayout)
+
+        validator.emailFocusChangeListener(binding.emailLayout)
+        validator.passwordFocusChangeListener(binding.passwordLayout)
+
         clickOnButtons()
-        responseComing()
 
         binding.password.transformationMethod = AsteriskPasswordTransformation()
-    }
-
-    private fun focusOnEditTextLayout() {
-        binding.email.setOnFocusChangeListener { _, hasFocus ->
-            if (hasFocus) {
-                binding.emailLayout.error = null
-            } else {
-                if (!emailEmptyError(binding.email.text.toString().trim())) {
-                    emailValidationError(binding.email.text.toString().trim())
-                }
-            }
-        }
-        binding.password.setOnFocusChangeListener { _, hasFocus ->
-            if (hasFocus) {
-                binding.passwordLayout.error = null
-            } else {
-                if (!passwordEmptyError(binding.password.text.toString().trim())) {
-                    passwordValidationError(binding.password.text.toString().trim())
-                }
-            }
-        }
-    }
-
-    private fun passwordToggle() {
-        binding.passwordLayout.setEndIconOnClickListener {
-            val selection = binding.password.selectionEnd
-            val hasPasswordTransformation = binding.password.transformationMethod is PasswordTransformationMethod
-            if (hasPasswordTransformation) {
-                binding.password.transformationMethod = null
-            } else {
-                binding.password.transformationMethod = AsteriskPasswordTransformation()
-            }
-            binding.password.setSelection(selection)
-        }
     }
 
     private fun clickOnButtons() {
@@ -89,100 +65,32 @@ class SignIn : Fragment() {
         binding.logInButton.setOnClickListener {
             val email = binding.email.text.toString().trim()
             val password = binding.password.text.toString().trim()
-            clearFocusEditTextLayout()
-            if (!(emailEmptyError(email) && passwordEmptyError(password))) {
-                if (!(emailValidationError(email) || passwordValidationError(password))) {
-                    startLoading()
+            validator.clearFocusEditTextLayout()
+            if (!(validator.emailEmptyError(email) && validator.passwordEmptyError(password))) {
+                if (!(validator.emailValidationError(email) || validator.passwordValidationError(password))) {
+                    validator.startLoading()
                     viewModel.signIn(email, password)
+                    waitingForResponse()
                 }
             }
         }
     }
 
-    private fun emailEmptyError(email: String): Boolean {
-        if (email.isEmpty()) {
-            binding.emailLayout.error = getString(R.string.empty_field)
-        }
-        return email.isEmpty()
-    }
-
-    private fun passwordEmptyError(password: String): Boolean {
-        if (password.isEmpty()) {
-            binding.passwordLayout.error = getString(R.string.empty_field)
-        }
-        return password.isEmpty()
-    }
-
-    private fun emailValidationError(email: String): Boolean {
-        if (!android.util.Patterns.EMAIL_ADDRESS.matcher(email).matches()) {
-            binding.emailLayout.error = getString(R.string.invalid_email)
-        }
-        return !android.util.Patterns.EMAIL_ADDRESS.matcher(email).matches()
-    }
-
-    private fun passwordValidationError(password: String): Boolean {
-        if (password.length < 8) {
-            binding.passwordLayout.error = getString(R.string.password_must_be_at_least_8_characters)
-            return true
-        } else if (!password.matches(Regex(".*[a-z].*"))) {
-            binding.passwordLayout.error = getString(R.string.password_must_contain_at_least_one_lowercase_letter)
-            return true
-        } else if (!password.matches(Regex(".*[A-Z].*"))) {
-            binding.passwordLayout.error = getString(R.string.password_must_contain_at_least_one_uppercase_letter)
-            return true
-        } else if (!password.matches(Regex(".*[0-9].*"))) {
-            binding.passwordLayout.error = getString(R.string.password_must_contain_at_least_one_digit)
-            return true
-        } else if (!password.matches(Regex(".*[!@#\$_%^&*+(,)/\"\':?-].*"))) {
-            binding.passwordLayout.error = getString(R.string.password_must_contain_at_least_one_special_character)
-            return true
-        } else {
-            return false
-        }
-    }
-
-    private fun emailNotRegistered() {
-        binding.emailLayout.error = getString(R.string.email_not_registered)
-    }
-
-    private fun passwordWrong() {
-        binding.passwordLayout.error = getString(R.string.wrong_password)
-    }
-
-    private fun startLoading() {
-        binding.blockingView.visibility = View.VISIBLE
-        binding.logInButton.setBackgroundResource(R.drawable.button_loading)
-        binding.logInButton.text = null
-        binding.progressCircular.visibility = View.VISIBLE
-    }
-
-    private fun stopLoading() {
-        binding.progressCircular.visibility = View.GONE
-        binding.logInButton.setBackgroundResource(R.drawable.button_background)
-        binding.logInButton.text = getString(R.string.login)
-        binding.blockingView.visibility = View.GONE
-    }
-
-    private fun clearFocusEditTextLayout() {
-        binding.email.clearFocus()
-        binding.password.clearFocus()
-    }
-
-    private fun responseComing() {
+    private fun waitingForResponse() {
         viewModel.message.observe(viewLifecycleOwner) { message ->
             checkAccountAndNetwork(message)
         }
     }
 
     private fun checkAccountAndNetwork(message: String) {
-        stopLoading()
+        validator.stopLoading()
         when (message) {
             "user not registered" -> {
-                emailNotRegistered()
+                binding.emailLayout.error = getString(R.string.email_not_registered)
             }
 
             "wrong password" -> {
-                passwordWrong()
+                binding.passwordLayout.error = getString(R.string.wrong_password)
             }
 
             "you have to activate your account first" -> {
@@ -202,6 +110,63 @@ class SignIn : Fragment() {
                 Toast.makeText(requireContext(), message, Toast.LENGTH_SHORT).show()
             }
         }
+    }
+
+    override fun onEmailEmptyError() {
+        binding.emailLayout.error = getString(R.string.email_is_empty)
+    }
+
+    override fun onPasswordEmptyError() {
+        binding.passwordLayout.error = getString(R.string.password_is_empty)
+    }
+
+    override fun onEmailValidationError() {
+        binding.emailLayout.error = getString(R.string.email_is_invalid)
+    }
+
+    override fun onPasswordValidationError(passwordError: String) {
+        binding.passwordLayout.error = passwordError
+    }
+
+    override fun onPasswordToggle(hasPasswordTransformation: Boolean) {
+        if (hasPasswordTransformation) {
+            binding.password.transformationMethod = null
+        } else {
+            binding.password.transformationMethod = AsteriskPasswordTransformation()
+        }
+    }
+
+    override fun onEmailFocusChange(hasFocus: Boolean, message: String?) {
+        if (!hasFocus) {
+            binding.emailLayout.error = message
+        } else {
+            binding.emailLayout.error = null
+        }
+    }
+
+    override fun onPasswordFocusChange(hasFocus: Boolean, message: String?) {
+        if (!hasFocus) {
+            binding.passwordLayout.error = message
+        } else {
+            binding.passwordLayout.error = null
+        }
+    }
+
+    override fun onClearFocusEditTextLayout() {
+        binding.email.clearFocus()
+        binding.password.clearFocus()
+    }
+
+    override fun onStartLoading() {
+        binding.blockingView.visibility = View.VISIBLE
+        binding.logInButton.text = null
+        binding.progressCircular.visibility = View.VISIBLE
+    }
+
+    override fun onStopLoading() {
+        binding.progressCircular.visibility = View.GONE
+        binding.logInButton.text = getString(R.string.login)
+        binding.blockingView.visibility = View.GONE
     }
 
     override fun onDestroy() {

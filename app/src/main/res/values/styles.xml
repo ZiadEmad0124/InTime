@@ -18,16 +18,6 @@
         <item name="android:padding">@dimen/standard_15</item>
     </style>
 
-    <style name="InTime.Button.Loading" parent="Widget.Material3.Button">
-        <item name="backgroundTint">@null</item>
-        <item name="android:background">@drawable/button_loading</item>
-        <item name="android:textColor">@color/black</item>
-        <item name="fontFamily">@font/roboto</item>
-        <item name="android:textStyle">bold</item>
-        <item name="android:textSize">18sp</item>
-        <item name="android:padding">@dimen/standard_15</item>
-    </style>
-
     <style name="InTime.TextInputLayout" parent="Widget.MaterialComponents.TextInputLayout.OutlinedBox">
         <item name="boxCornerRadiusTopEnd">@dimen/border_radius_16</item>
         <item name="boxCornerRadiusTopStart">@dimen/border_radius_16</item>
@@ -35,22 +25,24 @@
         <item name="boxCornerRadiusBottomStart">@dimen/border_radius_16</item>
         <item name="boxStrokeColor">@color/primary</item>
         <item name="boxStrokeWidth">@dimen/stroke_width</item>
-        <item name="maxLines">1</item>
+        <item name="endIconTint">@color/secondary</item>
+        <item name="android:textColorHint">@color/secondary</item>
         <item name="hintTextColor">@color/primary</item>
-        <item name="fontFamily">@font/roboto_medium</item>
+        <item name="fontFamily">@font/roboto</item>
+        <item name="android:textStyle">bold</item>
     </style>
 
     <style name="InTime.TextInputEditText" parent="ThemeOverlay.Material3.TextInputEditText">
         <item name="android:textColor">@color/secondary</item>
-        <item name="android:fontFamily">@font/roboto_medium</item>
-        <item name="android:lines">1</item>
+        <item name="android:fontFamily">@font/roboto</item>
+        <item name="android:textStyle">bold</item>
+        <item name="android:singleLine">true</item>
+        <item name="android:imeOptions">actionNext</item>
         <item name="android:padding">@dimen/standard_20</item>
     </style>
 
     <style name="InTime.PinView" parent="PinWidget.PinView">
-        <item name="android:cursorVisible">true</item>
-        <item name="cursorColor">@color/primary</item>
-        <item name="cursorWidth">@dimen/stroke_width</item>
+        <item name="android:cursorVisible">false</item>
         <item name="hideLineWhenFilled">false</item>
         <item name="lineColor">@drawable/pin_line</item>
         <item name="lineWidth">@dimen/stroke_width</item>
@@ -67,7 +59,8 @@
 
     <style name="InTime.BottomNavigationView" parent="Widget.Material3.BottomNavigationView">
         <item name="android:background">@color/white</item>
-        <item name="itemActiveIndicatorStyle">@style/InTime.BottomNavigationView.ActiveIndicator</item>
+        <item name="itemActiveIndicatorStyle">@style/InTime.BottomNavigationView.ActiveIndicator
+        </item>
         <item name="itemIconTint">@color/secondary</item>
         <item name="itemTextColor">@color/secondary</item>
         <item name="labelVisibilityMode">labeled</item>

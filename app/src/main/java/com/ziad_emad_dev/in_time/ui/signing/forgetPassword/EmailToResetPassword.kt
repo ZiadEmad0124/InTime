@@ -9,15 +9,24 @@ import androidx.fragment.app.Fragment
 import androidx.navigation.fragment.findNavController
 import com.ziad_emad_dev.in_time.R
 import com.ziad_emad_dev.in_time.databinding.FragmentEmailToResetPasswordBinding
+import com.ziad_emad_dev.in_time.ui.signing.ValidationListener
+import com.ziad_emad_dev.in_time.ui.signing.Validator
 import com.ziad_emad_dev.in_time.viewmodels.AuthViewModel
 
-class EmailToResetPassword : Fragment() {
+class EmailToResetPassword : Fragment(), ValidationListener {
 
     private var _binding: FragmentEmailToResetPasswordBinding? = null
     private val binding get() = _binding!!
 
+    private lateinit var validator: Validator
+
     private val viewModel by lazy {
         AuthViewModel(requireContext())
+    }
+
+    override fun onCreate(savedInstanceState: Bundle?) {
+        super.onCreate(savedInstanceState)
+        validator = Validator(this)
     }
 
     override fun onCreateView(
@@ -31,80 +40,32 @@ class EmailToResetPassword : Fragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
-        focusOnEditTextLayout()
+        validator.emailFocusChangeListener(binding.emailLayout)
         clickOnSendOTPButton()
-        responseComing()
-    }
-
-    private fun focusOnEditTextLayout() {
-        binding.email.setOnFocusChangeListener { _, hasFocus ->
-            if (hasFocus) {
-                binding.emailLayout.error = null
-            } else {
-                if (!emailEmptyError(binding.email.text.toString().trim())) {
-                    emailValidationError(binding.email.text.toString().trim())
-                }
-            }
-        }
     }
 
     private fun clickOnSendOTPButton() {
         binding.sendOTPButton.setOnClickListener {
             val email = binding.email.text.toString().trim()
-            clearFocusEditTextLayout()
-            if (!emailEmptyError(email)) {
-                if (!emailValidationError(email)) {
-                    startLoading()
+            validator.clearFocusEditTextLayout()
+            if (!validator.emailEmptyError(email)) {
+                if (!validator.emailValidationError(email)) {
+                    validator.startLoading()
                     viewModel.checkEmail(email)
+                    waitingForResponse()
                 }
             }
         }
     }
 
-    private fun emailEmptyError(email: String): Boolean {
-        if (email.isEmpty()) {
-            binding.emailLayout.error = getString(R.string.empty_field)
-        }
-        return email.isEmpty()
-    }
-
-    private fun emailValidationError(email: String): Boolean {
-        if (!android.util.Patterns.EMAIL_ADDRESS.matcher(email).matches()) {
-            binding.emailLayout.error = getString(R.string.invalid_email)
-        }
-        return !android.util.Patterns.EMAIL_ADDRESS.matcher(email).matches()
-    }
-
-    private fun emailNotRegistered() {
-        binding.emailLayout.error = getString(R.string.email_not_registered)
-    }
-
-    private fun startLoading() {
-        binding.blockingView.visibility = View.VISIBLE
-        binding.sendOTPButton.setBackgroundResource(R.drawable.button_loading)
-        binding.sendOTPButton.text = null
-        binding.progressCircular.visibility = View.VISIBLE
-    }
-
-    private fun stopLoading() {
-        binding.progressCircular.visibility = View.GONE
-        binding.sendOTPButton.setBackgroundResource(R.drawable.button_background)
-        binding.sendOTPButton.text = getString(R.string.send_otp)
-        binding.blockingView.visibility = View.GONE
-    }
-
-    private fun clearFocusEditTextLayout() {
-        binding.email.clearFocus()
-    }
-
-    private fun responseComing() {
+    private fun waitingForResponse() {
         viewModel.message.observe(viewLifecycleOwner) { message ->
             checkEmailAndNetwork(message)
         }
     }
 
     private fun checkEmailAndNetwork(message: String) {
-        stopLoading()
+        validator.stopLoading()
         when (message) {
             "true" -> {
                 val action = EmailToResetPasswordDirections.actionEmailToResetPasswordToResetPassword(binding.email.text.toString().trim())
@@ -112,13 +73,45 @@ class EmailToResetPassword : Fragment() {
             }
 
             "false" -> {
-                emailNotRegistered()
+                binding.emailLayout.error = getString(R.string.email_not_registered)
             }
 
             "Failed Connect, Try Again" -> {
                 Toast.makeText(requireContext(), message, Toast.LENGTH_SHORT).show()
             }
         }
+    }
+
+    override fun onEmailEmptyError() {
+        binding.emailLayout.error = getString(R.string.email_is_empty)
+    }
+
+    override fun onEmailValidationError() {
+        binding.emailLayout.error = getString(R.string.email_is_invalid)
+    }
+
+    override fun onEmailFocusChange(hasFocus: Boolean, message: String?) {
+        if (!hasFocus) {
+            binding.emailLayout.error = message
+        } else {
+            binding.emailLayout.error = null
+        }
+    }
+
+    override fun onClearFocusEditTextLayout() {
+        binding.email.clearFocus()
+    }
+
+    override fun onStartLoading() {
+        binding.blockingView.visibility = View.VISIBLE
+        binding.sendOTPButton.text = null
+        binding.progressCircular.visibility = View.VISIBLE
+    }
+
+    override fun onStopLoading() {
+        binding.progressCircular.visibility = View.GONE
+        binding.sendOTPButton.text = getString(R.string.send_otp)
+        binding.blockingView.visibility = View.GONE
     }
 
     override fun onDestroy() {

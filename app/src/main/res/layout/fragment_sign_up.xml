@@ -19,15 +19,18 @@
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:gravity="center"
+            android:gravity="bottom"
             android:orientation="vertical"
             android:padding="@dimen/standard_25">
 
             <com.google.android.material.card.MaterialCardView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_margin="@dimen/standard_25"
-                app:cardElevation="10dp">
+                android:layout_gravity="center"
+                android:layout_marginBottom="@dimen/standard_50"
+                app:cardBackgroundColor="@color/transparent"
+                app:cardElevation="10dp"
+                app:strokeColor="@color/transparent">
 
                 <ImageView
                     android:layout_width="120dp"
@@ -42,7 +45,7 @@
                 style="@style/InTime.TextInputLayout"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_marginTop="@dimen/standard_20"
+                android:layout_marginTop="@dimen/standard_25"
                 android:autofillHints="name"
                 android:hint="@string/name"
                 android:inputType="text">
@@ -60,7 +63,7 @@
                 style="@style/InTime.TextInputLayout"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_marginTop="@dimen/standard_40"
+                android:layout_marginTop="@dimen/standard_25"
                 android:autofillHints="emailAddress"
                 android:hint="@string/email"
                 android:inputType="textEmailAddress">
@@ -78,7 +81,7 @@
                 style="@style/InTime.TextInputLayout"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_marginTop="@dimen/standard_40"
+                android:layout_marginTop="@dimen/standard_25"
                 android:autofillHints="phone"
                 android:hint="@string/phone"
                 android:inputType="phone">
@@ -96,7 +99,7 @@
                 style="@style/InTime.TextInputLayout"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_marginTop="@dimen/standard_40"
+                android:layout_marginTop="@dimen/standard_25"
                 android:autofillHints="password"
                 android:hint="@string/password"
                 android:inputType="textEmailAddress"
@@ -116,7 +119,7 @@
                 style="@style/InTime.TextInputLayout"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_marginTop="@dimen/standard_40"
+                android:layout_marginTop="@dimen/standard_25"
                 android:autofillHints="password"
                 android:hint="@string/confirm_password"
                 android:inputType="textEmailAddress"
@@ -127,6 +130,7 @@
                     style="@style/InTime.TextInputEditText"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
+                    android:imeOptions="actionDone"
                     android:inputType="textPassword" />
 
             </com.google.android.material.textfield.TextInputLayout>
@@ -175,7 +179,7 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_gravity="center"
-                    android:indeterminateTint="@color/grey_5"
+                    android:indeterminateTint="@color/white"
                     android:visibility="gone" />
 
             </FrameLayout>
