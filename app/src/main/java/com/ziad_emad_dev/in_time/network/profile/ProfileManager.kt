@@ -6,15 +6,15 @@ class ProfileManager(context: Context) {
 
     private val sharedPreferences = context.getSharedPreferences("Profile", Context.MODE_PRIVATE)
 
-    fun saveProfile(id: String, name: String, title: String, email: String, phone: String, avatar: String, about: String,
-                    totalPoints: Int, completedTasks: Int, onGoingTasks: Int) {
+    fun saveProfile(id: String, name: String, email: String, phone: String, avatar: String, title: String,
+                    about: String, totalPoints: Int, completedTasks: Int, onGoingTasks: Int) {
         sharedPreferences.edit().apply {
             putString("id", id)
             putString("name", name)
-            putString("title", title)
             putString("email", email)
             putString("phone", phone)
             putString("avatar", avatar)
+            putString("title", title)
             putString("about", about)
             putInt("totalPoints", totalPoints)
             putInt("completedTasks", completedTasks)
@@ -38,10 +38,6 @@ class ProfileManager(context: Context) {
         return sharedPreferences.getString("name", "") ?: ""
     }
 
-    fun getProfileTitle(): String {
-        return sharedPreferences.getString("title", "") ?: ""
-    }
-
     fun getProfileEmail(): String {
         return sharedPreferences.getString("email", "") ?: ""
     }
@@ -52,6 +48,10 @@ class ProfileManager(context: Context) {
 
     fun getProfileAvatar(): String {
         return sharedPreferences.getString("avatar", "") ?: ""
+    }
+
+    fun getProfileTitle(): String {
+        return sharedPreferences.getString("title", "") ?: ""
     }
 
     fun getProfileAbout(): String {

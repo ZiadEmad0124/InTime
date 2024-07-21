@@ -17,6 +17,7 @@ import com.bumptech.glide.Glide
 import com.google.android.material.bottomnavigation.BottomNavigationItemView
 import com.google.android.material.bottomnavigation.BottomNavigationMenuView
 import com.google.android.material.bottomsheet.BottomSheetDialog
+import com.google.android.material.snackbar.Snackbar
 import com.google.android.material.textfield.TextInputEditText
 import com.google.android.material.textfield.TextInputLayout
 import com.ziad_emad_dev.in_time.R
@@ -52,8 +53,6 @@ class HomePage : AppCompatActivity() {
         sessionManager = SessionManager(this)
         profileManager = ProfileManager(this)
 
-        refreshProfile()
-
         myToolbar()
 
         customMiddleBottomNavBarIcon()
@@ -63,20 +62,19 @@ class HomePage : AppCompatActivity() {
         goToSettings()
         goToChangePassword()
         joinProject()
-
         signOut()
+
+        fetchProfile()
     }
 
     private fun myToolbar() {
-        myToolbarAvatar()
-
-        binding.myToolbar.notification.setOnClickListener {
-            val intent = Intent(this, NotificationActivity::class.java)
-            startActivity(intent)
+        binding.homeToolbar.profile.setOnClickListener {
+            binding.drawerLayout.openDrawer(GravityCompat.START)
         }
 
-        binding.myToolbar.profile.setOnClickListener {
-            binding.drawerLayout.openDrawer(GravityCompat.START)
+        binding.homeToolbar.notification.setOnClickListener {
+            val intent = Intent(this, NotificationActivity::class.java)
+            startActivity(intent)
         }
     }
 
@@ -89,7 +87,7 @@ class HomePage : AppCompatActivity() {
         val myIcon = LayoutInflater.from(this).inflate(R.layout.layout_middle_icon, bottomNavBarMenu, false)
         iconView.addView(myIcon)
 
-        myIcon.findViewById<ImageView>(R.id.add_button).setOnClickListener {
+        myIcon.findViewById<ImageView>(R.id.addButton).setOnClickListener {
             showBottomSheet()
         }
     }
@@ -146,6 +144,7 @@ class HomePage : AppCompatActivity() {
             startActivity(intent)
             finish()
         }
+
         val createProjectButton = view.findViewById<View>(R.id.createProjectButton)
         createProjectButton.setOnClickListener {
             dialog.dismiss()
@@ -180,7 +179,7 @@ class HomePage : AppCompatActivity() {
             startActivity(intent)
         }
     }
-
+//
     @SuppressLint("InflateParams")
     private fun joinProject() {
         binding.navigationView.joinProject.setOnClickListener {
@@ -224,54 +223,6 @@ class HomePage : AppCompatActivity() {
         }
     }
 
-    private fun navigationViewProfile() {
-        Glide.with(this)
-            .load(profileManager.getProfileAvatar())
-            .placeholder(R.drawable.ic_profile)
-            .error(R.drawable.ic_profile)
-            .into(binding.navigationView.profileImage)
-        binding.navigationView.profileName.text = profileManager.getProfileName()
-    }
-
-    private fun myToolbarAvatar() {
-        Glide.with(this)
-            .load(profileManager.getProfileAvatar())
-            .placeholder(R.drawable.ic_profile)
-            .error(R.drawable.ic_profile)
-            .into(binding.myToolbar.profile)
-    }
-
-    private fun refreshProfile() {
-        startLoading()
-        viewModel.refreshToken()
-        viewModel.refreshTokenMessage.observe(this) { message ->
-            if (message == "true") {
-                viewModel.fetchProfile()
-            } else {
-                failedConnect()
-            }
-        }
-
-        viewModel.fetchProfileMessage.observe(this) { message ->
-            if (message == "true") {
-                viewModel.fetchProfileRank()
-            } else {
-                failedConnect()
-            }
-        }
-
-        viewModel.fetchProfileRankMessage.observe(this) { message ->
-            if (message == "Fetch Profile Rank Success") {
-                stopLoading()
-                navigationViewProfile()
-                myToolbarAvatar()
-                runSelectedFragment(HomeFragment())
-            } else {
-                failedConnect()
-            }
-        }
-    }
-
     private fun signOut() {
         binding.navigationView.logOut.setOnClickListener {
             val alertDialog = LayoutInflater.from(this).inflate(R.layout.log_out_dialog, null)
@@ -295,11 +246,10 @@ class HomePage : AppCompatActivity() {
 
     private fun logOut() {
         startLoading()
-        binding.noConnection.visibility = View.GONE
         viewModel.signOut()
         viewModel.signOutMessage.observe(this) { message ->
             if (message != "true") {
-                sessionManager.clearAuthToken()
+                sessionManager.clearAccessToken()
                 sessionManager.clearRefreshToken()
                 profileManager.clearProfile()
             }
@@ -309,18 +259,76 @@ class HomePage : AppCompatActivity() {
         }
     }
 
+    private fun fetchProfile() {
+        startLoading()
+        viewModel.refreshToken()
+        viewModel.refreshTokenMessage.observe(this) { message ->
+            if (message == "true") {
+                viewModel.fetchProfile()
+            } else {
+                errorInConnectingOrFetching(message)
+            }
+        }
+
+        viewModel.fetchProfileMessage.observe(this) { message ->
+            if (message == "true") {
+                stopLoading()
+                fetchProfileNameAndAvatar()
+                runSelectedFragment(HomeFragment())
+            } else {
+                errorInConnectingOrFetching(message)
+            }
+        }
+    }
+
+    private fun fetchProfileNameAndAvatar() {
+        viewModel.fetchProfileAvatar.observe(this) { avatar ->
+            Glide.with(this)
+                .load(avatar)
+                .placeholder(R.drawable.ic_profile_default)
+                .error(R.drawable.ic_profile_default)
+                .into(binding.homeToolbar.profile)
+
+            Glide.with(this)
+                .load(avatar)
+                .placeholder(R.drawable.ic_profile_default)
+                .error(R.drawable.ic_profile_default)
+                .into(binding.navigationView.profileImage)
+        }
+
+        viewModel.fetchProfileName.observe(this) { name ->
+            binding.navigationView.profileName.text = name
+        }
+    }
+
     private fun startLoading() {
-        binding.blockingView.visibility = View.VISIBLE
+        binding.blockingView.progressCircular.visibility = View.VISIBLE
+        binding.blockingView.noFetch.visibility = View.GONE
+        binding.blockingView.noConnection.visibility = View.GONE
+        binding.blockingView.message.visibility = View.GONE
+        binding.blockingView.root.visibility = View.VISIBLE
     }
 
     private fun stopLoading() {
-        binding.blockingView.visibility = View.GONE
+        binding.blockingView.root.visibility = View.GONE
     }
 
-    private fun failedConnect() {
-        binding.blockingView.visibility = View.GONE
-        binding.blockingViewNoConnection.visibility = View.VISIBLE
-        Toast.makeText(this, "Failed Connect, Try Again", Toast.LENGTH_SHORT).show()
+    private fun errorInConnectingOrFetching(message: String) {
+        binding.blockingView.progressCircular.visibility = View.GONE
+
+        if (message == "Failed Connect, Try Again") {
+            binding.blockingView.noFetch.visibility = View.GONE
+            binding.blockingView.noConnection.visibility = View.VISIBLE
+            binding.blockingView.message.text = getString(R.string.no_connection)
+        } else {
+            binding.blockingView.noFetch.visibility = View.VISIBLE
+            binding.blockingView.noConnection.visibility = View.GONE
+            binding.blockingView.message.text = getString(R.string.something_went_wrong_try_again)
+        }
+
+        binding.blockingView.message.visibility = View.VISIBLE
+        Snackbar.make(binding.root, message, Snackbar.LENGTH_SHORT).show()
+        binding.blockingView.root.visibility = View.VISIBLE
     }
 
     @Deprecated("This function is Deprecated")

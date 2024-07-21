@@ -12,7 +12,7 @@
         android:layout_height="match_parent">
 
         <include
-            android:id="@+id/myToolbar"
+            android:id="@+id/homeToolbar"
             layout="@layout/toolbar_home"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
@@ -25,7 +25,7 @@
             app:layout_constraintBottom_toTopOf="@+id/view"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@id/myToolbar" />
+            app:layout_constraintTop_toBottomOf="@id/homeToolbar" />
 
         <View
             android:id="@+id/view"
@@ -46,60 +46,25 @@
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toBottomOf="@id/view"
-            app:menu="@menu/home_menu" />
+            app:menu="@menu/menu_home"
+            tools:ignore="VisualLintBottomNav" />
 
-        <LinearLayout
-            android:id="@+id/blockingViewNoConnection"
+        <include
+            android:id="@+id/blockingView"
+            layout="@layout/layout_blocking_no_connection_view"
             android:layout_width="match_parent"
             android:layout_height="0dp"
-            android:background="@color/white"
-            android:clickable="true"
-            android:focusable="true"
-            android:gravity="center"
-            android:visibility="gone"
             app:layout_constraintBottom_toTopOf="@id/view"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@id/myToolbar">
-
-            <ImageView
-                android:id="@+id/noConnection"
-                android:layout_width="80dp"
-                android:layout_height="80dp"
-                android:importantForAccessibility="no"
-                android:src="@drawable/ic_no_connection" />
-
-        </LinearLayout>
-
-        <LinearLayout
-            android:id="@+id/blockingView"
-            android:layout_width="match_parent"
-            android:layout_height="0dp"
-            android:background="@color/grey_6"
-            android:clickable="true"
-            android:focusable="true"
-            android:gravity="center"
-            android:visibility="gone"
-            app:layout_constraintBottom_toBottomOf="parent"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toTopOf="parent">
-
-            <ProgressBar
-                android:id="@+id/progressCircular"
-                android:layout_width="50dp"
-                android:layout_height="50dp"
-                android:layout_gravity="center"
-                android:indeterminateTint="@color/primary" />
-
-        </LinearLayout>
+            app:layout_constraintTop_toBottomOf="@id/homeToolbar" />
 
     </androidx.constraintlayout.widget.ConstraintLayout>
 
     <include
         android:id="@+id/navigationView"
-        layout="@layout/navigation_view_profile"
-        android:layout_width="wrap_content"
+        layout="@layout/navigation_view_home"
+        android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:layout_gravity="start" />
 

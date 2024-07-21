@@ -88,7 +88,7 @@ class TaskViewModel(context: Context) : ViewModel() {
 
         viewModelScope.launch {
             try {
-                val response = InTimeApi.retrofitService.createTask("Bearer ${sessionManager.fetchAuthToken().toString()}",
+                val response = InTimeApi.retrofitService.createTask("Bearer ${sessionManager.fetchAccessToken().toString()}",
                         myName, myDescription, myPriority, myStartAt, myEndAt, myTaskCoverFile, stepParts, tagName, tagColor)
                 if (response.isSuccessful) {
                     _createTaskMessage.value = response.body()?.success.toString()
@@ -106,7 +106,7 @@ class TaskViewModel(context: Context) : ViewModel() {
     fun getAllTag() {
         viewModelScope.launch {
             try {
-                val response = InTimeApi.retrofitService.getAllTag("Bearer ${sessionManager.fetchAuthToken().toString()}")
+                val response = InTimeApi.retrofitService.getAllTag("Bearer ${sessionManager.fetchAccessToken().toString()}")
                 if (response.isSuccessful) {
                     _getTagsMessage.value = response.body()?.success.toString()
                     _getTags.value = response.body()?.tags!!
@@ -122,7 +122,7 @@ class TaskViewModel(context: Context) : ViewModel() {
     fun getTasks() {
         viewModelScope.launch {
             try {
-                val response = InTimeApi.retrofitService.getTasks("Bearer ${sessionManager.fetchAuthToken().toString()}", 1, false)
+                val response = InTimeApi.retrofitService.getTasks("Bearer ${sessionManager.fetchAccessToken().toString()}", 1, false)
                 if (response.isSuccessful) {
                     _getTasksMessage.value = response.body()?.success.toString()
                     _getTasks.value = response.body()?.record!!
@@ -138,7 +138,7 @@ class TaskViewModel(context: Context) : ViewModel() {
     fun getTask(taskId: String) {
         viewModelScope.launch {
             try {
-                val response = InTimeApi.retrofitService.getTask("Bearer ${sessionManager.fetchAuthToken().toString()}", taskId)
+                val response = InTimeApi.retrofitService.getTask("Bearer ${sessionManager.fetchAccessToken().toString()}", taskId)
                 if (response.isSuccessful) {
                     _getTaskMessage.value = response.body()?.success.toString()
                     _getTask.value = response.body()?.record!!
@@ -154,7 +154,7 @@ class TaskViewModel(context: Context) : ViewModel() {
     fun deleteTask(taskId: String) {
         viewModelScope.launch {
             try {
-                val response = InTimeApi.retrofitService.deleteTask("Bearer ${sessionManager.fetchAuthToken().toString()}", taskId)
+                val response = InTimeApi.retrofitService.deleteTask("Bearer ${sessionManager.fetchAccessToken().toString()}", taskId)
                 if (response.isSuccessful) {
                     _deleteTaskMessage.value = response.body()?.success.toString()
                 } else {
@@ -199,7 +199,7 @@ class TaskViewModel(context: Context) : ViewModel() {
         viewModelScope.launch {
             try {
                 val response = InTimeApi.retrofitService.updateTask(
-                    "Bearer ${sessionManager.fetchAuthToken().toString()}", id,
+                    "Bearer ${sessionManager.fetchAccessToken().toString()}", id,
                     myName, myDescription, myPriority, myStartAt, myEndAt, myTaskCoverFile, stepParts, tagName, tagColor)
                 if (response.isSuccessful) {
                     _updateTaskMessage.value = response.body()?.success.toString()
@@ -240,7 +240,7 @@ class TaskViewModel(context: Context) : ViewModel() {
 
         viewModelScope.launch {
             try {
-                val response = InTimeApi.retrofitService.updateTask("Bearer ${sessionManager.fetchAuthToken().toString()}", id,
+                val response = InTimeApi.retrofitService.updateTask("Bearer ${sessionManager.fetchAccessToken().toString()}", id,
                     myDescription, myPriority, myTaskCoverFile, stepParts, tagName, tagColor)
                 if (response.isSuccessful) {
                     _updateTaskMessage.value = response.body()?.success.toString()
@@ -258,7 +258,7 @@ class TaskViewModel(context: Context) : ViewModel() {
     fun removeCover(taskId: String) {
         viewModelScope.launch {
             try {
-                val response = InTimeApi.retrofitService.removeTaskCover("Bearer ${sessionManager.fetchAuthToken().toString()}", taskId)
+                val response = InTimeApi.retrofitService.removeTaskCover("Bearer ${sessionManager.fetchAccessToken().toString()}", taskId)
                 if (response.isSuccessful) {
                     _removeCoverMessage.value = response.body()?.success.toString()
                 } else {
@@ -273,7 +273,7 @@ class TaskViewModel(context: Context) : ViewModel() {
     fun completeTask(taskId: String) {
         viewModelScope.launch {
             try {
-                val response = InTimeApi.retrofitService.completeTask("Bearer ${sessionManager.fetchAuthToken().toString()}", taskId)
+                val response = InTimeApi.retrofitService.completeTask("Bearer ${sessionManager.fetchAccessToken().toString()}", taskId)
                 if (response.isSuccessful) {
                     _completeTaskMessage.value = response.body()?.success.toString()
                 } else {
@@ -298,7 +298,7 @@ class TaskViewModel(context: Context) : ViewModel() {
 
         viewModelScope.launch {
             try {
-                val response = InTimeApi.retrofitService.updateSteps("Bearer ${sessionManager.fetchAuthToken().toString()}"
+                val response = InTimeApi.retrofitService.updateSteps("Bearer ${sessionManager.fetchAccessToken().toString()}"
                     , taskId, stepNameParts, stepCompletedParts)
                 if (response.isSuccessful) {
                     _completeStepsMessage.value = response.body()?.success.toString()

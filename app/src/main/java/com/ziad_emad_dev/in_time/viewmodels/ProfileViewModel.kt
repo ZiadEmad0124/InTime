@@ -38,9 +38,9 @@ class ProfileViewModel(context: Context) : ViewModel() {
 
         viewModelScope.launch {
             try {
-                val response = InTimeApi.retrofitService.deleteAccount("Bearer ${sessionManager.fetchAuthToken().toString()}")
+                val response = InTimeApi.retrofitService.deleteAccount("Bearer ${sessionManager.fetchAccessToken().toString()}")
                 if (response.isSuccessful) {
-                    sessionManager.clearAuthToken()
+                    sessionManager.clearAccessToken()
                     sessionManager.clearRefreshToken()
                     _deleteAccountMessage.value = response.body()?.success.toString()
                 } else {
@@ -55,7 +55,7 @@ class ProfileViewModel(context: Context) : ViewModel() {
     fun fetchProfile() {
         viewModelScope.launch {
             try {
-                val response = InTimeApi.retrofitService.fetchUser("Bearer ${sessionManager.fetchAuthToken()}")
+                val response = InTimeApi.retrofitService.fetchUser("Bearer ${sessionManager.fetchAccessToken()}")
                 if (response.isSuccessful) {
                     val title = when (response.body()?.record?.title) {
                         null -> "User"
@@ -102,7 +102,7 @@ class ProfileViewModel(context: Context) : ViewModel() {
 
         viewModelScope.launch {
             try {
-                val response = InTimeApi.retrofitService.editProfile("Bearer ${sessionManager.fetchAuthToken().toString()}",
+                val response = InTimeApi.retrofitService.editProfile("Bearer ${sessionManager.fetchAccessToken().toString()}",
                     myName, myTitle, myPhone, myAbout, avatar)
                 if (response.isSuccessful) {
                     _editProfileMessage.value = response.body()?.success.toString()
@@ -119,7 +119,7 @@ class ProfileViewModel(context: Context) : ViewModel() {
 
         viewModelScope.launch {
             try {
-                val response = InTimeApi.retrofitService.removeAvatar("Bearer ${sessionManager.fetchAuthToken().toString()}")
+                val response = InTimeApi.retrofitService.removeAvatar("Bearer ${sessionManager.fetchAccessToken().toString()}")
                 if (response.isSuccessful) {
                     _editProfileMessage.value = response.body()?.success.toString()
                 } else {
@@ -137,7 +137,7 @@ class ProfileViewModel(context: Context) : ViewModel() {
             val request = ChangePasswordRequest(currentPassword, newPassword, confirmPassword)
 
             try {
-                val response = InTimeApi.retrofitService.changePassword("Bearer ${sessionManager.fetchAuthToken().toString()}", request)
+                val response = InTimeApi.retrofitService.changePassword("Bearer ${sessionManager.fetchAccessToken().toString()}", request)
                 if (response.isSuccessful) {
                     _changePasswordMessage.value = response.body()?.success.toString()
                 } else {

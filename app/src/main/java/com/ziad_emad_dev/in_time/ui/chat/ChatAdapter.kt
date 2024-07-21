@@ -34,7 +34,7 @@ class ChatAdapter(context: Context, private val currentUser: String) :
             binding.senderName.text = message.senderName
             binding.message.text = message.messageText
             Glide.with(context).load(message.senderImageResource)
-                .error(R.drawable.ic_profile)
+                .error(R.drawable.ic_profile_default)
                 .into(binding.senderImage)
         } else {
             val binding: ItemChatMessageReceiverBinding
@@ -49,7 +49,7 @@ class ChatAdapter(context: Context, private val currentUser: String) :
             binding.senderName.text = message.senderName
             binding.message.text = message.messageText
             Glide.with(context).load(message.senderImageResource)
-                .error(R.drawable.ic_profile)
+                .error(R.drawable.ic_profile_default)
                 .into(binding.senderImage)
         }
 

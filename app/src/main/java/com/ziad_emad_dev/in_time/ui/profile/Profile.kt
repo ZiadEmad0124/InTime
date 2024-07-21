@@ -47,8 +47,8 @@ class Profile : AppCompatActivity() {
     private fun fitchProfile() {
         Glide.with(this)
             .load(profileManager.getProfileAvatar())
-            .placeholder(R.drawable.ic_profile)
-            .error(R.drawable.ic_profile)
+            .placeholder(R.drawable.ic_profile_default)
+            .error(R.drawable.ic_profile_default)
             .into(binding.profileImage)
         binding.profileName.text = profileManager.getProfileName()
         binding.profileTitle.text = profileManager.getProfileTitle()

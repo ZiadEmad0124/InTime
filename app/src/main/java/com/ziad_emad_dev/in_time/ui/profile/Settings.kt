@@ -84,8 +84,8 @@ class Settings : AppCompatActivity() {
     private fun profileImage() {
         Glide.with(this)
             .load(profileManager.getProfileAvatar())
-            .placeholder(R.drawable.ic_profile)
-            .error(R.drawable.ic_profile)
+            .placeholder(R.drawable.ic_profile_default)
+            .error(R.drawable.ic_profile_default)
             .into(binding.profileImage)
     }
 
@@ -239,8 +239,8 @@ class Settings : AppCompatActivity() {
             "true" -> {
                 Glide.with(this)
                     .load(profileManager.getProfileAvatar())
-                    .placeholder(R.drawable.ic_profile)
-                    .error(R.drawable.ic_profile)
+                    .placeholder(R.drawable.ic_profile_default)
+                    .error(R.drawable.ic_profile_default)
                     .into(binding.profileImage)
                 binding.profileName.details.text = profileManager.getProfileName()
                 binding.profileTitle.details.text = profileManager.getProfileTitle()
@@ -270,7 +270,7 @@ class Settings : AppCompatActivity() {
     private fun removeProfilePhotoButton() {
         binding.removeButton.setOnClickListener {
             isProfileImageRemoved = true
-            binding.profileImage.setImageResource(R.drawable.ic_profile)
+            binding.profileImage.setImageResource(R.drawable.ic_profile_default)
         }
     }
 

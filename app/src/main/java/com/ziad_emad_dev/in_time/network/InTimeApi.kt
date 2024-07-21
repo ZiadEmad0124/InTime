@@ -1,15 +1,15 @@
 package com.ziad_emad_dev.in_time.network
 
-import com.ziad_emad_dev.in_time.network.auth.activation.ActivationRequest
-import com.ziad_emad_dev.in_time.network.auth.activation.ActivationResponse
+import com.ziad_emad_dev.in_time.network.auth.activate_account.ActivateAccountRequest
+import com.ziad_emad_dev.in_time.network.auth.activate_account.ActivateAccountResponse
 import com.ziad_emad_dev.in_time.network.auth.check_email.CheckEmailRequest
 import com.ziad_emad_dev.in_time.network.auth.check_email.CheckEmailResponse
-import com.ziad_emad_dev.in_time.network.auth.new_password.ResetPasswordRequest
-import com.ziad_emad_dev.in_time.network.auth.new_password.ResetPasswordResponse
 import com.ziad_emad_dev.in_time.network.auth.refresh_token.RefreshTokenRequest
 import com.ziad_emad_dev.in_time.network.auth.refresh_token.RefreshTokenResponse
 import com.ziad_emad_dev.in_time.network.auth.resend_activation_code.ResendActivationCodeRequest
 import com.ziad_emad_dev.in_time.network.auth.resend_activation_code.ResendActivationCodeResponse
+import com.ziad_emad_dev.in_time.network.auth.reset_password.ResetPasswordRequest
+import com.ziad_emad_dev.in_time.network.auth.reset_password.ResetPasswordResponse
 import com.ziad_emad_dev.in_time.network.auth.sign_in.SignInRequest
 import com.ziad_emad_dev.in_time.network.auth.sign_in.SignInResponse
 import com.ziad_emad_dev.in_time.network.auth.sign_out.SignOutRequest
@@ -63,10 +63,10 @@ private const val BASE_URL = "https://intime-9hga.onrender.com/api/v1/"
 //  Auth Endpoints
 private const val SIGNIN_URL = "auth/login"
 private const val SIGNUP_URL = "auth/signup"
-private const val ACTIVATION_CODE_URL = "auth/activation/{code}"
+private const val ACTIVATE_ACCOUNT_URL = "auth/activation/{code}"
 private const val RESEND_ACTIVATION_CODE_URL = "auth/resendactivationcode"
 private const val CHECK_EMAIL_URL = "auth/forgetpassword"
-private const val FORGET_PASSWORD_URL = "auth/forgetpassword/changepassword/{code}"
+private const val RESET_PASSWORD_URL = "auth/forgetpassword/changepassword/{code}"
 private const val REFRESH_TOKEN_URL = "auth/refreshToken"
 private const val SIGNOUT_URL = "auth/signOut"
 
@@ -131,8 +131,8 @@ interface InTimeApiServices {
     @POST(SIGNUP_URL)
     suspend fun signUp(@Body request: SignUpRequest): Response<SignUpResponse>
 
-    @POST(ACTIVATION_CODE_URL)
-    suspend fun activateAccount(@Path("code") code: String, @Body request: ActivationRequest): Response<ActivationResponse>
+    @POST(ACTIVATE_ACCOUNT_URL)
+    suspend fun activateAccount(@Path("code") code: String, @Body request: ActivateAccountRequest): Response<ActivateAccountResponse>
 
     @POST(RESEND_ACTIVATION_CODE_URL)
     suspend fun resendActivationCode(@Body request: ResendActivationCodeRequest): Response<ResendActivationCodeResponse>
@@ -140,7 +140,7 @@ interface InTimeApiServices {
     @POST(CHECK_EMAIL_URL)
     suspend fun checkEmail(@Body request: CheckEmailRequest): Response<CheckEmailResponse>
 
-    @POST(FORGET_PASSWORD_URL)
+    @POST(RESET_PASSWORD_URL)
     suspend fun resetPassword(@Path("code") code: String, @Body request: ResetPasswordRequest): Response<ResetPasswordResponse>
 
     @POST(REFRESH_TOKEN_URL)
@@ -177,7 +177,10 @@ interface InTimeApiServices {
     suspend fun removeAvatar(@Header("Authorization") token: String): Response<RemoveAvatarResponse>
 
     @POST(CHANGE_PASSWORD_URL)
-    suspend fun changePassword(@Header("Authorization") token: String, @Body request: ChangePasswordRequest): Response<ChangePasswordResponse>
+    suspend fun changePassword(
+        @Header("Authorization") token: String,
+        @Body request: ChangePasswordRequest
+    ): Response<ChangePasswordResponse>
 
     @GET(USER_RANK_URL)
     suspend fun fetchUserRank(@Header("Authorization") token: String): Response<RankResponse>
@@ -204,7 +207,7 @@ interface InTimeApiServices {
         @Header("Authorization") token: String,
         @Query("sortingType") sortingType: Int,
         @Query("projectTask") projectTask: Boolean,
-        ): Response<GetTasksResponse>
+    ): Response<GetTasksResponse>
 
     @GET(GET_TASKS_URL)
     suspend fun getTwoTasks(
@@ -220,19 +223,34 @@ interface InTimeApiServices {
     suspend fun getAllTag(@Header("Authorization") token: String): Response<GetTasksResponse>
 
     @GET(GET_TASK_URL)
-    suspend fun getTask(@Header("Authorization") token: String, @Path("taskId") taskId: String): Response<GetTaskResponse>
+    suspend fun getTask(
+        @Header("Authorization") token: String,
+        @Path("taskId") taskId: String
+    ): Response<GetTaskResponse>
 
     @POST(DELETE_TASK_URL)
-    suspend fun deleteTask(@Header("Authorization") token: String, @Path("taskId") taskId: String): Response<DeleteTaskResponse>
+    suspend fun deleteTask(
+        @Header("Authorization") token: String,
+        @Path("taskId") taskId: String
+    ): Response<DeleteTaskResponse>
 
     @POST(COMPLETE_TASK_URL)
-    suspend fun completeTask(@Header("Authorization") token: String, @Path("taskId") search: String): Response<CompleteTaskResponse>
+    suspend fun completeTask(
+        @Header("Authorization") token: String,
+        @Path("taskId") search: String
+    ): Response<CompleteTaskResponse>
 
     @GET(SEARCH_TASK_URL)
-    suspend fun searchTasks(@Header("Authorization") token: String, @Path("search") search: String): Response<GetTasksResponse>
+    suspend fun searchTasks(
+        @Header("Authorization") token: String,
+        @Path("search") search: String
+    ): Response<GetTasksResponse>
 
     @DELETE(REMOVE_TASK_COVER_URL)
-    suspend fun removeTaskCover(@Header("Authorization") token: String, @Path("taskId") taskId: String): Response<DeleteTaskCover>
+    suspend fun removeTaskCover(
+        @Header("Authorization") token: String,
+        @Path("taskId") taskId: String
+    ): Response<DeleteTaskCover>
 
     @Multipart
     @POST(UPDATE_TASK_URL)
@@ -270,7 +288,7 @@ interface InTimeApiServices {
         @Path("taskId") taskId: String,
         @Part stepsName: List<MultipartBody.Part>,
         @Part stepsCompleted: List<MultipartBody.Part>,
-        ): Response<UpdateTaskResponse>
+    ): Response<UpdateTaskResponse>
 
 //    Projects
 
@@ -283,10 +301,16 @@ interface InTimeApiServices {
     ): Response<CreateTaskResponse>
 
     @GET(GET_PROJECTS_URL)
-    suspend fun getProjects(@Header("Authorization") token: String, @Query("role") role: String?): Response<GetProjectsResponse>
+    suspend fun getProjects(
+        @Header("Authorization") token: String,
+        @Query("role") role: String?
+    ): Response<GetProjectsResponse>
 
     @GET(GET_PROJECT_URL)
-    suspend fun getProject(@Header("Authorization") token: String, @Path("projectId") projectId: String): Response<GetProjectResponse>
+    suspend fun getProject(
+        @Header("Authorization") token: String,
+        @Path("projectId") projectId: String
+    ): Response<GetProjectResponse>
 
     @Multipart
     @POST(EDIT_PROJECT_URL)
@@ -298,29 +322,42 @@ interface InTimeApiServices {
     ): Response<GetProjectResponse>
 
     @GET(SHARE_PROJECT_URL)
-    suspend fun shareProject(@Header("Authorization") token: String, @Path("projectId") projectId: String): Response<ShareProjectResponse>
+    suspend fun shareProject(
+        @Header("Authorization") token: String,
+        @Path("projectId") projectId: String
+    ): Response<ShareProjectResponse>
 
     @GET(JOIN_PROJECT_URL)
     suspend fun joinProject(
         @Header("Authorization") token: String,
         @Path("projectId") projectId: String,
         @Path("otp") otp: String,
-        ): Response<GetProjectResponse>
+    ): Response<GetProjectResponse>
 
     @DELETE(REMOVE_PROJECT_COVER_URL)
-    suspend fun removeProjectCover(@Header("Authorization") token: String, @Path("projectId") projectId: String): Response<DeleteProjectCoverResponse>
+    suspend fun removeProjectCover(
+        @Header("Authorization") token: String,
+        @Path("projectId") projectId: String
+    ): Response<DeleteProjectCoverResponse>
 
     @GET(GET_PROJECT_MEMBERS_URL)
-    suspend fun getProjectMembers(@Header("Authorization") token: String, @Path("projectId") projectId: String): Response<GetProjectMembersResponse>
+    suspend fun getProjectMembers(
+        @Header("Authorization") token: String,
+        @Path("projectId") projectId: String
+    ): Response<GetProjectMembersResponse>
 
     @DELETE(REMOVE_PROJECT_MEMBER_URL)
     suspend fun removeProjectMember(
         @Header("Authorization") token: String,
         @Path("projectId") projectId: String,
-        @Path("memberId") memberId: String): Response<RemoveMemberResponse>
+        @Path("memberId") memberId: String
+    ): Response<RemoveMemberResponse>
 
     @DELETE(DELETE_PROJECT_URL)
-    suspend fun deleteProject(@Header("Authorization") token: String, @Path("projectId") projectId: String): Response<DeleteProjectResponse>
+    suspend fun deleteProject(
+        @Header("Authorization") token: String,
+        @Path("projectId") projectId: String
+    ): Response<DeleteProjectResponse>
 
     @Multipart
     @POST(CREATE_PROJECT_TASK_URL)
@@ -335,7 +372,10 @@ interface InTimeApiServices {
     ): Response<CreateProjectTaskResponse>
 
     @GET(GET_PROJECT_TASKS_URL)
-    suspend fun getProjectTasks(@Header("Authorization") token: String, @Path("projectId") projectId: String): Response<GetProjectTaskResponse>
+    suspend fun getProjectTasks(
+        @Header("Authorization") token: String,
+        @Path("projectId") projectId: String
+    ): Response<GetProjectTaskResponse>
 
     @Multipart
     @POST(EDIT_PROJECT_TASK_ADMIN_URL)

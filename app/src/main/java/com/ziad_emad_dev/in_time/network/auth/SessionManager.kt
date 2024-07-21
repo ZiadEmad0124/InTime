@@ -12,7 +12,7 @@ class SessionManager(context: Context) {
 
     private var sharedPreferences: SharedPreferences = context.getSharedPreferences("Session", Context.MODE_PRIVATE)
 
-    fun saveAuthToken(token: String) {
+    fun saveAccessToken(token: String) {
         val editor = sharedPreferences.edit()
         editor.putString(ACCESS_TOKEN, token)
         editor.apply()
@@ -24,11 +24,11 @@ class SessionManager(context: Context) {
         editor.apply()
     }
 
-    fun isAuthEmpty(): Boolean {
+    fun isAccessTokenEmpty(): Boolean {
         return sharedPreferences.getString(ACCESS_TOKEN, null) == null
     }
 
-    fun fetchAuthToken(): String? {
+    fun fetchAccessToken(): String? {
         return sharedPreferences.getString(ACCESS_TOKEN, null)
     }
 
@@ -36,7 +36,7 @@ class SessionManager(context: Context) {
         return sharedPreferences.getString(REFRESH_TOKEN, null)
     }
 
-    fun clearAuthToken() {
+    fun clearAccessToken() {
         val editor = sharedPreferences.edit()
         editor.remove(ACCESS_TOKEN)
         editor.apply()

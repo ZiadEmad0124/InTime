@@ -44,8 +44,8 @@
     <string name="create_a_task">Create a Task</string>
     <string name="details">Details</string>
     <string name="create">Create</string>
-    <string name="create_task">Create Task</string>
-    <string name="create_project">Create Project</string>
+    <string name="task">Task</string>
+    <string name="project">Project</string>
     <string name="tag">Tag</string>
     <string name="add_step">Add Step</string>
     <string name="log_out">Log Out</string>
@@ -166,6 +166,8 @@
     <string name="email_is_invalid">Email is invalid</string>
     <string name="phone_is_empty">Phone is empty</string>
     <string name="name_is_empty">Name is empty</string>
+    <string name="no_connection">No Connection</string>
+    <string name="something_went_wrong_try_again">Something Went Wrong, Try Again</string>
     <string-array name="sort_options">
         <item>Sort by Name</item>
         <item>Sort by Start Date</item>

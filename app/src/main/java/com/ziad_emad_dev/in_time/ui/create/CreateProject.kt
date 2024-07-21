@@ -57,7 +57,7 @@ class CreateProject : AppCompatActivity() {
 
     private fun myToolbar() {
         binding.myToolbar.root.background = ContextCompat.getDrawable(this, R.color.white_2)
-        binding.myToolbar.title.text = getString(R.string.create_project)
+        binding.myToolbar.title.text = getString(R.string.project)
         binding.myToolbar.back.setOnClickListener {
             val intent = Intent(this, HomePage::class.java)
             startActivity(intent)

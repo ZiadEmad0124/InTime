@@ -51,7 +51,7 @@
                 android:layout_width="32dp"
                 android:layout_height="32dp"
                 android:layout_marginEnd="@dimen/standard_10"
-                android:src="@drawable/ic_profile"
+                android:src="@drawable/ic_profile_default"
                 app:civ_border_color="@color/primary"
                 app:civ_border_width="@dimen/stroke_width" />
 

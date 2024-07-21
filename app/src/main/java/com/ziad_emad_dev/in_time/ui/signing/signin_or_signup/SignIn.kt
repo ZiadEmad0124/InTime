@@ -158,7 +158,7 @@ class SignIn : Fragment(), ValidationListener {
     }
 
     override fun onStartLoading() {
-        binding.blockingView.visibility = View.VISIBLE
+        binding.blockingView.root.visibility = View.VISIBLE
         binding.logInButton.text = null
         binding.progressCircular.visibility = View.VISIBLE
     }
@@ -166,7 +166,7 @@ class SignIn : Fragment(), ValidationListener {
     override fun onStopLoading() {
         binding.progressCircular.visibility = View.GONE
         binding.logInButton.text = getString(R.string.login)
-        binding.blockingView.visibility = View.GONE
+        binding.blockingView.root.visibility = View.GONE
     }
 
     override fun onDestroy() {

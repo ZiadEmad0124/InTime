@@ -7,14 +7,14 @@ import androidx.lifecycle.viewModelScope
 import com.google.gson.Gson
 import com.ziad_emad_dev.in_time.network.InTimeApi
 import com.ziad_emad_dev.in_time.network.auth.SessionManager
-import com.ziad_emad_dev.in_time.network.auth.activation.ActivationRequest
-import com.ziad_emad_dev.in_time.network.auth.activation.ActivationResponse
+import com.ziad_emad_dev.in_time.network.auth.activate_account.ActivateAccountRequest
+import com.ziad_emad_dev.in_time.network.auth.activate_account.ActivateAccountResponse
 import com.ziad_emad_dev.in_time.network.auth.check_email.CheckEmailRequest
 import com.ziad_emad_dev.in_time.network.auth.check_email.CheckEmailResponse
-import com.ziad_emad_dev.in_time.network.auth.new_password.ResetPasswordRequest
-import com.ziad_emad_dev.in_time.network.auth.new_password.ResetPasswordResponse
 import com.ziad_emad_dev.in_time.network.auth.resend_activation_code.ResendActivationCodeRequest
 import com.ziad_emad_dev.in_time.network.auth.resend_activation_code.ResendActivationCodeResponse
+import com.ziad_emad_dev.in_time.network.auth.reset_password.ResetPasswordRequest
+import com.ziad_emad_dev.in_time.network.auth.reset_password.ResetPasswordResponse
 import com.ziad_emad_dev.in_time.network.auth.sign_in.SignInRequest
 import com.ziad_emad_dev.in_time.network.auth.sign_in.SignInResponse
 import com.ziad_emad_dev.in_time.network.auth.sign_up.SignUpRequest
@@ -22,6 +22,10 @@ import com.ziad_emad_dev.in_time.network.auth.sign_up.SignUpResponse
 import kotlinx.coroutines.launch
 
 class AuthViewModel(context: Context) : ViewModel() {
+
+    companion object {
+        private const val FAILED_CONNECT = "Failed Connect, Try Again"
+    }
 
     private val sessionManager = SessionManager(context)
 
@@ -35,7 +39,7 @@ class AuthViewModel(context: Context) : ViewModel() {
             try {
                 val response = InTimeApi.retrofitService.signIn(request)
                 if (response.isSuccessful) {
-                    sessionManager.saveAuthToken(response.body()?.accessToken.toString())
+                    sessionManager.saveAccessToken(response.body()?.accessToken.toString())
                     sessionManager.saveRefreshToken(response.body()?.refreshToken.toString())
                     _message.value = response.body()?.success.toString()
                 } else {
@@ -44,7 +48,7 @@ class AuthViewModel(context: Context) : ViewModel() {
                     _message.value = errorSignInResponse?.message.toString()
                 }
             } catch (e: Exception) {
-                _message.value = "Failed Connect, Try Again"
+                _message.value = FAILED_CONNECT
             }
         }
     }
@@ -63,13 +67,13 @@ class AuthViewModel(context: Context) : ViewModel() {
                     _message.value = errorSignUpResponse?.message.toString()
                 }
             } catch (e: Exception) {
-                _message.value = "Failed Connect, Try Again"
+                _message.value = FAILED_CONNECT
             }
         }
     }
 
     fun activateAccount(code: String, email: String) {
-        val request = ActivationRequest(email = email)
+        val request = ActivateAccountRequest(email = email)
 
         viewModelScope.launch {
             try {
@@ -78,11 +82,11 @@ class AuthViewModel(context: Context) : ViewModel() {
                     _message.value = response.body()?.success.toString()
                 } else {
                     val errorResponse = response.errorBody()?.string()
-                    val errorActivationRequest = Gson().fromJson(errorResponse, ActivationResponse::class.java)
-                    _message.value = errorActivationRequest?.message.toString()
+                    val errorActivateAccountRequest = Gson().fromJson(errorResponse, ActivateAccountResponse::class.java)
+                    _message.value = errorActivateAccountRequest?.message.toString()
                 }
             } catch (e: Exception) {
-                _message.value = "Failed Connect, Try Again"
+                _message.value = FAILED_CONNECT
             }
         }
     }
@@ -101,7 +105,7 @@ class AuthViewModel(context: Context) : ViewModel() {
                     _message.value = errorResendActivationCodeRequest?.message.toString()
                 }
             } catch (e: Exception) {
-                _message.value = "Failed Connect, Try Again"
+                _message.value = FAILED_CONNECT
             }
         }
     }
@@ -120,7 +124,7 @@ class AuthViewModel(context: Context) : ViewModel() {
                     _message.value = errorCheckEmailRequest.success.toString()
                 }
             } catch (e: Exception) {
-                _message.value = "Failed Connect, Try Again"
+                _message.value = FAILED_CONNECT
             }
         }
     }
@@ -139,7 +143,7 @@ class AuthViewModel(context: Context) : ViewModel() {
                     _message.value = errorResetPasswordRequest?.message.toString()
                 }
             } catch (e: Exception) {
-                _message.value = "Failed Connect, Try Again"
+                _message.value = FAILED_CONNECT
             }
         }
     }

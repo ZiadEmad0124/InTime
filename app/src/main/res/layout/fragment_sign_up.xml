@@ -46,15 +46,15 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginTop="@dimen/standard_25"
-                android:autofillHints="name"
-                android:hint="@string/name"
-                android:inputType="text">
+                android:hint="@string/name">
 
                 <com.google.android.material.textfield.TextInputEditText
                     android:id="@+id/name"
                     style="@style/InTime.TextInputEditText"
                     android:layout_width="match_parent"
-                    android:layout_height="wrap_content" />
+                    android:layout_height="wrap_content"
+                    android:autofillHints="name"
+                    android:inputType="text" />
 
             </com.google.android.material.textfield.TextInputLayout>
 
@@ -64,15 +64,15 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginTop="@dimen/standard_25"
-                android:autofillHints="emailAddress"
-                android:hint="@string/email"
-                android:inputType="textEmailAddress">
+                android:hint="@string/email">
 
                 <com.google.android.material.textfield.TextInputEditText
                     android:id="@+id/email"
                     style="@style/InTime.TextInputEditText"
                     android:layout_width="match_parent"
-                    android:layout_height="wrap_content" />
+                    android:layout_height="wrap_content"
+                    android:autofillHints="emailAddress"
+                    android:inputType="textEmailAddress" />
 
             </com.google.android.material.textfield.TextInputLayout>
 
@@ -82,15 +82,15 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginTop="@dimen/standard_25"
-                android:autofillHints="phone"
-                android:hint="@string/phone"
-                android:inputType="phone">
+                android:hint="@string/phone">
 
                 <com.google.android.material.textfield.TextInputEditText
                     android:id="@+id/phone"
                     style="@style/InTime.TextInputEditText"
                     android:layout_width="match_parent"
-                    android:layout_height="wrap_content" />
+                    android:layout_height="wrap_content"
+                    android:autofillHints="phone"
+                    android:inputType="phone" />
 
             </com.google.android.material.textfield.TextInputLayout>
 
@@ -100,9 +100,7 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginTop="@dimen/standard_25"
-                android:autofillHints="password"
                 android:hint="@string/password"
-                android:inputType="textEmailAddress"
                 app:endIconMode="password_toggle">
 
                 <com.google.android.material.textfield.TextInputEditText
@@ -110,6 +108,7 @@
                     style="@style/InTime.TextInputEditText"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
+                    android:autofillHints="password"
                     android:inputType="textPassword" />
 
             </com.google.android.material.textfield.TextInputLayout>
@@ -120,9 +119,7 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginTop="@dimen/standard_25"
-                android:autofillHints="password"
                 android:hint="@string/confirm_password"
-                android:inputType="textEmailAddress"
                 app:endIconMode="password_toggle">
 
                 <com.google.android.material.textfield.TextInputEditText
@@ -130,6 +127,7 @@
                     style="@style/InTime.TextInputEditText"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
+                    android:autofillHints="password"
                     android:imeOptions="actionDone"
                     android:inputType="textPassword" />
 
@@ -188,17 +186,10 @@
 
     </ScrollView>
 
-    <View
+    <include
         android:id="@+id/blockingView"
+        layout="@layout/layout_blocking_view"
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:background="@android:color/transparent"
-        android:clickable="true"
-        android:focusable="true"
-        android:visibility="gone"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent" />
+        android:layout_height="match_parent" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>

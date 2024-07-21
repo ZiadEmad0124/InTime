@@ -2,7 +2,6 @@ package com.ziad_emad_dev.in_time.ui.signing.activation
 
 import android.graphics.Color
 import android.os.Bundle
-import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -73,7 +72,6 @@ class ActivationAccount : Fragment(), ValidationListener {
                 binding.otpCode.setLineColor(Color.GREEN)
                 Toast.makeText(requireContext(), "This account is active now, SignIn", Toast.LENGTH_LONG).show()
                 findNavController().navigate(R.id.action_activation_Account_to_signIn)
-                Log.e("ActivationAccount", "true")
             }
 
             "Invalid OTP" -> {
@@ -81,12 +79,7 @@ class ActivationAccount : Fragment(), ValidationListener {
                 Toast.makeText(requireContext(), "Code is wrong, Try again", Toast.LENGTH_SHORT).show()
             }
 
-            "Failed Connect, Try Again" -> {
-                Toast.makeText(requireContext(), message, Toast.LENGTH_SHORT).show()
-            }
-
             else -> {
-                binding.otpCode.setLineColor(Color.RED)
                 Toast.makeText(requireContext(), message, Toast.LENGTH_SHORT).show()
             }
         }
@@ -107,7 +100,6 @@ class ActivationAccount : Fragment(), ValidationListener {
     override fun onResetOTPTimer() {
         val email = requireArguments().getString("email").toString()
         viewModel.resendActivationCode(email)
-        Toast.makeText(requireContext(), "Resend OTP, Check Your Email", Toast.LENGTH_SHORT).show()
     }
 
     override fun onOTPCodeEmptyError() {
@@ -124,8 +116,7 @@ class ActivationAccount : Fragment(), ValidationListener {
     }
 
     override fun onStartLoading() {
-        binding.otpCode.setLineColor(R.drawable.pin_line)
-        binding.blockingView.visibility = View.VISIBLE
+        binding.blockingView.root.visibility = View.VISIBLE
         binding.nextButton.text = null
         binding.progressCircular.visibility = View.VISIBLE
     }
@@ -133,7 +124,7 @@ class ActivationAccount : Fragment(), ValidationListener {
     override fun onStopLoading() {
         binding.progressCircular.visibility = View.GONE
         binding.nextButton.text = getString(R.string.next)
-        binding.blockingView.visibility = View.GONE
+        binding.blockingView.root.visibility = View.GONE
     }
 
     override fun onDestroy() {

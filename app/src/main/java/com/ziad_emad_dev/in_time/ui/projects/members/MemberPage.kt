@@ -84,8 +84,8 @@ class MemberPage : AppCompatActivity() {
     private fun memberAvatar(memberAvatar: String) {
         Glide.with(this)
             .load("https://intime-9hga.onrender.com/api/v1/images/${memberAvatar}")
-            .placeholder(R.drawable.ic_profile)
-            .error(R.drawable.ic_profile)
+            .placeholder(R.drawable.ic_profile_default)
+            .error(R.drawable.ic_profile_default)
             .into(binding.profileImage)
     }
 

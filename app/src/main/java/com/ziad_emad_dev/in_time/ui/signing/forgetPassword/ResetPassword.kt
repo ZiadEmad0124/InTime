@@ -95,7 +95,7 @@ class ResetPassword : Fragment(), ValidationListener {
 
             "true" -> {
                 binding.otpCode.setLineColor(Color.GREEN)
-                Toast.makeText(requireContext(), "Password Changed Successfully, SignIn Now", Toast.LENGTH_SHORT).show()
+                Toast.makeText(requireContext(), "Password Changed Successfully, SignIn Now", Toast.LENGTH_LONG).show()
                 findNavController().navigate(R.id.action_resetPassword_to_signIn)
             }
 
@@ -128,15 +128,8 @@ class ResetPassword : Fragment(), ValidationListener {
     }
 
     override fun onResetOTPTimer() {
-        binding.saveNewPasswordButton.setOnClickListener {
-            val otpCode = binding.otpCode.text.toString()
-            val email = requireArguments().getString("email").toString()
-            val password = binding.password.text.toString().trim()
-            val confirmPassword = binding.confirmPassword.text.toString().trim()
-            validator.startLoading()
-            viewModel.resetPassword(otpCode, email, password, confirmPassword)
-            waitingForResponse()
-        }
+        val email = requireArguments().getString("email").toString()
+        viewModel.checkEmail(email)
     }
 
     override fun onPasswordEmptyError() {
@@ -198,8 +191,7 @@ class ResetPassword : Fragment(), ValidationListener {
     }
 
     override fun onStartLoading() {
-        binding.otpCode.setLineColor(R.drawable.pin_line)
-        binding.blockingView.visibility = View.VISIBLE
+        binding.blockingView.root.visibility = View.VISIBLE
         binding.saveNewPasswordButton.text = null
         binding.progressCircular.visibility = View.VISIBLE
     }
@@ -207,7 +199,7 @@ class ResetPassword : Fragment(), ValidationListener {
     override fun onStopLoading() {
         binding.progressCircular.visibility = View.GONE
         binding.saveNewPasswordButton.text = getString(R.string.save_new_password)
-        binding.blockingView.visibility = View.GONE
+        binding.blockingView.root.visibility = View.GONE
     }
 
     override fun onDestroy() {

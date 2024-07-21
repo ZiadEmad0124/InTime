@@ -89,7 +89,7 @@ class ProjectViewModel(context: Context) : ViewModel() {
 
         viewModelScope.launch {
             try {
-                val response = InTimeApi.retrofitService.createProject("Bearer ${sessionManager.fetchAuthToken().toString()}",
+                val response = InTimeApi.retrofitService.createProject("Bearer ${sessionManager.fetchAccessToken().toString()}",
                     myName, myProjectCoverFile)
                 if (response.isSuccessful) {
                     _createProjectMessage.value = response.body()?.success.toString()
@@ -107,7 +107,7 @@ class ProjectViewModel(context: Context) : ViewModel() {
     fun getProjects(role: String?) {
         viewModelScope.launch {
             try {
-                val response = InTimeApi.retrofitService.getProjects("Bearer ${sessionManager.fetchAuthToken().toString()}", role)
+                val response = InTimeApi.retrofitService.getProjects("Bearer ${sessionManager.fetchAccessToken().toString()}", role)
                 if (response.isSuccessful) {
                     _getProjectsMessage.value = "Get all projects success"
                     _getProjects.value = response.body()
@@ -123,7 +123,7 @@ class ProjectViewModel(context: Context) : ViewModel() {
     fun getProject(projectId: String) {
         viewModelScope.launch {
             try {
-                val response = InTimeApi.retrofitService.getProject("Bearer ${sessionManager.fetchAuthToken().toString()}", projectId)
+                val response = InTimeApi.retrofitService.getProject("Bearer ${sessionManager.fetchAccessToken().toString()}", projectId)
                 if (response.isSuccessful) {
                     _getProjectMessage.value = response.body()?.success.toString()
                     _getProject.value = response.body()?.record!!
@@ -149,7 +149,7 @@ class ProjectViewModel(context: Context) : ViewModel() {
 
         viewModelScope.launch {
             try {
-                val response = InTimeApi.retrofitService.editProject("Bearer ${sessionManager.fetchAuthToken().toString()}",
+                val response = InTimeApi.retrofitService.editProject("Bearer ${sessionManager.fetchAccessToken().toString()}",
                     projectId, myName, myProjectCoverFile)
                 if (response.isSuccessful) {
                     _editProjectMessage.value = response.body()?.success.toString()
@@ -165,7 +165,7 @@ class ProjectViewModel(context: Context) : ViewModel() {
     fun removeCover(projectId: String) {
         viewModelScope.launch {
             try {
-                val response = InTimeApi.retrofitService.removeProjectCover("Bearer ${sessionManager.fetchAuthToken().toString()}", projectId)
+                val response = InTimeApi.retrofitService.removeProjectCover("Bearer ${sessionManager.fetchAccessToken().toString()}", projectId)
                 if (response.isSuccessful) {
                     _removeProjectCoverMessage.value = "true"
                 } else {
@@ -180,7 +180,7 @@ class ProjectViewModel(context: Context) : ViewModel() {
     fun shareProject(projectId: String) {
         viewModelScope.launch {
             try {
-                val response = InTimeApi.retrofitService.shareProject("Bearer ${sessionManager.fetchAuthToken().toString()}", projectId)
+                val response = InTimeApi.retrofitService.shareProject("Bearer ${sessionManager.fetchAccessToken().toString()}", projectId)
                 if (response.isSuccessful) {
                     _shareProjectMessage.value = response.body()?.success.toString()
                     _shareProjectLink.value = response.body()?.link.toString()
@@ -196,7 +196,7 @@ class ProjectViewModel(context: Context) : ViewModel() {
     fun getMembers(projectId: String) {
         viewModelScope.launch {
             try {
-                val response = InTimeApi.retrofitService.getProjectMembers("Bearer ${sessionManager.fetchAuthToken().toString()}", projectId)
+                val response = InTimeApi.retrofitService.getProjectMembers("Bearer ${sessionManager.fetchAccessToken().toString()}", projectId)
                 if (response.isSuccessful) {
                     _getMembersMessage.value = response.body()?.success.toString()
                     _getMembers.value = response.body()?.record!!
@@ -212,7 +212,7 @@ class ProjectViewModel(context: Context) : ViewModel() {
     fun removeMember(projectId: String, memberId: String) {
         viewModelScope.launch {
             try {
-                val response = InTimeApi.retrofitService.removeProjectMember("Bearer ${sessionManager.fetchAuthToken().toString()}",
+                val response = InTimeApi.retrofitService.removeProjectMember("Bearer ${sessionManager.fetchAccessToken().toString()}",
                     projectId, memberId)
                 if (response.isSuccessful) {
                     _removeMembersMessage.value = response.body()?.success.toString()
@@ -228,7 +228,7 @@ class ProjectViewModel(context: Context) : ViewModel() {
     fun deleteProject(projectId: String) {
         viewModelScope.launch {
             try {
-                val response = InTimeApi.retrofitService.deleteProject("Bearer ${sessionManager.fetchAuthToken().toString()}", projectId)
+                val response = InTimeApi.retrofitService.deleteProject("Bearer ${sessionManager.fetchAccessToken().toString()}", projectId)
                 if (response.isSuccessful) {
                     _deleteProjectMessage.value = response.body()?.success.toString()
                 } else {
@@ -249,7 +249,7 @@ class ProjectViewModel(context: Context) : ViewModel() {
                 val myStartAt = startAt.toRequestBody("text/plain".toMediaTypeOrNull())
                 val myEndAt = endAt.toRequestBody("text/plain".toMediaTypeOrNull())
 
-                val response = InTimeApi.retrofitService.createProjectTask("Bearer ${sessionManager.fetchAuthToken().toString()}", projectId, memberId,
+                val response = InTimeApi.retrofitService.createProjectTask("Bearer ${sessionManager.fetchAccessToken().toString()}", projectId, memberId,
                     myName, myDescription, myStartAt, myEndAt)
                 if (response.isSuccessful) {
                     _createProjectTaskMessage.value = response.body()?.success.toString()
@@ -267,7 +267,7 @@ class ProjectViewModel(context: Context) : ViewModel() {
     fun getProjectTasks(projectId: String) {
         viewModelScope.launch {
             try {
-                val response = InTimeApi.retrofitService.getProjectTasks("Bearer ${sessionManager.fetchAuthToken().toString()}", projectId)
+                val response = InTimeApi.retrofitService.getProjectTasks("Bearer ${sessionManager.fetchAccessToken().toString()}", projectId)
                 if (response.isSuccessful) {
                     _getProjectTasksMessage.value = response.body()?.success.toString()
                     _getProjectTasks.value = response.body()?.record!!
@@ -289,7 +289,7 @@ class ProjectViewModel(context: Context) : ViewModel() {
                 val myStartAt = startAt.toRequestBody("text/plain".toMediaTypeOrNull())
                 val myEndAt = endAt.toRequestBody("text/plain".toMediaTypeOrNull())
 
-                val response = InTimeApi.retrofitService.editProjectTaskAdmin("Bearer ${sessionManager.fetchAuthToken().toString()}", projectId, taskId,
+                val response = InTimeApi.retrofitService.editProjectTaskAdmin("Bearer ${sessionManager.fetchAccessToken().toString()}", projectId, taskId,
                     myName, myDescription, myStartAt, myEndAt)
                 if (response.isSuccessful) {
                     _editProjectTaskAdminMessage.value = response.body()?.success.toString()
@@ -307,7 +307,7 @@ class ProjectViewModel(context: Context) : ViewModel() {
     fun deleteProjectTask(projectId: String, taskId: String) {
         viewModelScope.launch {
             try {
-                val response = InTimeApi.retrofitService.deleteProjectTask("Bearer ${sessionManager.fetchAuthToken().toString()}",
+                val response = InTimeApi.retrofitService.deleteProjectTask("Bearer ${sessionManager.fetchAccessToken().toString()}",
                     projectId, taskId)
                 if (response.isSuccessful) {
                     _deleteProjectTaskMessage.value = response.body()?.success.toString()

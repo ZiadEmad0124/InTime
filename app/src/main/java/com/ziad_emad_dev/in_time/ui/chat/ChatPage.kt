@@ -36,7 +36,7 @@ class ChatPage : AppCompatActivity() {
         adapter = ChatAdapter(this, profileManager.getProfileName())
         binding.chatListView.adapter = adapter
 
-        socketManager = SocketManager(sessionManager.fetchAuthToken()!!, project.id, profileManager.getProfileName(),
+        socketManager = SocketManager(sessionManager.fetchAccessToken()!!, project.id, profileManager.getProfileName(),
             profileManager.getProfileAvatar(), adapter, membersName, membersImage, membersIds)
         socketManager.connect()
 
