@@ -29,8 +29,8 @@ class AuthViewModel(context: Context) : ViewModel() {
 
     private val sessionManager = SessionManager(context)
 
-    private val _message = MutableLiveData<String>()
-    val message get() = _message
+    private val _signInMessage = MutableLiveData<String>()
+    val signInMessage get() = _signInMessage
 
     fun signIn(email: String, password: String) {
         val request = SignInRequest(email = email, password = password)
@@ -41,17 +41,20 @@ class AuthViewModel(context: Context) : ViewModel() {
                 if (response.isSuccessful) {
                     sessionManager.saveAccessToken(response.body()?.accessToken.toString())
                     sessionManager.saveRefreshToken(response.body()?.refreshToken.toString())
-                    _message.value = response.body()?.success.toString()
+                    _signInMessage.value = response.body()?.success.toString()
                 } else {
                     val errorResponse = response.errorBody()?.string()
                     val errorSignInResponse = Gson().fromJson(errorResponse, SignInResponse::class.java)
-                    _message.value = errorSignInResponse?.message.toString()
+                    _signInMessage.value = errorSignInResponse?.message.toString()
                 }
             } catch (e: Exception) {
-                _message.value = FAILED_CONNECT
+                _signInMessage.value = FAILED_CONNECT
             }
         }
     }
+
+    private val _message = MutableLiveData<String>()
+    val message get() = _message
 
     fun signUp(name: String, email: String, phone: String, password: String) {
         val request = SignUpRequest(name = name, email = email, phone = phone, password = password)
@@ -91,6 +94,9 @@ class AuthViewModel(context: Context) : ViewModel() {
         }
     }
 
+    private val _resendActivationCodeMessage = MutableLiveData<String>()
+    val resendActivationCodeMessage get() = _resendActivationCodeMessage
+
     fun resendActivationCode(email: String) {
         val request = ResendActivationCodeRequest(email = email)
 
@@ -98,14 +104,14 @@ class AuthViewModel(context: Context) : ViewModel() {
             try {
                 val response = InTimeApi.retrofitService.resendActivationCode(request)
                 if (response.isSuccessful) {
-                    _message.value = response.body()?.message.toString()
+                    _resendActivationCodeMessage.value = response.body()?.message.toString()
                 } else {
                     val errorResponse = response.errorBody()?.string()
                     val errorResendActivationCodeRequest = Gson().fromJson(errorResponse, ResendActivationCodeResponse::class.java)
-                    _message.value = errorResendActivationCodeRequest?.message.toString()
+                    _resendActivationCodeMessage.value = errorResendActivationCodeRequest?.message.toString()
                 }
             } catch (e: Exception) {
-                _message.value = FAILED_CONNECT
+                _resendActivationCodeMessage.value = FAILED_CONNECT
             }
         }
     }

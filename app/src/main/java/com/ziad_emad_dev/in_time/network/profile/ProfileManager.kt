@@ -6,8 +6,10 @@ class ProfileManager(context: Context) {
 
     private val sharedPreferences = context.getSharedPreferences("Profile", Context.MODE_PRIVATE)
 
-    fun saveProfile(id: String, name: String, email: String, phone: String, avatar: String, title: String,
-                    about: String, totalPoints: Int, completedTasks: Int, onGoingTasks: Int) {
+    fun saveProfile(
+        id: String, name: String, email: String, phone: String, avatar: String, title: String,
+        about: String, totalPoints: Int, completedTasks: Int, onGoingTasks: Int
+    ) {
         sharedPreferences.edit().apply {
             putString("id", id)
             putString("name", name)
@@ -38,11 +40,11 @@ class ProfileManager(context: Context) {
         return sharedPreferences.getString("name", "") ?: ""
     }
 
-    fun getProfileEmail(): String {
+    private fun getProfileEmail(): String {
         return sharedPreferences.getString("email", "") ?: ""
     }
 
-    fun getProfilePhone(): String {
+    private fun getProfilePhone(): String {
         return "0${sharedPreferences.getString("phone", "")}"
     }
 
@@ -50,12 +52,20 @@ class ProfileManager(context: Context) {
         return sharedPreferences.getString("avatar", "") ?: ""
     }
 
-    fun getProfileTitle(): String {
+    private fun getProfileTitle(): String {
         return sharedPreferences.getString("title", "") ?: ""
     }
 
-    fun getProfileAbout(): String {
+    private fun getProfileAbout(): String {
         return sharedPreferences.getString("about", "") ?: ""
+    }
+
+    private fun getRank(): Int {
+        return sharedPreferences.getInt("rank", 0)
+    }
+
+    private fun getLevel(): Int {
+        return ((getTotalPoints() / 100) + 1)
     }
 
     fun getTotalPoints(): Int {
@@ -70,8 +80,21 @@ class ProfileManager(context: Context) {
         return sharedPreferences.getInt("onGoingTasks", 0)
     }
 
-    fun getRank(): Int {
-        return sharedPreferences.getInt("rank", 0)
+    fun getProfile(): Profile {
+        return Profile(
+            getProfileId(),
+            getProfileName(),
+            getProfileEmail(),
+            getProfilePhone(),
+            getProfileAvatar(),
+            getProfileTitle(),
+            getProfileAbout(),
+            getRank().toString(),
+            getLevel().toString(),
+            getTotalPoints().toString(),
+            getCompletedTasks().toString(),
+            getOnGoingTasks().toString()
+        )
     }
 
     fun clearProfile() {

@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <com.google.android.material.appbar.MaterialToolbar xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="wrap_content">
 
@@ -10,7 +11,8 @@
         android:background="@color/transparent"
         android:importantForAccessibility="no"
         android:padding="@dimen/standard_10"
-        android:src="@drawable/ic_arrow_back" />
+        android:src="@drawable/ic_arrow_back"
+        tools:ignore="TouchTargetSizeCheck" />
 
     <TextView
         android:id="@+id/title"
@@ -31,6 +33,7 @@
         android:layout_marginEnd="@dimen/standard_15"
         android:background="@color/transparent"
         android:importantForAccessibility="no"
-        android:padding="@dimen/standard_10" />
+        android:padding="@dimen/standard_10"
+        tools:ignore="TouchTargetSizeCheck" />
 
 </com.google.android.material.appbar.MaterialToolbar>

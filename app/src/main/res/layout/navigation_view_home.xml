@@ -118,10 +118,9 @@
         android:fontFamily="@font/roboto"
         android:padding="15dp"
         android:text="@string/log_out"
-        android:textColor="@color/red"
+        android:textColor="@color/secondary"
         android:textSize="26sp"
         android:textStyle="bold"
-        app:drawableStartCompat="@drawable/ic_log_out"
-        app:drawableTint="@color/red" />
+        app:drawableStartCompat="@drawable/ic_log_out" />
 
 </LinearLayout>

@@ -2,7 +2,9 @@
     <string name="app_name">InTime</string>
     <string name="in">In</string>
     <string name="time">Time</string>
-    <string name="describe">Create a unique emotional story that \n describes better than words</string>
+    <string name="onboarding_describe_1">Create a unique emotional story that\n describes better than words.</string>
+    <string name="onboarding_describe_2">"Craft a seamless timeline of productivity,\n where actions speak louder than schedules."</string>
+    <string name="onboarding_describe_3">"Promote teamwork and seamless\n communication among managers and team members."</string>
     <string name="get_started">Get Started</string>
     <string name="task_manage">Task management &amp; project \n management</string>
     <string name="signin_with">Signin with</string>
@@ -83,7 +85,7 @@
     <string name="empty_field">Empty Field</string>
     <string name="wrong_password">Wrong Password</string>
     <string name="name_error">Name must be at least 3 characters</string>
-    <string name="phone_error">phone must be 10 number</string>
+    <string name="phone_error">phone must be 11 digits</string>
     <string name="password_error"><![CDATA[password must be more than 8 and contain digits, upper letter & lower letter and don\'t contain space]]></string>
     <string name="now">Now</string>
     <string name="email_not_registered">Email not registered</string>

@@ -4,7 +4,7 @@ import com.google.gson.annotations.SerializedName
 
 data class EditProfileResponse(
     @SerializedName("success")
-    val success: Boolean,
+    val success: Boolean? = null,
 
     @SerializedName("message")
     val message: String? = null

@@ -18,14 +18,33 @@
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="parent" />
 
-        <androidx.fragment.app.FragmentContainerView
-            android:id="@+id/fragmentContainerView"
+        <androidx.swiperefreshlayout.widget.SwipeRefreshLayout
+            android:id="@+id/swipeRefreshLayout"
             android:layout_width="match_parent"
             android:layout_height="0dp"
             app:layout_constraintBottom_toTopOf="@+id/view"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@id/homeToolbar" />
+            app:layout_constraintTop_toBottomOf="@id/homeToolbar">
+
+            <FrameLayout
+                android:layout_width="match_parent"
+                android:layout_height="match_parent">
+
+                <androidx.fragment.app.FragmentContainerView
+                    android:id="@+id/fragmentContainerView"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent" />
+
+                <include
+                    android:id="@+id/blockingView"
+                    layout="@layout/layout_blocking_no_connection_view"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent" />
+
+            </FrameLayout>
+
+        </androidx.swiperefreshlayout.widget.SwipeRefreshLayout>
 
         <View
             android:id="@+id/view"
@@ -35,7 +54,7 @@
             app:layout_constraintBottom_toTopOf="@+id/bottomNavBar"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@id/fragmentContainerView" />
+            app:layout_constraintTop_toBottomOf="@id/swipeRefreshLayout" />
 
         <com.google.android.material.bottomnavigation.BottomNavigationView
             android:id="@+id/bottomNavBar"
@@ -48,16 +67,6 @@
             app:layout_constraintTop_toBottomOf="@id/view"
             app:menu="@menu/menu_home"
             tools:ignore="VisualLintBottomNav" />
-
-        <include
-            android:id="@+id/blockingView"
-            layout="@layout/layout_blocking_no_connection_view"
-            android:layout_width="match_parent"
-            android:layout_height="0dp"
-            app:layout_constraintBottom_toTopOf="@id/view"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@id/homeToolbar" />
 
     </androidx.constraintlayout.widget.ConstraintLayout>
 

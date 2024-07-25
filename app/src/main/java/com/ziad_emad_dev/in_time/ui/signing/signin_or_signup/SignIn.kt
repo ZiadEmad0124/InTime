@@ -77,7 +77,7 @@ class SignIn : Fragment(), ValidationListener {
     }
 
     private fun waitingForResponse() {
-        viewModel.message.observe(viewLifecycleOwner) { message ->
+        viewModel.signInMessage.observe(viewLifecycleOwner) { message ->
             checkAccountAndNetwork(message)
         }
     }
@@ -95,7 +95,8 @@ class SignIn : Fragment(), ValidationListener {
 
             "you have to activate your account first" -> {
                 val email = binding.email.text.toString().trim()
-                val action = SignInDirections.actionSignInToActivationAccount(email = email)
+                val password = binding.password.text.toString().trim()
+                val action = SignInDirections.actionSignInToActivationAccount(email = email, password = password)
                 viewModel.resendActivationCode(email)
                 findNavController().navigate(action)
             }

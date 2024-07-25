@@ -164,8 +164,7 @@ interface InTimeApiServices {
 
     @Multipart
     @POST(EDIT_PROFILE_URL)
-    suspend fun editProfile(
-        @Header("Authorization") token: String,
+    suspend fun editProfile(@Header("Authorization") token: String,
         @Part("name") name: RequestBody,
         @Part("title") title: RequestBody,
         @Part("phone") phone: RequestBody,
@@ -177,10 +176,7 @@ interface InTimeApiServices {
     suspend fun removeAvatar(@Header("Authorization") token: String): Response<RemoveAvatarResponse>
 
     @POST(CHANGE_PASSWORD_URL)
-    suspend fun changePassword(
-        @Header("Authorization") token: String,
-        @Body request: ChangePasswordRequest
-    ): Response<ChangePasswordResponse>
+    suspend fun changePassword(@Header("Authorization") token: String, @Body request: ChangePasswordRequest): Response<ChangePasswordResponse>
 
     @GET(USER_RANK_URL)
     suspend fun fetchUserRank(@Header("Authorization") token: String): Response<RankResponse>

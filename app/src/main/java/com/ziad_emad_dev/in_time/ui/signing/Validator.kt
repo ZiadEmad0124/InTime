@@ -36,6 +36,13 @@ class Validator(private val listener: ValidationListener) {
         return password.isEmpty()
     }
 
+    fun newPasswordEmptyError(newPassword: String): Boolean {
+        if (newPassword.isEmpty()) {
+            listener.onNewPasswordEmptyError()
+        }
+        return newPassword.isEmpty()
+    }
+
     fun confirmPasswordEmptyError(confirmPassword: String): Boolean {
         if (confirmPassword.isEmpty()) {
             listener.onConfirmPasswordEmptyError()
@@ -122,6 +129,12 @@ class Validator(private val listener: ValidationListener) {
         }
     }
 
+    fun newPasswordValidationError(newPassword: String): Boolean {
+        return validatePassword(newPassword) { errorMessage ->
+            listener.onNewPasswordValidationError(errorMessage)
+        }
+    }
+
     fun confirmPasswordValidationError(confirmPassword: String): Boolean {
         return validatePassword(confirmPassword) { errorMessage ->
             listener.onConfirmPasswordValidationError(errorMessage)
@@ -142,6 +155,17 @@ class Validator(private val listener: ValidationListener) {
             listener.onPasswordToggle(hasPasswordTransformation)
             if (selection != null) {
                 passwordInputLayout.editText?.setSelection(selection)
+            }
+        }
+    }
+
+    fun newPasswordToggle(newPasswordInputLayout: TextInputLayout) {
+        newPasswordInputLayout.setEndIconOnClickListener {
+            val selection = newPasswordInputLayout.editText?.selectionEnd
+            val hasPasswordTransformation = newPasswordInputLayout.editText?.transformationMethod is PasswordTransformationMethod
+            listener.onNewPasswordToggle(hasPasswordTransformation)
+            if (selection != null) {
+                newPasswordInputLayout.editText?.setSelection(selection)
             }
         }
     }
@@ -237,6 +261,18 @@ class Validator(private val listener: ValidationListener) {
                 null
             }
             listener.onPasswordFocusChange(hasFocus, message)
+        }
+    }
+
+    fun newPasswordFocusChangeListener(newPasswordInputLayout: TextInputLayout) {
+        newPasswordInputLayout.editText?.setOnFocusChangeListener { _, hasFocus ->
+            val message = if (!hasFocus) {
+                val newPassword = newPasswordInputLayout.editText?.text.toString().trim()
+                validatePassword(newPassword)
+            } else {
+                null
+            }
+            listener.onNewPasswordFocusChange(hasFocus, message)
         }
     }
 

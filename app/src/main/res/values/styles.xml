@@ -38,6 +38,7 @@
         <item name="android:textStyle">bold</item>
         <item name="android:singleLine">true</item>
         <item name="android:imeOptions">actionNext</item>
+        <item name="android:drawablePadding">@dimen/standard_10</item>
         <item name="android:padding">@dimen/standard_20</item>
     </style>
 

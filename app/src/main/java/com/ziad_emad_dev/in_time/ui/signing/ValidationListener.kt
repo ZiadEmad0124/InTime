@@ -6,6 +6,7 @@ interface ValidationListener {
     fun onEmailEmptyError() {}
     fun onPhoneEmptyError() {}
     fun onPasswordEmptyError() {}
+    fun onNewPasswordEmptyError() {}
     fun onConfirmPasswordEmptyError() {}
 
     fun onOTPTimer(timer: String) {}
@@ -16,17 +17,20 @@ interface ValidationListener {
     fun onEmailValidationError() {}
     fun onPhoneValidationError() {}
     fun onPasswordValidationError(passwordError: String) {}
+    fun onNewPasswordValidationError(passwordError: String) {}
     fun onConfirmPasswordValidationError(passwordError: String) {}
 
     fun onPasswordsMatchError() {}
 
     fun onPasswordToggle(hasPasswordTransformation: Boolean) {}
+    fun onNewPasswordToggle(hasPasswordTransformation: Boolean) {}
     fun onConfirmPasswordToggle(hasPasswordTransformation: Boolean) {}
 
     fun onNameFocusChange(hasFocus: Boolean, message: String?) {}
     fun onEmailFocusChange(hasFocus: Boolean, message: String?) {}
     fun onPhoneFocusChange(hasFocus: Boolean, message: String?) {}
     fun onPasswordFocusChange(hasFocus: Boolean, message: String?) {}
+    fun onNewPasswordFocusChange(hasFocus: Boolean, message: String?) {}
     fun onConfirmPasswordFocusChange(hasFocus: Boolean, message: String?) {}
 
     fun onClearFocusEditTextLayout() {}

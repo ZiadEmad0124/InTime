@@ -1,22 +1,21 @@
 package com.ziad_emad_dev.in_time.ui.profile
 
 import android.os.Bundle
-import android.os.Handler
-import android.os.Looper
-import android.text.method.PasswordTransformationMethod
 import android.view.View
 import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
-import com.google.android.material.textfield.TextInputEditText
-import com.google.android.material.textfield.TextInputLayout
 import com.ziad_emad_dev.in_time.R
 import com.ziad_emad_dev.in_time.databinding.ActivityChangePasswordBinding
 import com.ziad_emad_dev.in_time.ui.signing.AsteriskPasswordTransformation
+import com.ziad_emad_dev.in_time.ui.signing.ValidationListener
+import com.ziad_emad_dev.in_time.ui.signing.Validator
 import com.ziad_emad_dev.in_time.viewmodels.ProfileViewModel
 
-class ChangePassword : AppCompatActivity() {
+class ChangePassword : AppCompatActivity(), ValidationListener {
 
     private lateinit var binding: ActivityChangePasswordBinding
+
+    private lateinit var validator: Validator
 
     private val viewModel by lazy {
         ProfileViewModel(this)
@@ -27,67 +26,29 @@ class ChangePassword : AppCompatActivity() {
         binding = ActivityChangePasswordBinding.inflate(layoutInflater)
         setContentView(binding.root)
 
-        myToolbar()
-        focusOnEditTextLayout()
-        passwordToggle(binding.currentPassword, binding.currentPasswordLayout)
-        passwordToggle(binding.newPassword, binding.newPasswordLayout)
-        passwordToggle(binding.confirmPassword, binding.confirmPasswordLayout)
+        validator = Validator(this)
+
+        appToolbar()
+
+        validator.passwordToggle(binding.currentPasswordLayout)
+        validator.newPasswordToggle(binding.newPasswordLayout)
+        validator.confirmPasswordToggle(binding.confirmPasswordLayout)
+
+        validator.passwordFocusChangeListener(binding.currentPasswordLayout)
+        validator.newPasswordFocusChangeListener(binding.newPasswordLayout)
+        validator.confirmPasswordFocusChangeListener(binding.confirmPasswordLayout)
+
         clickOnSaveButton()
-        responseComing()
 
         binding.currentPassword.transformationMethod = AsteriskPasswordTransformation()
         binding.newPassword.transformationMethod = AsteriskPasswordTransformation()
         binding.confirmPassword.transformationMethod = AsteriskPasswordTransformation()
     }
 
-    private fun myToolbar() {
-        binding.myToolbar.title.text = getString(R.string.change_password)
-        binding.myToolbar.back.setOnClickListener {
+    private fun appToolbar() {
+        binding.appToolbar.title.text = getString(R.string.change_password)
+        binding.appToolbar.back.setOnClickListener {
             finish()
-        }
-    }
-
-    private fun focusOnEditTextLayout() {
-        binding.currentPassword.setOnFocusChangeListener { _, hasFocus ->
-            if (hasFocus) {
-                binding.currentPasswordLayout.error = null
-            } else {
-                if (!passwordEmptyError(binding.currentPassword.text.toString().trim(), binding.currentPasswordLayout)) {
-                    passwordValidationError(binding.currentPassword.text.toString().trim(), binding.currentPasswordLayout)
-                }
-            }
-        }
-        binding.newPassword.setOnFocusChangeListener { _, hasFocus ->
-            if (hasFocus) {
-                binding.newPasswordLayout.error = null
-            } else {
-                if (!passwordEmptyError(binding.newPassword.text.toString().trim(), binding.newPasswordLayout)) {
-                    passwordValidationError(binding.newPassword.text.toString().trim(), binding.newPasswordLayout)
-                }
-            }
-        }
-        binding.confirmPassword.setOnFocusChangeListener { _, hasFocus ->
-            if (hasFocus) {
-                binding.confirmPasswordLayout.error = null
-            } else {
-                if (!passwordEmptyError(binding.confirmPassword.text.toString().trim(), binding.confirmPasswordLayout)) {
-                    passwordValidationError(binding.confirmPassword.text.toString().trim(), binding.confirmPasswordLayout)
-                    passwordsMatchError(binding.newPassword.text.toString().trim(), binding.confirmPassword.text.toString().trim())
-                }
-            }
-        }
-    }
-
-    private fun passwordToggle(password: TextInputEditText, passwordLayout: TextInputLayout) {
-        passwordLayout.setEndIconOnClickListener {
-            val selection = password.selectionEnd
-            val hasPasswordTransformation = password.transformationMethod is PasswordTransformationMethod
-            if (hasPasswordTransformation) {
-                password.transformationMethod = null
-            } else {
-                password.transformationMethod = AsteriskPasswordTransformation()
-            }
-            password.setSelection(selection)
         }
     }
 
@@ -96,113 +57,145 @@ class ChangePassword : AppCompatActivity() {
             val currentPassword = binding.currentPassword.text.toString().trim()
             val newPassword = binding.newPassword.text.toString().trim()
             val confirmPassword = binding.confirmPassword.text.toString().trim()
-            clearFocusEditTextLayout()
-            if (!(passwordEmptyError(currentPassword, binding.currentPasswordLayout) &&
-                        passwordEmptyError(newPassword, binding.newPasswordLayout) &&
-                        passwordEmptyError(confirmPassword, binding.confirmPasswordLayout))) {
-                if (!(passwordValidationError(currentPassword, binding.currentPasswordLayout) ||
-                            passwordValidationError(newPassword, binding.newPasswordLayout) ||
-                            passwordValidationError(confirmPassword, binding.confirmPasswordLayout))) {
-                    if (!passwordsMatchError(newPassword, confirmPassword)) {
-                        startLoading()
+            validator.clearFocusEditTextLayout()
+            if (!(validator.passwordEmptyError(currentPassword) &&
+                        validator.newPasswordEmptyError(newPassword) &&
+                        validator.confirmPasswordEmptyError(confirmPassword))
+            ) {
+                if (!(validator.passwordValidationError(currentPassword) ||
+                            validator.newPasswordValidationError(newPassword) ||
+                            validator.confirmPasswordValidationError(confirmPassword))
+                ) {
+                    if (!validator.passwordsMatchError(newPassword, confirmPassword)) {
+                        validator.startLoading()
                         viewModel.changePassword(currentPassword, newPassword, confirmPassword)
+                        waitingForResponse()
                     }
                 }
             }
         }
     }
 
-    private fun passwordEmptyError(password: String, passwordLayout: TextInputLayout): Boolean {
-        if (password.isEmpty()) {
-            passwordLayout.error = getString(R.string.empty_field)
-        }
-        return password.isEmpty()
-    }
-
-    private fun passwordValidationError(password: String, passwordLayout: TextInputLayout): Boolean {
-        if (password.length < 8) {
-            passwordLayout.error = getString(R.string.password_must_be_at_least_8_characters)
-            return true
-        } else if (!password.matches(Regex(".*[a-z].*"))) {
-            passwordLayout.error = getString(R.string.password_must_contain_at_least_one_lowercase_letter)
-            return true
-        } else if (!password.matches(Regex(".*[A-Z].*"))) {
-            passwordLayout.error = getString(R.string.password_must_contain_at_least_one_uppercase_letter)
-            return true
-        } else if (!password.matches(Regex(".*[0-9].*"))) {
-            passwordLayout.error = getString(R.string.password_must_contain_at_least_one_digit)
-            return true
-        } else if (!password.matches(Regex(".*[!@#\$_%^&*+(,)/\"\':?-].*"))) {
-            passwordLayout.error = getString(R.string.password_must_contain_at_least_one_special_character)
-            return true
-        } else {
-            return false
-        }
-    }
-
-    private fun passwordsMatchError(password: String, confirmPassword: String): Boolean {
-        if (password != confirmPassword) {
-            binding.confirmPasswordLayout.error = getString(R.string.password_not_match)
-        }
-        return password != confirmPassword
-    }
-
-    private fun startLoading() {
-        binding.blockingView.visibility = View.VISIBLE
-        binding.saveButton.setBackgroundResource(R.drawable.button_loading)
-        binding.saveButton.text = null
-        binding.progressCircular.visibility = View.VISIBLE
-    }
-
-    private fun stopLoading() {
-        binding.progressCircular.visibility = View.GONE
-        binding.saveButton.setBackgroundResource(R.drawable.button_background)
-        binding.saveButton.text = getString(R.string.save)
-        binding.blockingView.visibility = View.GONE
-    }
-
-    private fun clearFocusEditTextLayout() {
-        binding.currentPassword.clearFocus()
-        binding.newPassword.clearFocus()
-        binding.confirmPassword.clearFocus()
-    }
-
-    private fun responseComing() {
+    private fun waitingForResponse() {
         viewModel.changePasswordMessage.observe(this) { message ->
             checkAccountAndNetwork(message)
         }
     }
 
-    private fun wrongPassword() {
-        binding.currentPasswordLayout.error = getString(R.string.wrong_password)
-    }
-
-    private fun sameOldPassword() {
-        binding.newPasswordLayout.error = getString(R.string.must_be_different_from_the_current_password)
-        binding.confirmPasswordLayout.error = getString(R.string.must_be_different_from_the_current_password)
-    }
-
     private fun checkAccountAndNetwork(message: String) {
-        stopLoading()
+        validator.stopLoading()
         when (message) {
-            "\"newPassword\" contains an invalid value" -> {
-                sameOldPassword()
+            "wrong password" -> {
+                binding.currentPasswordLayout.error = getString(R.string.wrong_password)
             }
 
-            "wrong password" -> {
-                wrongPassword()
+            "\"newPassword\" contains an invalid value" -> {
+                binding.newPasswordLayout.error = getString(R.string.must_be_different_from_the_current_password)
+                binding.confirmPasswordLayout.error = getString(R.string.must_be_different_from_the_current_password)
             }
 
             "true" -> {
-                binding.passwordChanged.visibility = View.VISIBLE
-                Handler(Looper.getMainLooper()).postDelayed({
-                    finish()
-                }, 700)
+                Toast.makeText(this, "Password changed successfully", Toast.LENGTH_SHORT).show()
+                finish()
             }
 
             else -> {
                 Toast.makeText(this, message, Toast.LENGTH_SHORT).show()
             }
         }
+    }
+
+    override fun onPasswordEmptyError() {
+        binding.currentPasswordLayout.error = getString(R.string.password_is_empty)
+    }
+
+    override fun onNewPasswordEmptyError() {
+        binding.newPasswordLayout.error = getString(R.string.password_is_empty)
+    }
+
+    override fun onConfirmPasswordEmptyError() {
+        binding.confirmPasswordLayout.error = getString(R.string.password_is_empty)
+    }
+
+    override fun onPasswordValidationError(passwordError: String) {
+        binding.currentPasswordLayout.error = passwordError
+    }
+
+    override fun onNewPasswordValidationError(passwordError: String) {
+        binding.newPasswordLayout.error = passwordError
+    }
+
+    override fun onConfirmPasswordValidationError(passwordError: String) {
+        binding.confirmPasswordLayout.error = passwordError
+    }
+
+    override fun onPasswordToggle(hasPasswordTransformation: Boolean) {
+        if (hasPasswordTransformation) {
+            binding.currentPassword.transformationMethod = null
+        } else {
+            binding.currentPassword.transformationMethod = AsteriskPasswordTransformation()
+        }
+    }
+
+    override fun onNewPasswordToggle(hasPasswordTransformation: Boolean) {
+        if (hasPasswordTransformation) {
+            binding.newPassword.transformationMethod = null
+        } else {
+            binding.newPassword.transformationMethod = AsteriskPasswordTransformation()
+        }
+    }
+
+    override fun onConfirmPasswordToggle(hasPasswordTransformation: Boolean) {
+        if (hasPasswordTransformation) {
+            binding.confirmPassword.transformationMethod = null
+        } else {
+            binding.confirmPassword.transformationMethod = AsteriskPasswordTransformation()
+        }
+    }
+
+    override fun onPasswordFocusChange(hasFocus: Boolean, message: String?) {
+        if (!hasFocus) {
+            binding.currentPasswordLayout.error = message
+        } else {
+            binding.currentPasswordLayout.error = null
+        }
+    }
+
+    override fun onNewPasswordFocusChange(hasFocus: Boolean, message: String?) {
+        if (!hasFocus) {
+            binding.newPasswordLayout.error = message
+        } else {
+            binding.newPasswordLayout.error = null
+        }
+    }
+
+    override fun onConfirmPasswordFocusChange(hasFocus: Boolean, message: String?) {
+        if (!hasFocus) {
+            binding.confirmPasswordLayout.error = message
+        } else {
+            binding.confirmPasswordLayout.error = null
+        }
+    }
+
+    override fun onPasswordsMatchError() {
+        binding.confirmPasswordLayout.error = getString(R.string.password_not_match)
+    }
+
+    override fun onClearFocusEditTextLayout() {
+        binding.currentPassword.clearFocus()
+        binding.newPassword.clearFocus()
+        binding.confirmPassword.clearFocus()
+    }
+
+    override fun onStartLoading() {
+        binding.blockingView.root.visibility = View.VISIBLE
+        binding.saveButton.text = null
+        binding.progressCircular.visibility = View.VISIBLE
+    }
+
+    override fun onStopLoading() {
+        binding.progressCircular.visibility = View.GONE
+        binding.saveButton.text = getString(R.string.save)
+        binding.blockingView.root.visibility = View.GONE
     }
 }

@@ -59,17 +59,11 @@
         android:name="com.ziad_emad_dev.in_time.ui.signing.activation.ActivationAccount"
         android:label="fragment_activation_account"
         tools:layout="@layout/fragment_activation_account">
-        <action
-            android:id="@+id/action_activation_Account_to_signIn"
-            app:destination="@id/signIn"
-            app:enterAnim="@anim/nav_default_enter_anim"
-            app:exitAnim="@anim/nav_default_exit_anim"
-            app:popEnterAnim="@anim/nav_default_pop_enter_anim"
-            app:popExitAnim="@anim/nav_default_pop_exit_anim"
-            app:popUpTo="@id/signIn"
-            app:popUpToInclusive="true" />
         <argument
             android:name="email"
+            app:argType="string" />
+        <argument
+            android:name="password"
             app:argType="string" />
     </fragment>
     <fragment
@@ -90,15 +84,6 @@
         android:name="com.ziad_emad_dev.in_time.ui.signing.forgetPassword.ResetPassword"
         android:label="fragment_reset_password"
         tools:layout="@layout/fragment_reset_password">
-        <action
-            android:id="@+id/action_resetPassword_to_signIn"
-            app:destination="@id/signIn"
-            app:enterAnim="@anim/nav_default_enter_anim"
-            app:exitAnim="@anim/nav_default_exit_anim"
-            app:popEnterAnim="@anim/nav_default_pop_enter_anim"
-            app:popExitAnim="@anim/nav_default_pop_exit_anim"
-            app:popUpTo="@id/signIn"
-            app:popUpToInclusive="true" />
         <argument
             android:name="email"
             app:argType="string" />

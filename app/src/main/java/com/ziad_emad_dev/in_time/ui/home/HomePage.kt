@@ -22,8 +22,6 @@ import com.google.android.material.textfield.TextInputEditText
 import com.google.android.material.textfield.TextInputLayout
 import com.ziad_emad_dev.in_time.R
 import com.ziad_emad_dev.in_time.databinding.ActivityHomePageBinding
-import com.ziad_emad_dev.in_time.network.auth.SessionManager
-import com.ziad_emad_dev.in_time.network.profile.ProfileManager
 import com.ziad_emad_dev.in_time.ui.create.CreateProject
 import com.ziad_emad_dev.in_time.ui.create.CreateTask
 import com.ziad_emad_dev.in_time.ui.notification.NotificationActivity
@@ -38,9 +36,6 @@ class HomePage : AppCompatActivity() {
 
     private lateinit var binding: ActivityHomePageBinding
 
-    private lateinit var sessionManager: SessionManager
-    private lateinit var profileManager: ProfileManager
-
     private val viewModel by lazy {
         HomeViewModel(this)
     }
@@ -50,10 +45,7 @@ class HomePage : AppCompatActivity() {
         binding = ActivityHomePageBinding.inflate(layoutInflater)
         setContentView(binding.root)
 
-        sessionManager = SessionManager(this)
-        profileManager = ProfileManager(this)
-
-        myToolbar()
+        homeToolbar()
 
         customMiddleBottomNavBarIcon()
         clickOnItemInBottomNavBar()
@@ -65,9 +57,10 @@ class HomePage : AppCompatActivity() {
         signOut()
 
         fetchProfile()
+        setupSwipeRefreshLayout()
     }
 
-    private fun myToolbar() {
+    private fun homeToolbar() {
         binding.homeToolbar.profile.setOnClickListener {
             binding.drawerLayout.openDrawer(GravityCompat.START)
         }
@@ -84,7 +77,8 @@ class HomePage : AppCompatActivity() {
         val middleIcon = bottomNavBarMenu.getChildAt(2)
         val iconView = middleIcon as BottomNavigationItemView
 
-        val myIcon = LayoutInflater.from(this).inflate(R.layout.layout_middle_icon, bottomNavBarMenu, false)
+        val myIcon =
+            LayoutInflater.from(this).inflate(R.layout.layout_middle_icon, bottomNavBarMenu, false)
         iconView.addView(myIcon)
 
         myIcon.findViewById<ImageView>(R.id.addButton).setOnClickListener {
@@ -96,11 +90,13 @@ class HomePage : AppCompatActivity() {
         binding.bottomNavBar.setOnItemSelectedListener { item ->
             when (item.itemId) {
                 R.id.homeFragment -> {
+                    binding.homeToolbar.title.text = getString(R.string.home)
                     runSelectedFragment(HomeFragment())
                     true
                 }
 
                 R.id.tasksFragment -> {
+                    binding.homeToolbar.title.text = getString(R.string.tasks)
                     runSelectedFragment(TasksFragment())
                     true
                 }
@@ -111,11 +107,13 @@ class HomePage : AppCompatActivity() {
                 }
 
                 R.id.projectsFragment -> {
+                    binding.homeToolbar.title.text = getString(R.string.projects)
                     runSelectedFragment(ProjectsFragment())
                     true
                 }
 
                 R.id.calenderFragment -> {
+                    binding.homeToolbar.title.text = getString(R.string.calender)
                     runSelectedFragment(CalenderFragment())
                     true
                 }
@@ -168,7 +166,6 @@ class HomePage : AppCompatActivity() {
             binding.drawerLayout.closeDrawer(GravityCompat.START)
             val intent = Intent(this, Settings::class.java)
             startActivity(intent)
-            finish()
         }
     }
 
@@ -179,7 +176,8 @@ class HomePage : AppCompatActivity() {
             startActivity(intent)
         }
     }
-//
+
+    //
     @SuppressLint("InflateParams")
     private fun joinProject() {
         binding.navigationView.joinProject.setOnClickListener {
@@ -247,12 +245,7 @@ class HomePage : AppCompatActivity() {
     private fun logOut() {
         startLoading()
         viewModel.signOut()
-        viewModel.signOutMessage.observe(this) { message ->
-            if (message != "true") {
-                sessionManager.clearAccessToken()
-                sessionManager.clearRefreshToken()
-                profileManager.clearProfile()
-            }
+        viewModel.signOutMessage.observe(this) {
             val intent = Intent(this, SignPage::class.java)
             intent.flags = Intent.FLAG_ACTIVITY_CLEAR_TASK or Intent.FLAG_ACTIVITY_NEW_TASK
             startActivity(intent)
@@ -263,10 +256,17 @@ class HomePage : AppCompatActivity() {
         startLoading()
         viewModel.refreshToken()
         viewModel.refreshTokenMessage.observe(this) { message ->
-            if (message == "true") {
-                viewModel.fetchProfile()
-            } else {
-                errorInConnectingOrFetching(message)
+            when (message) {
+                "true" -> {
+                    viewModel.fetchProfile()
+                }
+                "session expired" -> {
+                    Toast.makeText(this, "Session Expired", Toast.LENGTH_SHORT).show()
+                    logOut()
+                }
+                else -> {
+                    errorInConnectingOrFetching(message)
+                }
             }
         }
 
@@ -274,6 +274,7 @@ class HomePage : AppCompatActivity() {
             if (message == "true") {
                 stopLoading()
                 fetchProfileNameAndAvatar()
+                binding.homeToolbar.title.text = getString(R.string.home)
                 runSelectedFragment(HomeFragment())
             } else {
                 errorInConnectingOrFetching(message)
@@ -282,7 +283,7 @@ class HomePage : AppCompatActivity() {
     }
 
     private fun fetchProfileNameAndAvatar() {
-        viewModel.fetchProfileAvatar.observe(this) { avatar ->
+        viewModel.profileAvatar.observe(this) { avatar ->
             Glide.with(this)
                 .load(avatar)
                 .placeholder(R.drawable.ic_profile_default)
@@ -296,8 +297,23 @@ class HomePage : AppCompatActivity() {
                 .into(binding.navigationView.profileImage)
         }
 
-        viewModel.fetchProfileName.observe(this) { name ->
+        viewModel.profileName.observe(this) { name ->
             binding.navigationView.profileName.text = name
+        }
+    }
+
+    private fun setupSwipeRefreshLayout() {
+        binding.swipeRefreshLayout.setColorSchemeResources(R.color.primary)
+        binding.swipeRefreshLayout.setOnRefreshListener {
+            refreshContent()
+        }
+    }
+
+    private fun refreshContent() {
+        viewModel.fetchProfile()
+
+        viewModel.fetchProfileMessage.observe(this) {
+            binding.swipeRefreshLayout.isRefreshing = false
         }
     }
 

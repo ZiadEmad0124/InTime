@@ -1,5 +1,6 @@
 package com.ziad_emad_dev.in_time.ui.signing.activation
 
+import android.content.Intent
 import android.graphics.Color
 import android.os.Bundle
 import android.view.LayoutInflater
@@ -7,9 +8,9 @@ import android.view.View
 import android.view.ViewGroup
 import android.widget.Toast
 import androidx.fragment.app.Fragment
-import androidx.navigation.fragment.findNavController
 import com.ziad_emad_dev.in_time.R
 import com.ziad_emad_dev.in_time.databinding.FragmentActivationAccountBinding
+import com.ziad_emad_dev.in_time.ui.home.HomePage
 import com.ziad_emad_dev.in_time.ui.signing.ValidationListener
 import com.ziad_emad_dev.in_time.ui.signing.Validator
 import com.ziad_emad_dev.in_time.viewmodels.AuthViewModel
@@ -66,21 +67,33 @@ class ActivationAccount : Fragment(), ValidationListener {
     }
 
     private fun checkCodeAndNetwork(message: String) {
-        validator.stopLoading()
         when (message) {
             "true" -> {
                 binding.otpCode.setLineColor(Color.GREEN)
-                Toast.makeText(requireContext(), "This account is active now, SignIn", Toast.LENGTH_LONG).show()
-                findNavController().navigate(R.id.action_activation_Account_to_signIn)
+                Toast.makeText(requireContext(), "This account is active now", Toast.LENGTH_LONG).show()
+                validator.stopLoading()
+
+                val email = requireArguments().getString("email").toString()
+                val password = requireArguments().getString("password").toString()
+                viewModel.signIn(email, password)
+                viewModel.signInMessage.observe(viewLifecycleOwner) { signInMessage ->
+                    if (signInMessage == "true") {
+                        val intent = Intent(requireContext(), HomePage::class.java)
+                        startActivity(intent)
+                        requireActivity().finish()
+                    }
+                }
             }
 
             "Invalid OTP" -> {
                 binding.otpCode.setLineColor(Color.RED)
                 Toast.makeText(requireContext(), "Code is wrong, Try again", Toast.LENGTH_SHORT).show()
+                validator.stopLoading()
             }
 
             else -> {
                 Toast.makeText(requireContext(), message, Toast.LENGTH_SHORT).show()
+                validator.stopLoading()
             }
         }
     }
@@ -100,6 +113,9 @@ class ActivationAccount : Fragment(), ValidationListener {
     override fun onResetOTPTimer() {
         val email = requireArguments().getString("email").toString()
         viewModel.resendActivationCode(email)
+        viewModel.resendActivationCodeMessage.observe(viewLifecycleOwner) { resendActivationCodeMessage ->
+            Toast.makeText(requireContext(), resendActivationCodeMessage, Toast.LENGTH_SHORT).show()
+        }
     }
 
     override fun onOTPCodeEmptyError() {

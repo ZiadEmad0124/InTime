@@ -1,5 +1,6 @@
 package com.ziad_emad_dev.in_time.ui.signing.forgetPassword
 
+import android.content.Intent
 import android.graphics.Color
 import android.os.Bundle
 import android.view.LayoutInflater
@@ -7,9 +8,9 @@ import android.view.View
 import android.view.ViewGroup
 import android.widget.Toast
 import androidx.fragment.app.Fragment
-import androidx.navigation.fragment.findNavController
 import com.ziad_emad_dev.in_time.R
 import com.ziad_emad_dev.in_time.databinding.FragmentResetPasswordBinding
+import com.ziad_emad_dev.in_time.ui.home.HomePage
 import com.ziad_emad_dev.in_time.ui.signing.AsteriskPasswordTransformation
 import com.ziad_emad_dev.in_time.ui.signing.ValidationListener
 import com.ziad_emad_dev.in_time.ui.signing.Validator
@@ -86,26 +87,39 @@ class ResetPassword : Fragment(), ValidationListener {
     }
 
     private fun checkCodePasswordAndNetwork(message: String) {
-        validator.stopLoading()
         when (message) {
             "Invalid OTP" -> {
                 binding.otpCode.setLineColor(Color.RED)
                 Toast.makeText(requireContext(), "Code is Wrong, Try Again", Toast.LENGTH_SHORT).show()
+                validator.stopLoading()
             }
 
             "true" -> {
                 binding.otpCode.setLineColor(Color.GREEN)
-                Toast.makeText(requireContext(), "Password Changed Successfully, SignIn Now", Toast.LENGTH_LONG).show()
-                findNavController().navigate(R.id.action_resetPassword_to_signIn)
+                Toast.makeText(requireContext(), "Password Changed Successfully", Toast.LENGTH_LONG).show()
+                validator.stopLoading()
+
+                val email = requireArguments().getString("email").toString()
+                val password = binding.password.text.toString().trim()
+                viewModel.signIn(email, password)
+                viewModel.signInMessage.observe(viewLifecycleOwner) { signInMessage ->
+                    if (signInMessage == "true") {
+                        val intent = Intent(requireContext(), HomePage::class.java)
+                        startActivity(intent)
+                        requireActivity().finish()
+                    }
+                }
             }
 
             "password must be unique" -> {
                 binding.passwordLayout.error = getString(R.string.password_must_be_unique)
                 binding.confirmPasswordLayout.error = getString(R.string.password_must_be_unique)
+                validator.stopLoading()
             }
 
             else -> {
                 Toast.makeText(requireContext(), message, Toast.LENGTH_SHORT).show()
+                validator.stopLoading()
             }
         }
     }

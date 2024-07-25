@@ -54,6 +54,7 @@
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:autofillHints="name"
+                    android:drawableStart="@drawable/ic_name"
                     android:inputType="text" />
 
             </com.google.android.material.textfield.TextInputLayout>
@@ -72,6 +73,7 @@
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:autofillHints="emailAddress"
+                    android:drawableStart="@drawable/ic_email"
                     android:inputType="textEmailAddress" />
 
             </com.google.android.material.textfield.TextInputLayout>
@@ -90,6 +92,7 @@
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:autofillHints="phone"
+                    android:drawableStart="@drawable/ic_egypt"
                     android:inputType="phone" />
 
             </com.google.android.material.textfield.TextInputLayout>
@@ -109,6 +112,7 @@
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:autofillHints="password"
+                    android:drawableStart="@drawable/ic_password"
                     android:inputType="textPassword" />
 
             </com.google.android.material.textfield.TextInputLayout>
@@ -128,6 +132,7 @@
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:autofillHints="password"
+                    android:drawableStart="@drawable/ic_password"
                     android:imeOptions="actionDone"
                     android:inputType="textPassword" />
 

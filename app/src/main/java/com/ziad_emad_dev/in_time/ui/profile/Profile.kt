@@ -9,17 +9,15 @@ import android.widget.Button
 import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
 import com.bumptech.glide.Glide
+import com.google.android.material.snackbar.Snackbar
 import com.ziad_emad_dev.in_time.R
 import com.ziad_emad_dev.in_time.databinding.ActivityProfileBinding
-import com.ziad_emad_dev.in_time.network.profile.ProfileManager
 import com.ziad_emad_dev.in_time.ui.signing.SignPage
 import com.ziad_emad_dev.in_time.viewmodels.ProfileViewModel
 
 class Profile : AppCompatActivity() {
 
     private lateinit var binding: ActivityProfileBinding
-
-    private lateinit var profileManager: ProfileManager
 
     private val viewModel by lazy {
         ProfileViewModel(this)
@@ -30,36 +28,44 @@ class Profile : AppCompatActivity() {
         binding = ActivityProfileBinding.inflate(layoutInflater)
         setContentView(binding.root)
 
-        profileManager = ProfileManager(this)
+        binding.viewModel = viewModel
+        binding.lifecycleOwner = this
 
-        myToolbar()
+        appToolbar()
         fitchProfile()
         clickOnDeleteAccountButton()
+        setupSwipeRefreshLayout()
     }
 
-    private fun myToolbar() {
-        binding.myToolbar.title.text = getString(R.string.my_profile)
-        binding.myToolbar.back.setOnClickListener {
+    private fun appToolbar() {
+        binding.appToolbar.title.text = getString(R.string.my_profile)
+        binding.appToolbar.back.setOnClickListener {
             finish()
         }
     }
 
     private fun fitchProfile() {
-        Glide.with(this)
-            .load(profileManager.getProfileAvatar())
-            .placeholder(R.drawable.ic_profile_default)
-            .error(R.drawable.ic_profile_default)
-            .into(binding.profileImage)
-        binding.profileName.text = profileManager.getProfileName()
-        binding.profileTitle.text = profileManager.getProfileTitle()
-        binding.profileAbout.text = profileManager.getProfileAbout()
-        binding.rank.text = profileManager.getRank().toString()
-        binding.level.text = if (profileManager.getTotalPoints() <= 100) {
-            1.toString()
-        } else {
-            ((profileManager.getTotalPoints() / 100)+1).toString()
+        startLoading()
+        viewModel.fetchProfileRank()
+        viewModel.fetchProfileRankMessage.observe(this) { message ->
+            if (message == "true") {
+                setProfileImage()
+                stopLoading()
+            }
+            else {
+                errorInConnectingOrFetching(message)
+            }
         }
-        binding.totalPoints.text = profileManager.getTotalPoints().toString()
+    }
+
+    private fun setProfileImage() {
+        viewModel.profile.observe(this) { profile ->
+            Glide.with(this)
+                .load(profile.avatar)
+                .placeholder(R.drawable.ic_profile_default)
+                .error(R.drawable.ic_profile_default)
+                .into(binding.profileImage)
+        }
     }
 
     private fun clickOnDeleteAccountButton() {
@@ -71,8 +77,8 @@ class Profile : AppCompatActivity() {
 
             val deleteAccountButton = alertDialog.findViewById<Button>(R.id.deleteAccountButton)
             deleteAccountButton.setOnClickListener {
-                deleteAccount()
                 alertInstance.dismiss()
+                deleteAccount()
             }
 
             val cancelButton = alertDialog.findViewById<Button>(R.id.cancelButton)
@@ -83,31 +89,75 @@ class Profile : AppCompatActivity() {
     }
 
     private fun deleteAccount() {
-        startLoading()
+        startDeleting()
         viewModel.deleteAccount()
         viewModel.deleteAccountMessage.observe(this) { message ->
             if (message == "true") {
-                profileManager.clearProfile()
                 val intent = Intent(this, SignPage::class.java)
                 intent.flags = Intent.FLAG_ACTIVITY_CLEAR_TASK or Intent.FLAG_ACTIVITY_NEW_TASK
                 startActivity(intent)
-            } else {
-                failedConnect(message)
+            }
+            else {
+                stopDeleting(message)
             }
         }
     }
 
-    private fun startLoading() {
-        binding.blockingView.visibility = View.VISIBLE
-        binding.deleteAccountButton.setBackgroundResource(R.drawable.button_loading)
-        binding.deleteAccountButton.text = null
-        binding.progressCircular.visibility = View.VISIBLE
+    private fun setupSwipeRefreshLayout() {
+        binding.swipeRefreshLayout.setColorSchemeResources(R.color.primary)
+        binding.swipeRefreshLayout.setOnRefreshListener {
+            refreshContent()
+        }
     }
 
-    private fun failedConnect(message: String) {
-        binding.blockingView.visibility = View.GONE
-        binding.deleteAccountButton.setBackgroundResource(R.drawable.button_delete_account)
-        binding.deleteAccountButton.text = getString(R.string.delete_account)
+    private fun refreshContent() {
+        viewModel.fetchProfile()
+
+        viewModel.fetchProfileMessage.observe(this) {
+            binding.swipeRefreshLayout.isRefreshing = false
+        }
+    }
+
+    private fun startDeleting() {
+        binding.blockingView.progressCircular.visibility = View.VISIBLE
+        binding.blockingView.noFetch.visibility = View.GONE
+        binding.blockingView.noConnection.visibility = View.GONE
+        binding.blockingView.message.visibility = View.GONE
+        binding.blockingView.root.visibility = View.VISIBLE
+    }
+
+    private fun stopDeleting(message: String) {
+        binding.blockingView.root.visibility = View.GONE
         Toast.makeText(this, message, Toast.LENGTH_SHORT).show()
+    }
+
+    private fun startLoading() {
+        binding.blockingView.progressCircular.visibility = View.VISIBLE
+        binding.blockingView.noFetch.visibility = View.GONE
+        binding.blockingView.noConnection.visibility = View.GONE
+        binding.blockingView.message.visibility = View.GONE
+        binding.blockingView.root.visibility = View.VISIBLE
+    }
+
+    private fun stopLoading() {
+        binding.blockingView.root.visibility = View.GONE
+    }
+
+    private fun errorInConnectingOrFetching(message: String) {
+        binding.blockingView.progressCircular.visibility = View.GONE
+
+        if (message == "Failed Connect, Try Again") {
+            binding.blockingView.noFetch.visibility = View.GONE
+            binding.blockingView.noConnection.visibility = View.VISIBLE
+            binding.blockingView.message.text = getString(R.string.no_connection)
+        } else {
+            binding.blockingView.noFetch.visibility = View.VISIBLE
+            binding.blockingView.noConnection.visibility = View.GONE
+            binding.blockingView.message.text = getString(R.string.something_went_wrong_try_again)
+        }
+
+        binding.blockingView.message.visibility = View.VISIBLE
+        Snackbar.make(binding.root, message, Snackbar.LENGTH_SHORT).show()
+        binding.blockingView.root.visibility = View.VISIBLE
     }
 }

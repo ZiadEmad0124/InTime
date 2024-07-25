@@ -6,9 +6,9 @@ data class DeleteAccountResponse(
     @SerializedName("success")
     val success: Boolean,
 
-    @SerializedName("messages")
-    val messages: List<String>? = null,
-
     @SerializedName("message")
-    val message: String? = null,
+    val message: String,
+
+    @SerializedName("status")
+    val status: Int? = null
 )

@@ -1,10 +1,6 @@
 package com.ziad_emad_dev.in_time.ui.signing.signin_or_signup
 
 import android.os.Bundle
-import android.text.Editable
-import android.text.InputFilter
-import android.text.TextWatcher
-import android.view.KeyEvent
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -55,8 +51,6 @@ class SignUp : Fragment(), ValidationListener {
         validator.confirmPasswordFocusChangeListener(binding.confirmPasswordLayout)
 
         clickOnButtons()
-
-        phoneNumber()
 
         binding.password.transformationMethod = AsteriskPasswordTransformation()
         binding.confirmPassword.transformationMethod = AsteriskPasswordTransformation()
@@ -111,7 +105,8 @@ class SignUp : Fragment(), ValidationListener {
 
             "check your mail to activate your account" -> {
                 val email = binding.email.text.toString().trim()
-                val action = SignUpDirections.actionSignUpToActivationAccount(email = email)
+                val password = binding.password.text.toString().trim()
+                val action = SignUpDirections.actionSignUpToActivationAccount(email = email, password = password)
                 findNavController().navigate(action)
             }
 
@@ -178,34 +173,6 @@ class SignUp : Fragment(), ValidationListener {
             binding.confirmPassword.transformationMethod = null
         } else {
             binding.confirmPassword.transformationMethod = AsteriskPasswordTransformation()
-        }
-    }
-
-    private fun phoneNumber() {
-        binding.phone.setText(getString(R.string._20))
-        binding.phone.setSelection(binding.phone.text?.length!!)
-
-        val maxLength = 13
-        binding.phone.filters = arrayOf<InputFilter>(InputFilter.LengthFilter(maxLength))
-
-        binding.phone.addTextChangedListener(object : TextWatcher {
-            override fun beforeTextChanged(s: CharSequence, start: Int, count: Int, after: Int) {}
-
-            override fun onTextChanged(s: CharSequence, start: Int, before: Int, count: Int) {}
-
-            override fun afterTextChanged(s: Editable) {
-                if (s.length < 3) {
-                    binding.phone.setText(getString(R.string._20))
-                    binding.phone.setSelection(binding.phone.text?.length!!)
-                } else if (!s.startsWith("+20")) {
-                    binding.phone.setText(getString(R.string._phone, s.substring(3)))
-                    binding.phone.setSelection(binding.phone.text?.length!!)
-                }
-            }
-        })
-
-        binding.phone.setOnKeyListener { _, keyCode, _ ->
-            binding.phone.selectionStart <= 2 && (keyCode == KeyEvent.KEYCODE_DEL || keyCode == KeyEvent.KEYCODE_FORWARD_DEL)
         }
     }
 

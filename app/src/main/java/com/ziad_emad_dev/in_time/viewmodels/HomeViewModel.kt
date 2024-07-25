@@ -8,6 +8,7 @@ import com.google.gson.Gson
 import com.ziad_emad_dev.in_time.network.InTimeApi
 import com.ziad_emad_dev.in_time.network.auth.SessionManager
 import com.ziad_emad_dev.in_time.network.auth.refresh_token.RefreshTokenRequest
+import com.ziad_emad_dev.in_time.network.auth.refresh_token.RefreshTokenResponse
 import com.ziad_emad_dev.in_time.network.auth.sign_out.SignOutRequest
 import com.ziad_emad_dev.in_time.network.notification.Record
 import com.ziad_emad_dev.in_time.network.profile.ProfileManager
@@ -19,7 +20,8 @@ class HomeViewModel(context: Context) : ViewModel() {
 
     companion object {
         private const val FAILED_CONNECT = "Failed Connect, Try Again"
-        const val IMAGES_URL = "https://intime-9hga.onrender.com/api/v1/images/"
+        private const val SOMETHING_WENT_WRONG = "Something went wrong"
+        private const val IMAGES_URL = "https://intime-9hga.onrender.com/api/v1/images/"
     }
 
     private val sessionManager = SessionManager(context)
@@ -40,7 +42,9 @@ class HomeViewModel(context: Context) : ViewModel() {
                     sessionManager.saveRefreshToken(response.body()?.newRefreshToken.toString())
                     _refreshTokenMessage.value = response.body()?.success.toString()
                 } else {
-                    _refreshTokenMessage.value = "Something went wrong"
+                    val errorResponse = response.errorBody()?.string()
+                    val errorRefreshTokenResponse = Gson().fromJson(errorResponse, RefreshTokenResponse::class.java)
+                    _refreshTokenMessage.value = errorRefreshTokenResponse?.message.toString()
                 }
             } catch (e: Exception) {
                 _refreshTokenMessage.value = FAILED_CONNECT
@@ -51,11 +55,11 @@ class HomeViewModel(context: Context) : ViewModel() {
     private val _fetchProfileMessage = MutableLiveData<String>()
     val fetchProfileMessage get() = _fetchProfileMessage
 
-    private val _fetchProfileName = MutableLiveData<String>()
-    val fetchProfileName get() = _fetchProfileName
+    private val _profileName = MutableLiveData<String>()
+    val profileName get() = _profileName
 
-    private val _fetchProfileAvatar = MutableLiveData<String>()
-    val fetchProfileAvatar get() = _fetchProfileAvatar
+    private val _profileAvatar = MutableLiveData<String>()
+    val profileAvatar get() = _profileAvatar
 
     fun fetchProfile() {
 
@@ -77,10 +81,10 @@ class HomeViewModel(context: Context) : ViewModel() {
                         response.body()?.record?.tasks?.onGoingTasks ?: 0
                     )
                     _fetchProfileMessage.value = response.body()?.success.toString()
-                    _fetchProfileName.value = response.body()?.record?.name.toString()
-                    _fetchProfileAvatar.value = IMAGES_URL + response.body()?.record?.avatar.toString()
+                    _profileName.value = response.body()?.record?.name.toString()
+                    _profileAvatar.value = IMAGES_URL + response.body()?.record?.avatar.toString()
                 } else {
-                    _fetchProfileMessage.value = "Something went wrong"
+                    _fetchProfileMessage.value = SOMETHING_WENT_WRONG
                 }
             } catch (e: Exception) {
                 _fetchProfileMessage.value = FAILED_CONNECT
@@ -98,9 +102,6 @@ class HomeViewModel(context: Context) : ViewModel() {
             try {
                 val response = InTimeApi.retrofitService.signOut(request)
                 if (response.isSuccessful) {
-                    sessionManager.clearAccessToken()
-                    sessionManager.clearRefreshToken()
-                    profileManager.clearProfile()
                     _signOutMessage.value = response.body()?.success.toString()
                 } else {
                     _signOutMessage.value = "Sign Out Failed"
@@ -108,11 +109,11 @@ class HomeViewModel(context: Context) : ViewModel() {
             } catch (e: Exception) {
                 _signOutMessage.value = FAILED_CONNECT
             }
+            sessionManager.clearAccessToken()
+            sessionManager.clearRefreshToken()
+            profileManager.clearProfile()
         }
     }
-
-    private val _fetchProfileRankMessage = MutableLiveData<String>()
-    val fetchProfileRankMessage get() = _fetchProfileRankMessage
 
     private val _joinProjectMessage = MutableLiveData<String>()
     val joinProjectMessage get() = _joinProjectMessage
@@ -134,23 +135,6 @@ class HomeViewModel(context: Context) : ViewModel() {
 
     private val _getNotificationsMessage = MutableLiveData<String>()
     val getNotificationsMessage get() = _getNotificationsMessage
-
-    fun fetchProfileRank() {
-        viewModelScope.launch {
-            try {
-                val response =
-                    InTimeApi.retrofitService.fetchUserRank("Bearer ${sessionManager.fetchAccessToken()}")
-                if (response.isSuccessful) {
-                    _fetchProfileRankMessage.value = "Fetch Profile Rank Success"
-                    profileManager.saveProfileRank(response.body()?.myRank ?: 0)
-                } else {
-                    _fetchProfileRankMessage.value = "Fetch Profile Rank Failed"
-                }
-            } catch (e: Exception) {
-                _fetchProfileRankMessage.value = "Failed Connect, Try Again"
-            }
-        }
-    }
 
     fun getTasks() {
         viewModelScope.launch {
